@@ -67,7 +67,7 @@ Telemedicina, videochamada, labs/farmácias, compra automática, detecção de q
 2. Código de 6 dígitos (válido 10 min; reenvio após 45 s invalida o anterior)
 3. Nome + celular WhatsApp do gestor
 4. Dados da pessoa cuidada (nome, como chamar, nascimento, parentesco)
-5. WhatsApp do idoso + endereço de casa (vira primeiro “lugar de sempre”)
+5. WhatsApp do idoso + endereço de casa (vira primeiro “lugar de sempre”, **sem exigir coordenadas** — lat/lng reais vêm depois do PWA do idoso)
 6. Canal (só WA / WA+voz Cuidado+ / só ligação) + tom + janela “não incomodar”
 7. Convidar participantes (opcional)
 8. Plano: 30 dias grátis **sem cartão** **ou** assinar agora (cobrança só após trial; sem confirmação no fim → conta pausa, **não cobra automaticamente**)
@@ -196,8 +196,8 @@ Login limitado → visão de rotina do dia → observações → alertas permiti
 | Entidade | Campos-chave |
 | --- | --- |
 | `sos_alerts` | care_recipient_id, triggered_at, location_lat/lng?, status (open\|resolved), resolved_by, resolved_at, notified_member_ids[] |
-| `safe_places` | care_recipient_id, name, lat, lng, radius_m, is_home |
-| `location_points` | care_recipient_id, lat, lng, accuracy_m, recorded_at, source (sos\|periodic\|share) |
+| `safe_places` | care_recipient_id, name, address_text?, lat?, lng?, radius_m, is_home, coords_confirmed_at? | Casa nasce no onboarding só com endereço; coords opcionais até confirmação no device |
+| `location_points` | care_recipient_id, lat, lng, accuracy_m, recorded_at, source (sos\|periodic\|share\|home_confirm) |
 | `geofence_events` | care_recipient_id, safe_place_id, type (exit\|enter), at |
 
 ### 4.4 Exames, agenda, observações
@@ -279,6 +279,12 @@ MVP enxuto (não rastreador invasivo):
 - Compartilhamento temporário
 - Histórico básico
 - Lugares de sempre + alerta de saída
+
+**Fluxo de “Casa” (lugar de sempre):**
+
+1. **Onboarding (família):** informa só o endereço textual. Cria `safe_places` “Casa” **sem** lat/lng obrigatórios (status pendente). Não usa GPS do celular do familiar (costuma não ser a casa do idoso).
+2. **PWA do idoso (após vínculo + consentimento geo):** confirma posição real (“Estou em casa”) e grava/atualiza lat/lng + `coords_confirmed_at`.
+3. **Alerta de saída de zona:** só liga quando Casa tiver coordenadas confirmadas; enquanto pendente, UX degrada (“Casa ainda sem posição precisa”).
 
 **Obrigatório:** consentimento do idoso, revogável; privacidade; falhas de GPS/rede tratadas com “localização indisponível”.
 
@@ -374,7 +380,7 @@ Papéis por pessoa cuidada / conta (matriz do protótipo):
 | ID | Item | Prioridade | Critérios de aceite |
 | --- | --- | --- | --- |
 | F1-01 | Auth e-mail OTP (magic link / código 6 dígitos) | P0 | Código 10 min; reenvio 45 s invalida anterior; sem senha |
-| F1-02 | Onboarding passos 1–5 (conta + care recipient) | P0 | Pessoa cuidada criada sem user auth; endereço vira safe_place “Casa” |
+| F1-02 | Onboarding passos 1–5 (conta + care recipient) | P0 | Pessoa cuidada criada sem user auth; endereço vira safe_place “Casa” **sem lat/lng obrigatórios** (coords reais no PWA) |
 | F1-03 | CRUD medicamento + cartela + preview de fim | P0 | Cálculo de fim igual à regra §5.1; UI não usa “tomou” |
 | F1-04 | Agendamento de lembretes (job) + log `reminder_sent` | P0 | Respeita DND; evento auditável |
 | F1-05 | Integração WhatsApp sandbox (template lembrete + opt-in) | P0 | Nada recorrente sem opt-in |
@@ -388,6 +394,7 @@ Papéis por pessoa cuidada / conta (matriz do protótipo):
 | F2-02 | Notificação SOS para papéis corretos | P0 | Ignora DND do familiar; registra notificados |
 | F2-03 | Painel Pedidos de ajuda (abrir/resolver) | P0 | Timeline com horário e resolução |
 | F2-04 | Fluxo de vínculo de device (token/QR) | P1 | Abre sem login; revoke no Ajustes |
+| F2-05 | Confirmar Casa no PWA (GPS com consentimento) | P1 | Atualiza lat/lng da Casa; sem confirmação = alerta de zona desligado |
 
 ### Fatia 3 — Pessoas, permissões, exames
 
@@ -402,8 +409,8 @@ Papéis por pessoa cuidada / conta (matriz do protótipo):
 
 | ID | Item | Prioridade | Critérios de aceite |
 | --- | --- | --- | --- |
-| F4-01 | Consentimento geo + última localização + SOS location | P1 | Revogável; falha degradada |
-| F4-02 | Lugares de sempre + alerta de saída | P1 | Casa criada no onboarding |
+| F4-01 | Consentimento geo + última localização + SOS location | P1 | Revogável; falha degradada; GPS só no device vinculado |
+| F4-02 | Lugares de sempre + alerta de saída | P1 | Casa criada no onboarding (endereço); alerta só com coords confirmadas (F2-05) |
 | F4-03 | Planos + trial 30 dias sem cartão + pausa sem cobrança auto | P0 | Idoso nunca vê billing |
 | F4-04 | Voz fallback (Cuidado+) | P2 | Só após regra de não leitura |
 

@@ -5,8 +5,11 @@ Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e e
 ## Agora
 
 - [x] Migrations fatia 1 aplicadas no remoto (`001` + `002`)
+- [x] Migration `003_bootstrap_family_account` aplicada no remoto (BG-01 onboarding/RLS)
+- [x] Migration `004_safe_places_coords_optional` aplicada (Casa sem lat/lng no onboarding)
 - [ ] Preencher WhatsApp (`WHATSAPP_*`) quando for sair do dry-run
 - [ ] Homologar FL-01…FL-04 com chaves Supabase + Inngest
+- [ ] Fatia 2: PWA + confirmar Casa (F2-05)
 
 ## Homologação manual (skill `manual-report`)
 

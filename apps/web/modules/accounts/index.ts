@@ -17,6 +17,7 @@ import {
   requireRoutineViewer,
   requireUser,
 } from "./application/family-context";
+import { bootstrapFamilyAccount } from "./infrastructure/bootstrap-family-account";
 
 export const accountsModule = {
   id: "accounts",
@@ -36,4 +37,5 @@ export {
   requireAdminForMedications,
   requireRoutineViewer,
   requireUser,
+  bootstrapFamilyAccount,
 };

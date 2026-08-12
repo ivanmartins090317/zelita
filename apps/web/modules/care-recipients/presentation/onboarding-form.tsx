@@ -77,26 +77,12 @@ export function OnboardingForm() {
 
       <section className="space-y-4">
         <h2 className="text-lg font-bold text-brand-900">Casa e não incomodar</h2>
-        <Field label="Endereço de casa" name="addressText" required />
-        <div className="grid grid-cols-2 gap-3">
-          <Field
-            label="Latitude"
-            name="lat"
-            type="number"
-            step="any"
-            required
-            defaultValue="-23.5505"
-            hint="Fatia 1 já guarda coordenadas."
-          />
-          <Field
-            label="Longitude"
-            name="lng"
-            type="number"
-            step="any"
-            required
-            defaultValue="-46.6333"
-          />
-        </div>
+        <Field
+          label="Endereço de casa"
+          name="addressText"
+          required
+          hint="A posição no mapa será confirmada depois no celular da pessoa cuidada (com autorização)."
+        />
         <div className="grid grid-cols-2 gap-3">
           <Field
             label="Início do não incomodar"

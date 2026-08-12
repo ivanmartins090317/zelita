@@ -4,10 +4,9 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { requireUser } from "@/modules/accounts/application/family-context";
-import {
-  ACCOUNT_ROLES,
-  computeTrialEndsAt,
-} from "@/modules/accounts/domain/roles";
+import { computeTrialEndsAt } from "@/modules/accounts/domain/roles";
+import { bootstrapFamilyAccount } from "@/modules/accounts/infrastructure/bootstrap-family-account";
+import { LOCATION_CONSTANTS } from "@/modules/location";
 
 const onboardingSchema = z.object({
   managerName: z.string().min(2, "Informe seu nome."),
@@ -18,8 +17,6 @@ const onboardingSchema = z.object({
   careRelationship: z.string().optional(),
   careWhatsapp: z.string().min(8, "Informe o WhatsApp da pessoa cuidada."),
   addressText: z.string().min(5, "Informe o endereço de casa."),
-  lat: z.coerce.number().min(-90).max(90),
-  lng: z.coerce.number().min(-180).max(180),
   dndStart: z.string().regex(/^\d{2}:\d{2}$/, "DND início no formato HH:MM."),
   dndEnd: z.string().regex(/^\d{2}:\d{2}$/, "DND fim no formato HH:MM."),
 });
@@ -42,8 +39,6 @@ export async function completeOnboarding(
     careRelationship: formData.get("careRelationship") || undefined,
     careWhatsapp: formData.get("careWhatsapp"),
     addressText: formData.get("addressText"),
-    lat: formData.get("lat"),
-    lng: formData.get("lng"),
     dndStart: formData.get("dndStart"),
     dndEnd: formData.get("dndEnd"),
   });
@@ -69,22 +64,20 @@ export async function completeOnboarding(
 
   const trialEndsAt = computeTrialEndsAt().toISOString();
 
-  const { data: account, error: accountError } = await supabase
-    .from("accounts")
-    .insert({
-      plan: "essential",
-      status: "active",
-      trial_ends_at: trialEndsAt,
-    })
-    .select("id")
-    .single();
+  // Conta + membership admin via RPC SECURITY DEFINER (não INSERT direto sob RLS).
+  const bootstrap = await bootstrapFamilyAccount(supabase, {
+    plan: "essential",
+    trialEndsAt,
+  });
 
-  if (accountError || !account) {
+  if (!bootstrap.accountId) {
     return {
       ok: false,
-      message: `Falha ao criar conta: ${accountError?.message ?? "sem retorno"}. Verifique migrations/RLS.`,
+      message: `Falha ao criar conta: ${bootstrap.errorMessage ?? "sem retorno"}. Verifique se a migration 003 (bootstrap_family_account) foi aplicada.`,
     };
   }
+
+  const accountId = bootstrap.accountId;
 
   const { error: profileError } = await supabase
     .from("profiles")
@@ -101,25 +94,10 @@ export async function completeOnboarding(
     };
   }
 
-  const { error: memberError } = await supabase.from("account_members").insert({
-    account_id: account.id,
-    profile_id: user.id,
-    role: ACCOUNT_ROLES.admin,
-    status: "active",
-    accepted_at: new Date().toISOString(),
-  });
-
-  if (memberError) {
-    return {
-      ok: false,
-      message: `Falha ao vincular membership: ${memberError.message}.`,
-    };
-  }
-
   const { data: recipient, error: recipientError } = await supabase
     .from("care_recipients")
     .insert({
-      account_id: account.id,
+      account_id: accountId,
       full_name: input.careFullName,
       display_name: input.careDisplayName,
       birth_date: input.careBirthDate || null,
@@ -141,20 +119,22 @@ export async function completeOnboarding(
     };
   }
 
+  // Casa sem lat/lng: coords reais vêm do PWA do idoso (consentimento + confirmar em casa).
   const { error: homeError } = await supabase.from("safe_places").insert({
     care_recipient_id: recipient.id,
-    name: "Casa",
+    name: LOCATION_CONSTANTS.homePlaceName,
     address_text: input.addressText,
-    lat: input.lat,
-    lng: input.lng,
-    radius_m: 150,
+    lat: null,
+    lng: null,
+    radius_m: LOCATION_CONSTANTS.defaultHomeRadiusM,
     is_home: true,
+    coords_confirmed_at: null,
   });
 
   if (homeError) {
     return {
       ok: false,
-      message: `Falha ao registrar Casa: ${homeError.message}. Informe lat/lng válidos.`,
+      message: `Falha ao registrar Casa: ${homeError.message}. Verifique se a migration 004 (coords opcionais) foi aplicada.`,
     };
   }
 

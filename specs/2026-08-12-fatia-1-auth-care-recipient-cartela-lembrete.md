@@ -4,7 +4,7 @@
 - Data: 2026-08-12
 - Autonomia: `medium`
 - Projeto: Zelita (`apps/web`)
-- Pedido original: Fatia 1 do PRD (F1-01…F1-06) — auth OTP, onboarding com pessoa cuidada e DND, cartela com preview de fim, lembrete com opt-in WhatsApp, painel Hoje/Remédios mínimo; billing só placeholder; Casa com coordenadas já nesta fatia; OTP por código e magic link; RLS pela matriz completa de papéis.
+- Pedido original: Fatia 1 do PRD (F1-01…F1-06) — auth OTP, onboarding com pessoa cuidada e DND, cartela com preview de fim, lembrete com opt-in WhatsApp, painel Hoje/Remédios mínimo; billing só placeholder; Casa no onboarding **só com endereço** (lat/lng confirmados depois no PWA do idoso); OTP por código e magic link; RLS pela matriz completa de papéis.
 
 ## 1. Objetivo
 
@@ -57,8 +57,8 @@ Linguagem de domínio. Sem leakage de endpoint, tabela ou classe.
 ### Cenário 4: Onboarding — conta + pessoa cuidada + casa + DND (caminho feliz)
 
 - Dado: gestora autenticada sem conta completa de cuidado
-- Quando: informa nome e WhatsApp dela; dados da pessoa cuidada; WhatsApp do idoso; endereço de casa **com coordenadas**; janela “não incomodar”
-- Então: a conta fica pronta para uso; a pessoa cuidada existe **sem login**; “Casa” fica registrada como lugar de sempre com coordenadas; o trial fica só como **placeholder** na conta (sem cobrança)
+- Quando: informa nome e WhatsApp dela; dados da pessoa cuidada; WhatsApp do idoso; endereço de casa (**sem** latitude/longitude na UI); janela “não incomodar”
+- Então: a conta fica pronta para uso; a pessoa cuidada existe **sem login**; “Casa” fica registrada como lugar de sempre **com endereço e sem coordenadas obrigatórias** (pendente de confirmação no device); o trial fica só como **placeholder** na conta (sem cobrança)
 
 ### Cenário 5: Pessoa cuidada nunca autentica
 
@@ -140,7 +140,7 @@ Linguagem de domínio. Sem leakage de endpoint, tabela ou classe.
 - Lembrete enviado **nunca** implica medicamento tomado.
 - Opt-in WhatsApp obrigatório antes de lembretes recorrentes.
 - Janela “não incomodar” vale para lembretes ao idoso (SOS à família, fora desta Spec, ignoraria silêncio do familiar).
-- Casa do onboarding já nasce como lugar de sempre **com coordenadas** (geo fino de saída de zona continua fora).
+- Casa do onboarding nasce como lugar de sempre **com endereço**; lat/lng ficam nulos até confirmação no PWA do idoso (geo fino / saída de zona fora desta Spec).
 - Trial/billing nesta fatia: apenas placeholder na conta; sem gateway e sem cobrança automática.
 - Papéis: admin, cuidador, visualizador, contato de emergência — autorização pela matriz completa mesmo que a UI de convite não esteja nesta Spec.
 - Canal WhatsApp: caminho mais fácil agora (sandbox Meta); troca de provedor depois sem mudar as regras de domínio.
@@ -189,7 +189,7 @@ Linguagem de domínio. Sem leakage de endpoint, tabela ou classe.
 - Segurança (RLS, authz, webhook, elder-access, PHI): matriz completa no início aumenta superfície de policies; service role só em jobs/webhooks confiáveis; não logar PHI desnecessário; webhook WhatsApp precisa validar origem.
 - WhatsApp: sandbox Meta como caminho fácil; se credencial atrasar, modo seco + registro — confirmar no Done o que foi homologado de fato.
 - Spec larga: risco de atraso; Done não declara verde com cenários P0 abertos.
-- Coordenadas no onboarding: UX de mapa/pin mínimo vs lat/lng manual — detalhe de UI na implementação, desde que Casa fique com coordenadas.
+- Coordenadas no onboarding: **removidas da UI** — confirmação real no PWA (F2-05 do PRD). Migration `004` torna lat/lng nullable.
 - Checklist de `docs/SECURITY.md` é obrigatório no Done; marcar N/A só com justificativa (ex.: SOS/elder fora desta Spec).
 
 ## 9. Aprovação humana
