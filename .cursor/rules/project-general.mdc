@@ -19,9 +19,11 @@ Idioma: **sempre responda em português (pt-BR)**.
 - **Canais:** WhatsApp Business API (+ voz no Cuidado+); ports/adapters para provedores.
 - **Testes:** Vitest (domínio/casos de uso). Homologação de fluxos UI/PWA via skill `manual-report`. **Sem Playwright no MVP.**
 
-Docs de referência: `docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/architecture/` (quando existir).
+Docs de referência: `docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/SECURITY.md`, `docs/architecture/` (quando existir).
 
 **Docs operacionais (sempre):** `docs/state/` (WIP, pendências, bugs) · `docs/implementation/` (entregas Done). Contrato completo: `AGENTS.md`.
+
+**Segurança:** `docs/SECURITY.md` é fonte única de verdade. Cumprir o checklist desse doc antes do Done/merge de cada feature.
 
 ## Arquitetura (monólito modular)
 
@@ -64,10 +66,11 @@ UI (RSC/Client) → Server Action / Route Handler → application (caso de uso) 
 6. **Design:** seguir protótipo / marca Zelita (`marca-zelita.html`, `zelita-prototipo.html`). Verde-petróleo de marca; **coral só para SOS/emergência**. Light-first, mobile-first. PWA idoso: texto ≥17px, alvos ≥56px, SOS >100px.
 7. **LGPD / saúde:** não logar PHI desnecessário no Sentry; IDs + tipo de evento. Opt-in WA antes de lembretes recorrentes.
 8. **Lembrete ≠ tomada:** eventos `reminder_sent` nunca implicam medicamento tomado.
-9. **Arquivo > 300 linhas:** dividir por domínio. Sem mocks em dev/prod (só testes).
-10. **Commits:** Conventional Commits; branch descritiva (`feature/...`).
-11. **Não-objetivos MVP:** microserviços, BullMQ+worker, Nest separado, Playwright, IA clínica/OCR.
+9. **Segurança:** RLS + authz server-side; `service_role` só em Route Handlers / Inngest; seguir `docs/SECURITY.md`.
+10. **Arquivo > 300 linhas:** dividir por domínio. Sem mocks em dev/prod (só testes).
+11. **Commits:** Conventional Commits; branch descritiva (`feature/...`).
+12. **Não-objetivos MVP:** microserviços, BullMQ+worker, Nest separado, Playwright, IA clínica/OCR.
 
 ## Depois de alterar
 
-Reflita em 1–2 parágrafos sobre escalabilidade/manutenibilidade. Cubra regras de domínio com Vitest (≥ 80% quando aplicável). Fluxos de UI/PWA: atualizar plano/relatório via skill `manual-report`.
+Reflita em 1–2 parágrafos sobre escalabilidade/manutenibilidade. Cubra regras de domínio com Vitest (≥ 80% quando aplicável). Fluxos de UI/PWA: atualizar plano/relatório via skill `manual-report`. No Done: checklist aplicável de `docs/SECURITY.md`.

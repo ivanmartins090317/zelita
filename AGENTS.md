@@ -6,7 +6,9 @@ Idioma de trabalho e respostas: **português (pt-BR)**.
 
 **Zelita** é um SaaS de coordenação familiar para cuidado de idosos. Familiar gerencia; pessoa cuidada recebe lembretes/SOS sem login (PWA + vínculo de device).
 
-Docs de referência (read-only para contexto): `docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/architecture/` (quando existir). Marca/protótipo: `marca-zelita.html`, `zelita-prototipo.html/`.
+Docs de referência (read-only para contexto): `docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/SECURITY.md`, `docs/architecture/` (quando existir). Marca/protótipo: `marca-zelita.html`, `zelita-prototipo.html/`.
+
+**Segurança:** `docs/SECURITY.md` é a fonte única de verdade (OWASP aplicado à Zelita). Toda feature deve cumprir o checklist de segurança desse doc antes do Done/merge.
 
 ### Docs operacionais (obrigatório em toda tarefa)
 
@@ -78,7 +80,7 @@ supabase/
   migrations/
   policies/
 docs/
-  prd-mvp.md · arquitetura-solucao.md
+  prd-mvp.md · arquitetura-solucao.md · SECURITY.md
   state/                  # WIP, pendências, bugs (vivo)
   implementation/         # histórico de entregas
 specs/                    # Specs de feature (aprovação humana)
@@ -109,7 +111,7 @@ specs/                    # Specs de feature (aprovação humana)
 
 - Alterar este `AGENTS.md` sem pedido explícito
 - Alterar Spec aprovada em `specs/` sem pedido explícito
-- Alterar PRD / arquitetura (`docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/architecture/`) sem pedido explícito — **exceto** `docs/state/` e `docs/implementation/`, que devem ser atualizados a cada tarefa
+- Alterar PRD / arquitetura / segurança (`docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/SECURITY.md`, `docs/architecture/`) sem pedido explícito — **exceto** `docs/state/` e `docs/implementation/`, que devem ser atualizados a cada tarefa
 - Mexer em **paths críticos** sem pedido explícito (lista abaixo)
 - Criar migration / mudar schema / RLS / Storage sem aprovação
 - Adicionar dependência nova sem aprovação
@@ -150,11 +152,11 @@ No início de cada feature, declarar um nível:
 
 ## Fluxo obrigatório por feature
 
-1. **Research** (sem código) — ler PRD/arquitetura/protótipo, `docs/state/` e módulo vizinho
-2. **Plano curto** (sem código) — escopo, módulo dono, riscos, autonomia; atualizar `docs/state/ATUAL.md`
+1. **Research** (sem código) — ler PRD/arquitetura/`docs/SECURITY.md`/protótipo, `docs/state/` e módulo vizinho
+2. **Plano curto** (sem código) — escopo, módulo dono, riscos (incl. segurança), autonomia; atualizar `docs/state/ATUAL.md`
 3. **Spec** em `specs/` → **esperar aprovação humana**
 4. **Implementar** só o que a Spec pede (conventional commits; branch `feature/...` quando houver git flow)
-5. **Verificar Done** + registrar em `docs/implementation/` e atualizar `docs/state/`
+5. **Verificar Done** (incl. checklist de `docs/SECURITY.md`) + registrar em `docs/implementation/` e atualizar `docs/state/`
 6. **Parar** e reportar evidências (não expandir escopo)
 
 ### Regras de código (invioláveis no MVP)
@@ -168,6 +170,7 @@ No início de cada feature, declarar um nível:
 - LGPD: não logar PHI desnecessário no Sentry (IDs + tipo de evento)
 - Opt-in WhatsApp antes de lembretes recorrentes
 - **Lembrete ≠ tomada:** `reminder_sent` nunca implica medicamento tomado
+- Demais controles: seguir `docs/SECURITY.md` (RLS, authz server-side, webhooks, elder-access, uploads)
 
 ---
 
@@ -185,6 +188,7 @@ E também:
 
 - Cenários da Spec da feature em verde (Vitest; UI/PWA via `manual-report` quando a Spec exigir)
 - Cobertura de regras de domínio com Vitest (≥ 80% quando aplicável)
+- Checklist de segurança de `docs/SECURITY.md` aplicável à feature (itens N/A explicitados no relatório)
 - Nenhuma mudança fora do escopo sem aprovação
 - Reflexão curta (1–2 parágrafos) sobre escalabilidade/manutenibilidade
 - Resumo do que mudou + arquivos tocados
@@ -201,6 +205,7 @@ E também:
 - Spec:
 - State / implementation:
 - Comandos Done:
+- Segurança (`docs/SECURITY.md`): checklist ok / N/A justificados
 - Arquivos alterados:
 - Riscos / dúvidas:
 - Diff crítico para review humano: sim/não
