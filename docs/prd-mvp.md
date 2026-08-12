@@ -419,14 +419,19 @@ Papéis por pessoa cuidada / conta (matriz do protótipo):
 
 ## 9. Stack (MVP técnico)
 
+> Detalhamento: [arquitetura-solucao.md](./arquitetura-solucao.md)
+
 | Camada | Escolha |
 | --- | --- |
+| Hosting | Vercel |
 | Web família | Next.js (App Router) |
 | Backend / DB | Supabase + Postgres + RLS |
 | Auth | E-mail + OTP / magic link |
-| App idoso | PWA |
+| App idoso | PWA (rota no Next no MVP) |
 | Mensageria | WhatsApp Business API (provedor oficial) |
-| Filas / jobs | Agendamento de lembretes + retentativas |
+| Filas / jobs | **Inngest** (BullMQ fora do MVP) |
+| Monitoramento | Sentry |
+| Redis | Não no MVP (Upstash só se rate limit/cache doer) |
 | Arquivos | Supabase Storage (URLs assinadas) |
 | Geo | APIs do device / navegador |
 | Pagamentos | Provedor externo (cartão nunca armazenado na Zelita) |
@@ -471,6 +476,8 @@ Ver §0 “Fora do MVP” e protótipo seção Escopo.
 ---
 
 ## 13. Decisões em aberto (confirmar antes de codar)
+
+**Já fechado:** Next.js · Vercel · Supabase · Sentry · Inngest (ver [arquitetura-solucao.md](./arquitetura-solucao.md)).
 
 1. Provedor WhatsApp (Meta Cloud API vs BSP) e provedor de voz
 2. Provedor de pagamento (Stripe, Asaas, Pagar.me…)

@@ -1,0 +1,71 @@
+---
+description: Regras gerais e arquitetura da Zelita (sempre ativa)
+alwaysApply: true
+---
+
+# Regras Gerais — Zelita
+
+Idioma: **sempre responda em português (pt-BR)**.
+
+**Zelita** é um SaaS de coordenação familiar para cuidado de idosos. Familiar gerencia; idoso recebe lembretes/SOS sem login.
+
+## Stack
+
+- **App:** Next.js (App Router) · React · TypeScript · Tailwind · shadcn/ui · Radix · monorepo (`apps/web`).
+- **Backend:** Supabase (Auth OTP, Postgres, Storage, RLS) — dependência intencional; não abstrair “banco genérico”.
+- **Jobs:** Inngest (lembretes, fallback de voz, trial).
+- **Observabilidade:** Sentry (`@sentry/nextjs`).
+- **Hosting:** Vercel.
+- **Canais:** WhatsApp Business API (+ voz no Cuidado+); ports/adapters para provedores.
+- **Testes:** Vitest (domínio/casos de uso). Homologação de fluxos UI/PWA via skill `manual-report`. **Sem Playwright no MVP.**
+
+Docs de referência: `docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/architecture/` (quando existir).
+
+## Arquitetura (monólito modular)
+
+```text
+UI (RSC/Client) → Server Action / Route Handler → application (caso de uso) → domain
+                                                              ↓
+                                                    infrastructure (repos Supabase, adapters)
+```
+
+1. **Server-first:** dados e mutações no servidor. UI é apresentação.
+2. **SQL/Supabase só em `infrastructure/` (repos)** do módulo — nunca query em componente Client.
+3. **Domínio puro:** regras (fim de cartela, DND, quem recebe SOS) sem React/Supabase/Inngest.
+4. **Ports só onde a troca é real:** WhatsApp, voz, billing — não `IDatabase` universal.
+5. **RLS obrigatório** por `account_id` / membership / papel. Service role só em Route Handlers / Inngest confiáveis — nunca no client.
+6. **Pessoa cuidada** não é `auth.users`; PWA usa vínculo de device (`elder-access`).
+
+### Módulos (ownership)
+
+`accounts` · `care-recipients` · `medications` · `reminders` · `sos` · `location` · `exams` · `billing` · `elder-access`
+
+- Importar só pela API pública do módulo (`index.ts`).
+- `app/(marketing|auth|family|elder)/` não importa internals de outro módulo.
+- `(elder)/` isolado do painel da família (testável; extração futura possível).
+
+## Clean Code (proporcional)
+
+- Dependência aponta para dentro: presentation → application → domain; infrastructure implementa ports.
+- SRP, funções pequenas, nomes com intenção (`is/has/should`), early return, sem dead code.
+- DRY com cuidado — sem abstração prematura.
+- Sem números/strings mágicos — tokens do design / constantes nomeadas.
+- Efeitos colaterais nas bordas (repos, adapters, actions).
+
+## Regras invioláveis
+
+1. **`use client` mínimo:** prefira RSC. Client só para interação/estado local; Suspense com fallback.
+2. **Tipos:** prefira `interface` sobre `type`. **Não use `enum`** — mapas/const objects.
+3. **Sem classes:** componentes funcionais e `function` para funções puras. Exports nomeados. Pastas `kebab-case`.
+4. **Erros:** estados explícitos; mensagem com causa e correção. Nunca `catch` vazio.
+5. **Ambiente:** secrets só em `.env` / Vercel. **Nunca sobrescreva `.env` sem confirmar.**
+6. **Design:** seguir protótipo / marca Zelita (`marca-zelita.html`, `zelita-prototipo.html`). Verde-petróleo de marca; **coral só para SOS/emergência**. Light-first, mobile-first. PWA idoso: texto ≥17px, alvos ≥56px, SOS >100px.
+7. **LGPD / saúde:** não logar PHI desnecessário no Sentry; IDs + tipo de evento. Opt-in WA antes de lembretes recorrentes.
+8. **Lembrete ≠ tomada:** eventos `reminder_sent` nunca implicam medicamento tomado.
+9. **Arquivo > 300 linhas:** dividir por domínio. Sem mocks em dev/prod (só testes).
+10. **Commits:** Conventional Commits; branch descritiva (`feature/...`).
+11. **Não-objetivos MVP:** microserviços, BullMQ+worker, Nest separado, Playwright, IA clínica/OCR.
+
+## Depois de alterar
+
+Reflita em 1–2 parágrafos sobre escalabilidade/manutenibilidade. Cubra regras de domínio com Vitest (≥ 80% quando aplicável). Fluxos de UI/PWA: atualizar plano/relatório via skill `manual-report`.
