@@ -2,19 +2,20 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | — |
-| Spec | Fatia 1 (ajuste Casa) + BG-01 |
-| Autonomia | `tight` |
-| Status | Idle — RLS accounts + Casa sem coords no onboarding feitos; aguarda deploy + homologação FL-02 |
+| Etapa | **F3 · Cadastro** — Done técnico; aguardando homologação manual FL-02 |
+| Spec | `specs/2026-08-12-f3-cadastro.md` (aprovada) |
+| Autonomia | `medium` |
+| Status | Wizard 8 passos em `/cadastro`; persistência única no passo 8 |
 
 ## Feito nesta sessão
 
-- [x] BG-01: RPC `bootstrap_family_account` (migration 003) — subagente
-- [x] PRD §2.1 / §5.3 / F1-02 / F2-05 / F4-01–02: coords reais no PWA
-- [x] Migration 004 aplicada (lat/lng nullable + `coords_confirmed_at`)
-- [x] Onboarding sem campos lat/lng; Casa com endereço pendente
-- [x] `pnpm typecheck|lint|test` verdes (25 testes)
+- [x] Wizard `/cadastro` (8 passos) — OTP reutiliza F2; copy em `content/signup.ts`
+- [x] Persistência única via `complete-signup` (perfil + conta + pessoa cuidada + Casa)
+- [x] `/onboarding` → redirect `/cadastro`; login-routing incompleto → `/cadastro`
+- [x] Passo 7 convites só locais; passo 8 sem gateway (trial 30 / Cuidado+ 60 dias)
+- [x] Vitest: message-preview, signup-routing, content/signup; login-routing atualizado
+- [x] Entrega em `docs/implementation/2026-08-12-f3-cadastro.md`
 
 ## Próximo
 
-Deploy Vercel → retestar onboarding → Spec fatia 2 (vínculo PWA + confirmar Casa F2-05).
+Homologação manual F3 (skill `manual-report`, FL-02) + review humano paths críticos (auth, bootstrap, persistência).

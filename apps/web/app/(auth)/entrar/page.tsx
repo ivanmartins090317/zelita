@@ -1,38 +1,23 @@
-import { Suspense } from "react";
-
+import { resolveEntrarPageState } from "@/modules/accounts/application/login-session";
 import { LoginForm } from "@/modules/accounts/presentation/login-form";
+import { LoginMark } from "@/modules/accounts/presentation/login-mark";
 
-export default function EntrarPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ erro?: string }>;
-}) {
-  return (
-    <main className="mx-auto flex min-h-full w-full max-w-lg flex-1 flex-col justify-center px-6 py-16">
-      <h1 className="text-3xl font-extrabold text-brand-900">Entrar</h1>
-      <p className="mt-3 text-muted">
-        Sem senha. Receba um código no e-mail ou um link mágico.
-      </p>
-      <Suspense fallback={<p className="mt-6 text-muted">Carregando…</p>}>
-        <EntrarErro searchParams={searchParams} />
-      </Suspense>
-      <div className="mt-8">
-        <LoginForm />
-      </div>
-    </main>
-  );
-}
-
-async function EntrarErro({
+export default async function EntrarPage({
   searchParams,
 }: {
   searchParams: Promise<{ erro?: string }>;
 }) {
   const params = await searchParams;
-  if (!params.erro) return null;
+  const pageState = await resolveEntrarPageState();
+
   return (
-    <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">
-      {params.erro}
-    </p>
+    <main className="mx-auto flex min-h-full w-full max-w-[520px] flex-1 flex-col justify-center px-6 py-12 sm:py-16">
+      <LoginMark />
+      <LoginForm
+        initialStep={pageState.kind === "account-picker" ? "picker" : "email"}
+        initialAccounts={pageState.accounts ?? []}
+        urlError={params.erro ?? null}
+      />
+    </main>
   );
 }

@@ -1,36 +1,196 @@
 @import "tailwindcss";
 
+/*
+  Fundação de design da Zelita (F0).
+  Origem dos valores: aba "Escopo & style guide" de zelita-prototipo.html.
+  Se uma cor, raio, sombra ou piso de toque não estiver aqui, ele não deve
+  existir em tela: peça e página consomem token, nunca valor cru.
+*/
 :root {
-  --background: #faf7f2;
-  --foreground: #14201e;
-  --brand-50: #e8f6f3;
-  --brand-200: #a9e0d5;
-  --brand-600: #12766e;
-  --brand-700: #0f5b54;
-  --brand-800: #0b3b36;
+  /* marca — verde-petróleo */
   --brand-900: #072b27;
+  --brand-800: #0b3b36;
+  --brand-700: #0f5b54;
+  --brand-600: #12766e;
+  --brand-500: #189085;
+  --brand-400: #3fa99a;
+  --brand-200: #a9e0d5;
+  --brand-100: #d6f2ec;
+  --brand-50: #eef8f5;
+
+  /* neutras */
+  --sand: #faf7f2;
+  --sand-2: #f2efe8;
+  --line: #e4e0d8;
+  --line-2: #efece5;
+  --ink: #14201e;
   --muted: #4e5d5a;
-  --surface: #f2efe8;
-  --border: #e4e0d8;
+  --muted-2: #667572;
+
+  /* semânticas — cada uma com um sentido só */
+  --ok: #2e7d62;
+  --ok-bg: #e3f3ec;
+  --amber: #d98c1f;
+  --amber-bg: #fdf0dc;
+  --amber-ink: #7a4e06;
+  --amber-line: #f0d19a;
+
+  /* coral: exclusivo de emergência. Nunca em marca, botão comum ou destaque */
+  --coral: #e4572e;
+  --coral-dark: #c2401c;
+  --coral-bg: #fdeae2;
+  --coral-line: #f5c0ac;
+
+  /* tintas de contexto — sobre fundo escuro e sobre coral */
+  --on-dark: #dcefea;
+  --on-dark-soft: #cbe9e2;
+  --on-dark-muted: #9fc4be;
+  --brand-on-dark: #7fd8c6;
+  --on-coral: #8a2c10;
+  --on-coral-muted: #a0472a;
+
+  /* apelidos das telas anteriores à F0 — mantêm o que já está no ar de pé */
+  --background: var(--sand);
+  --foreground: var(--ink);
+  --surface: var(--sand-2);
+  --border: var(--line);
+
+  /* tipografia */
+  --font-body-stack: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-head-stack: var(--font-plus-jakarta), ui-sans-serif, system-ui,
+    sans-serif;
+  --fs-label: 12px;
+  --fs-compact: 13.5px;
+  --fs-secondary: 14px;
+  --fs-control: 14.5px;
+  --fs-body: 15.5px;
+  --fs-body-elder: 17px;
+
+  /* pisos de leitura e de toque — antes só existiam na documentação */
+  --tap: 48px;
+  --tap-sm: 42px;
+  --tap-xs: 38px;
+  --tap-chip: 44px;
+  --tap-elder: 56px;
+  --tap-sos: 104px;
+  --h-field: 50px;
+  --h-row: 64px;
+  --sq-icon: 38px;
+
+  /* raios — escala real do protótipo, sem normalizar degraus */
+  --r-chip: 9px;
+  --r-control-sm: 10px;
+  --r-field: 11px;
+  --r-control: 12px;
+  --r-note: 14px;
+  --r-panel: 16px;
+  --r-elder: 18px;
+  --r-card: 20px;
+  --r-sos: 22px;
+  --r-sheet: 26px;
+  --r-phone: 38px;
+  --r-pill: 99px;
+
+  /* sombra única do produto — hierarquia se faz com espaço, não com sombra */
+  --sh-card:
+    0 1px 2px rgba(7, 43, 39, 0.05), 0 10px 28px -18px rgba(7, 43, 39, 0.28);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
   --color-brand-200: var(--brand-200);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
   --color-brand-600: var(--brand-600);
   --color-brand-700: var(--brand-700);
   --color-brand-800: var(--brand-800);
   --color-brand-900: var(--brand-900);
+
+  --color-sand: var(--sand);
+  --color-sand-2: var(--sand-2);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+
+  --color-ok: var(--ok);
+  --color-ok-bg: var(--ok-bg);
+  --color-amber: var(--amber);
+  --color-amber-bg: var(--amber-bg);
+  --color-amber-ink: var(--amber-ink);
+  --color-amber-line: var(--amber-line);
+  --color-coral: var(--coral);
+  --color-coral-dark: var(--coral-dark);
+  --color-coral-bg: var(--coral-bg);
+  --color-coral-line: var(--coral-line);
+
+  --color-on-dark: var(--on-dark);
+  --color-on-dark-soft: var(--on-dark-soft);
+  --color-on-dark-muted: var(--on-dark-muted);
+  --color-brand-on-dark: var(--brand-on-dark);
+  --color-on-coral: var(--on-coral);
+  --color-on-coral-muted: var(--on-coral-muted);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-border: var(--border);
-  --font-sans: var(--font-plus-jakarta);
+
+  --font-sans: var(--font-body-stack);
+  --font-head: var(--font-head-stack);
+
+  --text-label: var(--fs-label);
+  --text-compact: var(--fs-compact);
+  --text-secondary: var(--fs-secondary);
+  --text-control: var(--fs-control);
+  --text-body: var(--fs-body);
+  --text-body-elder: var(--fs-body-elder);
+
+  --spacing-tap: var(--tap);
+  --spacing-tap-sm: var(--tap-sm);
+  --spacing-tap-xs: var(--tap-xs);
+  --spacing-tap-chip: var(--tap-chip);
+  --spacing-tap-elder: var(--tap-elder);
+  --spacing-tap-sos: var(--tap-sos);
+  --spacing-field: var(--h-field);
+  --spacing-row: var(--h-row);
+  --spacing-icon: var(--sq-icon);
+
+  --radius-chip: var(--r-chip);
+  --radius-control-sm: var(--r-control-sm);
+  --radius-field: var(--r-field);
+  --radius-control: var(--r-control);
+  --radius-note: var(--r-note);
+  --radius-panel: var(--r-panel);
+  --radius-elder: var(--r-elder);
+  --radius-card: var(--r-card);
+  --radius-sos: var(--r-sos);
+  --radius-sheet: var(--r-sheet);
+  --radius-phone: var(--r-phone);
+  --radius-pill: var(--r-pill);
+
+  --shadow-card: var(--sh-card);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body-stack);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-head-stack);
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand-500);
+  outline-offset: 2px;
 }

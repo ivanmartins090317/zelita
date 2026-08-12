@@ -32,6 +32,18 @@ Assuntos sugeridos:
 - Magic Link: `Seu código Zelita`
 - Confirm signup: `Confirme seu e-mail — Zelita`
 
+## Comprimento do código (6 vs 8 dígitos)
+
+O **número de dígitos** do `{{ .Token }}` vem do **Supabase Auth**, não do template HTML nem do app.
+
+| Onde | O que fazer |
+| --- | --- |
+| **Dashboard** | [Authentication → Sign In / Providers → Email](https://supabase.com/dashboard/project/xfrmbckdgojrpvprvnwg/auth/providers?provider=Email) |
+| **Campo** | **Email OTP length** → definir **6** (padrão Zelita / PRD) |
+| **Depois** | Salvar e pedir **um código novo** — e-mails já enviados não mudam |
+
+Projetos Supabase mais novos costumam vir com **8 dígitos** por padrão. O app aceita **6 a 8** na digitação, mas o copy e a UX assumem **6** — alinhe o Dashboard para evitar confusão.
+
 ## Variáveis Supabase usadas
 
 - `{{ .Token }}` — código OTP (6–8 dígitos, conforme Auth do Supabase)

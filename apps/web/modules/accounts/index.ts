@@ -8,6 +8,7 @@ import {
 } from "./domain/roles";
 import {
   requestEmailOtp,
+  selectLoginAccount,
   signOut,
   verifyEmailOtp,
 } from "./application/auth-actions";
@@ -31,6 +32,7 @@ export {
   isAccountPaused,
   TRIAL_PLACEHOLDER_DAYS,
   requestEmailOtp,
+  selectLoginAccount,
   signOut,
   verifyEmailOtp,
   getFamilyContext,

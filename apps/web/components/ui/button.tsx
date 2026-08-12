@@ -1,30 +1,40 @@
-"use client";
-
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Botão do style guide. `emergency` e `sos` são as únicas variações com coral:
+ * pedir ajuda e ligar 192. Um primário por tela; um SOS, só no app do idoso.
+ * `default`, `outline` e `lg` são apelidos das telas anteriores à F0.
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap border border-transparent font-bold transition-colors disabled:pointer-events-none disabled:opacity-45",
   {
     variants: {
       variant: {
+        primary: "bg-brand-600 text-white hover:bg-brand-700",
+        secondary:
+          "border-line bg-white text-brand-800 hover:border-brand-400",
+        emergency: "bg-coral text-white hover:bg-coral-dark",
         default: "bg-brand-600 text-white hover:bg-brand-700",
-        outline:
-          "border border-brand-200 bg-transparent text-brand-900 hover:bg-brand-50",
-        ghost: "text-brand-800 hover:bg-brand-50",
+        outline: "border-line bg-white text-brand-800 hover:border-brand-400",
       },
       size: {
-        default: "h-11 px-5 py-2",
-        sm: "h-9 rounded-lg px-3",
-        lg: "h-12 rounded-xl px-8 text-base",
+        md: "min-h-tap rounded-control px-5 py-3 text-base",
+        sm: "min-h-tap-sm rounded-control-sm px-4 py-2 text-control",
+        xs: "min-h-tap-xs rounded-chip px-3 py-2 text-compact",
+        elder:
+          "min-h-tap-elder w-full justify-start rounded-elder border-2 border-line bg-white px-4 py-4 text-left text-lg",
+        sos: "min-h-tap-sos w-full flex-col rounded-sos px-4 py-6 font-head text-2xl font-extrabold leading-tight",
+        default: "min-h-tap rounded-control px-5 py-3 text-base",
+        lg: "min-h-tap rounded-control px-8 py-3 text-base",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "primary",
+      size: "md",
     },
   },
 );
