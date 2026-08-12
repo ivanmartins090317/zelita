@@ -20,6 +20,7 @@ const buttonVariants = cva(
         emergency: "bg-coral text-white hover:bg-coral-dark",
         default: "bg-brand-600 text-white hover:bg-brand-700",
         outline: "border-line bg-white text-brand-800 hover:border-brand-400",
+        ghost: "bg-transparent text-brand-800 hover:bg-brand-50",
       },
       size: {
         md: "min-h-tap rounded-control px-5 py-3 text-base",
@@ -30,6 +31,7 @@ const buttonVariants = cva(
         sos: "min-h-tap-sos w-full flex-col rounded-sos px-4 py-6 font-head text-2xl font-extrabold leading-tight",
         default: "min-h-tap rounded-control px-5 py-3 text-base",
         lg: "min-h-tap rounded-control px-8 py-3 text-base",
+        icon: "size-9 min-h-0 rounded-control-sm p-0",
       },
     },
     defaultVariants: {
@@ -50,11 +52,13 @@ function Button({
   variant,
   size,
   asChild = false,
+  ref,
   ...props
-}: ButtonProps) {
+}: ButtonProps & { ref?: React.Ref<HTMLButtonElement> }) {
   const Comp = asChild ? Slot : "button";
   return (
     <Comp
+      ref={ref}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
