@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   familyContent,
   familyRoutes,
+  formatChecklistProgress,
   formatFamilySubtitle,
   formatTrialBadge,
 } from "./family";
@@ -60,10 +61,24 @@ describe("familyContent", () => {
     expect(serialized).not.toContain("🔍");
   });
 
-  it("não inclui toggle de protótipo primeiro acesso", () => {
+  it("não inclui toggle de protótipo conta em uso", () => {
     const serialized = JSON.stringify(familyContent).toLowerCase();
-    expect(serialized).not.toContain("primeiro acesso");
     expect(serialized).not.toContain("conta em uso");
+  });
+
+  it("expõe copy do Hoje / primeiro acesso", () => {
+    expect(familyContent.hoje.checklistTasks).toHaveLength(4);
+    expect(familyContent.hoje.welcomeModal.primary).toContain("painel");
+    expect(familyContent.hoje.maduro.stats.locationValue).toBe("Em breve");
+    expect(familyContent.hoje.maduro.stats.noticesValue).toBe("0");
+  });
+});
+
+describe("formatChecklistProgress", () => {
+  it("substitui contagem no template", () => {
+    expect(formatChecklistProgress("{count} de 4 feitas", 2)).toBe(
+      "2 de 4 feitas",
+    );
   });
 });
 

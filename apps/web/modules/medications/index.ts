@@ -10,6 +10,8 @@ import {
   previewPackEnd,
 } from "./application/medication-actions";
 
+import { getHojeMedications } from "./application/get-hoje-medications";
+
 export const medicationsModule = {
   id: "medications",
 } as const;
@@ -22,4 +24,5 @@ export {
   createMedicationWithPack,
   pauseMedicationPack,
   previewPackEnd,
+  getHojeMedications,
 };

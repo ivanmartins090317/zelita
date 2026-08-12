@@ -19,6 +19,11 @@ import {
   requireUser,
 } from "./application/family-context";
 import { bootstrapFamilyAccount } from "./infrastructure/bootstrap-family-account";
+import { getHojeDashboard } from "./application/get-hoje-dashboard";
+import {
+  computeOnboardingChecklist,
+  isFirstAccessMode,
+} from "./application/onboarding-checklist";
 
 export const accountsModule = {
   id: "accounts",
@@ -40,4 +45,7 @@ export {
   requireRoutineViewer,
   requireUser,
   bootstrapFamilyAccount,
+  getHojeDashboard,
+  computeOnboardingChecklist,
+  isFirstAccessMode,
 };

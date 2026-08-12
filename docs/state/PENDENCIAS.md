@@ -13,7 +13,7 @@ Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e e
 
 ## Abertas pela F4 · Painel
 
-- [ ] **Homologação manual F4.1** — smoke do shell (sidebar, trial, modal trocar) via skill `manual-report`; acumula F4.2+
+- [ ] **Homologação manual F4.1 + F4.2** — smoke do shell + primeiro acesso/Hoje maduro via skill `manual-report`; replanejar FL-02/03 conforme `docs/F4/plan.md`
 - [ ] **Conferência visual `/familia` e subrotas** — tipografia F0 + shell novo; exige sessão Supabase
 - [ ] **Review humano paths críticos F4.1** — layout autenticado, `selectAccountAction`, `getShellContext`
 

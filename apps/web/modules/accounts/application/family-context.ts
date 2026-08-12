@@ -204,4 +204,24 @@ export async function requireRoutineViewer() {
   return ctx;
 }
 
+/** Membros ativos da conta — convites pendentes não entram (checklist F4.2). */
+export async function countActiveAccountMembers(
+  supabase: SupabaseClient,
+  accountId: string,
+): Promise<number> {
+  const { count, error } = await supabase
+    .from("account_members")
+    .select("*", { count: "exact", head: true })
+    .eq("account_id", accountId)
+    .eq("status", "active");
+
+  if (error) {
+    throw new Error(
+      "Não foi possível carregar os participantes agora. Tente recarregar a página.",
+    );
+  }
+
+  return count ?? 0;
+}
+
 export { ACCOUNT_ROLES };
