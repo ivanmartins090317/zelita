@@ -23,6 +23,8 @@ import {
   type ShellContext,
   type ShellMembershipOption,
 } from "@/modules/accounts/application/shell-context";
+import { countActiveMedications } from "@/modules/medications/infrastructure/medication-list-repo";
+import { DEFAULT_CARE_TIMEZONE } from "@/modules/medications/domain/hoje-timeline";
 
 function pickMembership(
   memberships: AccountMembershipSummary[],
@@ -97,6 +99,12 @@ export async function getShellContext(): Promise<ShellContext | null> {
     membership.accountStatus;
   const trialEndsAt = (account?.trial_ends_at as string | null) ?? null;
   const age = computeAgeFromBirthDate(membership.careRecipientBirthDate);
+  const activeMedicationCount = await countActiveMedications(
+    supabase,
+    membership.careRecipientId,
+    new Date(),
+    DEFAULT_CARE_TIMEZONE,
+  );
 
   return {
     userId: user.id,
@@ -121,5 +129,6 @@ export async function getShellContext(): Promise<ShellContext | null> {
     }),
     isPaused: isAccountPaused(accountStatus),
     memberships: mapShellMembershipOptions(memberships, membership.accountId),
+    activeMedicationCount,
   };
 }

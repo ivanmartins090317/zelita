@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { requireAdminForMedications } from "@/modules/accounts/application/family-context";
@@ -27,6 +28,7 @@ export interface MedicationActionResult {
   ok: boolean;
   message?: string;
   endDateEstimated?: string;
+  medicationId?: string;
 }
 
 export async function previewPackEnd(
@@ -180,11 +182,138 @@ export async function createMedicationWithPack(
   revalidatePath("/familia");
   revalidatePath("/familia/remedios");
 
-  return {
-    ok: true,
-    endDateEstimated: packEnd.endDateEstimated.toISOString().slice(0, 10),
-    message: "Remédio anotado. Lembrete enviado ≠ tomada confirmada.",
-  };
+  redirect(`/familia/remedios?remedio=${medication.id}`);
+}
+
+const replacementSchema = z.object({
+  medicationId: z.string().uuid(),
+  quantityTotal: z.coerce.number().positive(),
+  doseUnits: z.coerce.number().positive(),
+  dosesPerDay: z.coerce.number().int().positive(),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+export async function registerReplacementPack(
+  _prev: MedicationActionResult,
+  formData: FormData,
+): Promise<MedicationActionResult> {
+  const parsed = replacementSchema.safeParse({
+    medicationId: formData.get("medicationId"),
+    quantityTotal: formData.get("quantityTotal"),
+    doseUnits: formData.get("doseUnits"),
+    dosesPerDay: formData.get("dosesPerDay"),
+    startDate: formData.get("startDate"),
+  });
+
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.message };
+  }
+
+  const ctx = await requireAdminForMedications();
+  const supabase = await createSupabaseServerClient();
+
+  const { data: medication, error: medError } = await supabase
+    .from("medications")
+    .select(
+      "id, name, dosage_label, care_recipient_id, medication_schedules(times, dose_units, doses_per_day), medication_packs(id, status)",
+    )
+    .eq("id", parsed.data.medicationId)
+    .eq("care_recipient_id", ctx.careRecipientId)
+    .maybeSingle();
+
+  if (medError || !medication) {
+    return {
+      ok: false,
+      message: "Remédio não encontrado para esta conta.",
+    };
+  }
+
+  const schedule = Array.isArray(medication.medication_schedules)
+    ? medication.medication_schedules[0]
+    : medication.medication_schedules;
+
+  const times = (schedule?.times as string[] | undefined)?.map((time) =>
+    time.slice(0, 5),
+  ) ?? [];
+
+  if (times.length === 0 || times.length !== parsed.data.dosesPerDay) {
+    return {
+      ok: false,
+      message:
+        "Horários do remédio não batem com as doses por dia. Peça ajuda ao suporte.",
+    };
+  }
+
+  let packEnd;
+  try {
+    packEnd = computePackEnd({
+      quantityTotal: parsed.data.quantityTotal,
+      doseUnits: parsed.data.doseUnits,
+      dosesPerDay: parsed.data.dosesPerDay,
+      startDate: new Date(`${parsed.data.startDate}T00:00:00.000Z`),
+    });
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : "Cálculo inválido.",
+    };
+  }
+
+  const activePacks = (
+    Array.isArray(medication.medication_packs)
+      ? medication.medication_packs
+      : medication.medication_packs
+        ? [medication.medication_packs]
+        : []
+  ).filter((pack) => pack.status === "active");
+
+  for (const pack of activePacks) {
+    const { error: pauseError } = await supabase
+      .from("medication_packs")
+      .update({ status: "paused" })
+      .eq("id", pack.id);
+
+    if (pauseError) {
+      return {
+        ok: false,
+        message: `Não foi possível pausar a cartela anterior: ${pauseError.message}.`,
+      };
+    }
+  }
+
+  const { data: newPack, error: packError } = await supabase
+    .from("medication_packs")
+    .insert({
+      medication_id: medication.id,
+      quantity_total: parsed.data.quantityTotal,
+      quantity_remaining: parsed.data.quantityTotal,
+      start_date: parsed.data.startDate,
+      end_date_estimated: packEnd.endDateEstimated.toISOString().slice(0, 10),
+      refill_alert_days: DEFAULT_REFILL_ALERT_DAYS,
+      status: "active",
+    })
+    .select("id")
+    .single();
+
+  if (packError || !newPack) {
+    return {
+      ok: false,
+      message: `Falha ao salvar nova cartela: ${packError?.message ?? "sem retorno"}.`,
+    };
+  }
+
+  await scheduleMedicationReminders({
+    medicationId: medication.id,
+    packId: newPack.id,
+    careRecipientId: ctx.careRecipientId as string,
+    times,
+    medicationLabel: `${medication.name} ${medication.dosage_label}`,
+  });
+
+  revalidatePath("/familia");
+  revalidatePath("/familia/remedios");
+
+  redirect(`/familia/remedios?remedio=${medication.id}`);
 }
 
 export async function pauseMedicationPack(

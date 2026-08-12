@@ -43,7 +43,9 @@ function FamilyTopbar({ shell }: FamilyTopbarProps) {
 
           {shell.canManageMedications ? (
             <Button asChild variant="outline" size="sm">
-              <Link href="/familia/remedios">{copy.addMedicationLabel}</Link>
+              <Link href={`${familyRoutes.remedios}?modal=nova`}>
+                {copy.addMedicationLabel}
+              </Link>
             </Button>
           ) : null}
 

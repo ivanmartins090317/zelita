@@ -8,9 +8,11 @@ import {
   createMedicationWithPack,
   pauseMedicationPack,
   previewPackEnd,
+  registerReplacementPack,
 } from "./application/medication-actions";
 
 import { getHojeMedications } from "./application/get-hoje-medications";
+import { getRemediosPage } from "./application/get-remedios-page";
 
 export const medicationsModule = {
   id: "medications",
@@ -24,5 +26,7 @@ export {
   createMedicationWithPack,
   pauseMedicationPack,
   previewPackEnd,
+  registerReplacementPack,
   getHojeMedications,
+  getRemediosPage,
 };

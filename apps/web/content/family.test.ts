@@ -72,6 +72,15 @@ describe("familyContent", () => {
     expect(familyContent.hoje.maduro.stats.locationValue).toBe("Em breve");
     expect(familyContent.hoje.maduro.stats.noticesValue).toBe("0");
   });
+
+  it("expõe copy de Remédios F4.3", () => {
+    expect(familyContent.remedios.listCard.title).toBe("Remédios que ele toma");
+    expect(familyContent.remedios.modal.previewTitle).toContain("conta");
+    expect(familyContent.remedios.howWeWrite.neverItems[0]).toContain("tomou");
+    expect(familyContent.remedios.detail.actions.editScheduleSoon).toBe(
+      "Em breve",
+    );
+  });
 });
 
 describe("formatChecklistProgress", () => {

@@ -38,6 +38,10 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
             ) : null}
             {section.items.map((item) => {
               const active = isNavItemActive(pathname, item.path);
+              const badge =
+                item.id === "remedios" && shell.activeMedicationCount > 0
+                  ? shell.activeMedicationCount
+                  : null;
               return (
                 <Link
                   key={item.id}
@@ -54,7 +58,12 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
                   <span aria-hidden className="w-5 text-center text-base">
                     {item.emoji}
                   </span>
-                  {item.label}
+                  <span className="flex-1">{item.label}</span>
+                  {badge ? (
+                    <span className="rounded-pill bg-white/20 px-2 py-0.5 text-[11px] font-extrabold text-white">
+                      {badge}
+                    </span>
+                  ) : null}
                 </Link>
               );
             })}

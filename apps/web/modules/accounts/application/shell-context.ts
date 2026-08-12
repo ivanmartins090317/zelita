@@ -32,6 +32,7 @@ export interface ShellContext {
   trial: TrialDisplay | null;
   isPaused: boolean;
   memberships: ShellMembershipOption[];
+  activeMedicationCount: number;
 }
 
 const TRIAL_DAYS_BY_PLAN: Record<string, number> = {

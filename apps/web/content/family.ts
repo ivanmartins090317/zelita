@@ -70,6 +70,113 @@ export interface FamilyContent {
     closeLabel: string;
   };
   hoje: FamilyHojeContent;
+  remedios: FamilyRemediosContent;
+}
+
+export interface FamilyRemediosContent {
+  loadError: string;
+  refillBanner: {
+    title: string;
+    body: string;
+  };
+  listCard: {
+    title: string;
+    addButton: string;
+    detailButton: string;
+  };
+  listTags: {
+    asNeeded: string;
+    noSchedule: string;
+    warnDays: string;
+    okDays: string;
+    noReminder: string;
+  };
+  empty: {
+    icon: string;
+    title: string;
+    description: string;
+    cta: string;
+  };
+  detail: {
+    titleSuffix: string;
+    stats: {
+      quantityLabel: string;
+      quantityHint: string;
+      dailyLabel: string;
+      dailyHint: string;
+      durationLabel: string;
+      durationHint: string;
+      remainingLabel: string;
+      remainingHint: string;
+    };
+    startedLabel: string;
+    endsLabel: string;
+    consumedTemplate: string;
+    buyUntilTemplate: string;
+    scheduledTitle: string;
+    actions: {
+      registerPurchase: string;
+      editSchedule: string;
+      editScheduleSoon: string;
+      pause: string;
+      pauseConfirm: string;
+    };
+    pauseSuccess: string;
+  };
+  scheduledAlerts: {
+    refillDays: string;
+    endsTomorrow: string;
+    lastPill: string;
+    registerPurchase: string;
+    sentAt: string;
+    scheduledFor: string;
+    recipients: string;
+  };
+  recentReminders: {
+    title: string;
+    empty: string;
+    reminderSent: string;
+    notConfirmed: string;
+    manualConfirmation: string;
+    refillWarning: string;
+    voiceFallback: string;
+  };
+  howWeWrite: {
+    title: string;
+    saysTitle: string;
+    saysItems: string[];
+    neverTitle: string;
+    neverItems: string[];
+  };
+  modal: {
+    titleNew: string;
+    titleReplacement: string;
+    fields: {
+      name: string;
+      dosage: string;
+      quantity: string;
+      doseUnits: string;
+      dosesPerDay: string;
+      startDate: string;
+      times: string;
+      instructions: string;
+    };
+    previewTitle: string;
+    previewDaily: string;
+    previewDuration: string;
+    previewEnd: string;
+    previewBuyUntil: string;
+    previewInvalid: string;
+    timesMismatch: string;
+    cancel: string;
+    save: string;
+    saving: string;
+    successNew: string;
+    genericError: string;
+    pausedHint: string;
+    viewerHint: string;
+  };
+  pausedActionHint: string;
 }
 
 export interface FamilyChecklistTaskContent {
@@ -657,6 +764,127 @@ export const familyContent: FamilyContent = {
       description:
         "Algo falhou ao buscar os dados. Recarregue a página ou tente de novo em instantes.",
     },
+  },
+  remedios: {
+    loadError:
+      "Não foi possível carregar os remédios agora. Recarregue a página ou tente de novo em instantes.",
+    refillBanner: {
+      title: "Atenção: um remédio está acabando.",
+      body: "A caixa de {medicamento} deve terminar em {data}. Confirme com o idoso ou cuidador quantos comprimidos ainda tem e anote aqui a caixa nova.",
+    },
+    listCard: {
+      title: "Remédios que ele toma",
+      addButton: "+ Adicionar remédio",
+      detailButton: "Detalhe",
+    },
+    listTags: {
+      asNeeded: "Se necessário · sem horário fixo",
+      noSchedule: "Sem horário fixo",
+      warnDays: "Faltam {dias} dias",
+      okDays: "{dias} dias restantes",
+      noReminder: "Sem lembrete",
+    },
+    empty: {
+      icon: "💊",
+      title: "Nenhum remédio anotado ainda",
+      description:
+        "Anote o primeiro remédio que ele toma. A Zelita calcula quando a caixa acaba e te avisa antes — sem afirmar que ele tomou.",
+      cta: "+ Adicionar remédio",
+    },
+    detail: {
+      titleSuffix: "— cartela atual",
+      stats: {
+        quantityLabel: "Vieram na caixa",
+        quantityHint: "comprimidos",
+        dailyLabel: "Ele toma por dia",
+        dailyHint: "comprimido",
+        durationLabel: "A caixa dura",
+        durationHint: "dias",
+        remainingLabel: "Ainda dá para",
+        remainingHint: "dias",
+      },
+      startedLabel: "Começou em {data}",
+      endsLabel: "Deve acabar em {data}",
+      consumedTemplate:
+        "Pela conta, já foram {consumido} dos {total} comprimidos.",
+      buyUntilTemplate: "Compre outra caixa até {data}",
+      scheduledTitle: "Avisos programados desta cartela",
+      actions: {
+        registerPurchase: "Cadastrar nova compra",
+        editSchedule: "Editar horários",
+        editScheduleSoon: "Em breve",
+        pause: "Pausar lembretes",
+        pauseConfirm:
+          "Pausar lembretes desta cartela? Isso não significa que ele parou de tomar o remédio.",
+      },
+      pauseSuccess: "Cartela pausada. Lembretes desta cartela param.",
+    },
+    scheduledAlerts: {
+      refillDays: "Faltam {dias} dias",
+      endsTomorrow: "Termina amanhã",
+      lastPill: "Último comprimido",
+      registerPurchase: "Cadastre nova compra",
+      sentAt: "Enviado {data}",
+      scheduledFor: "Programado {data}",
+      recipients: "administradores da conta",
+    },
+    recentReminders: {
+      title: "Últimos lembretes",
+      empty: "Nenhum lembrete registrado ainda",
+      reminderSent: "Lembrete enviado",
+      notConfirmed: "tomada não confirmada",
+      manualConfirmation: "confirmado por {ator}",
+      refillWarning: "Aviso de cartela acabando",
+      voiceFallback: "Ligação de reforço após lembrete",
+    },
+    howWeWrite: {
+      title: "Como escrevemos",
+      saysTitle: "✓ A Zelita diz",
+      saysItems: [
+        "Lembrete enviado",
+        "Tomada não confirmada",
+        "Cartela prevista para terminar hoje",
+        "Verifique com o idoso ou cuidador",
+        "Atenção: medicamento próximo do fim",
+      ],
+      neverTitle: "✕ A Zelita nunca diz",
+      neverItems: ["O idoso tomou o medicamento", "Dose garantida"],
+    },
+    modal: {
+      titleNew: "Nova cartela",
+      titleReplacement: "Nova cartela",
+      fields: {
+        name: "Medicamento",
+        dosage: "Dosagem",
+        quantity: "Comprimidos na cartela",
+        doseUnits: "Comprimidos por dose",
+        dosesPerDay: "Doses por dia",
+        startDate: "Início",
+        times: "Horários",
+        instructions: "Instrução para o idoso (opcional)",
+      },
+      previewTitle: "A conta é por nossa conta",
+      previewDaily: "Ele toma por dia",
+      previewDuration: "A caixa dura",
+      previewEnd: "Deve acabar em",
+      previewBuyUntil: "Compre outra até",
+      previewInvalid:
+        "Ajuste quantidade e doses para ver quando a cartela termina.",
+      timesMismatch:
+        "Selecione exatamente {count} horário(s), um por dose do dia.",
+      cancel: "Cancelar",
+      save: "Salvar cartela",
+      saving: "Salvando…",
+      successNew: "Remédio anotado. Lembrete enviado ≠ tomada confirmada.",
+      genericError:
+        "Não foi possível salvar agora. Verifique a conexão e tente de novo.",
+      pausedHint:
+        "Conta pausada: você pode ver os remédios, mas não cadastrar ou pausar cartelas até reativar o plano.",
+      viewerHint:
+        "Seu papel não permite cadastrar cartelas. Peça ao admin da conta.",
+    },
+    pausedActionHint:
+      "Conta pausada — ações de cadastro e pausa ficam indisponíveis.",
   },
 };
 
