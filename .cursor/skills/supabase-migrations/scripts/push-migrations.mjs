@@ -10,14 +10,21 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "../../../..");
-const envPath = path.join(projectRoot, ".env.local");
+
+function resolveEnvPath() {
+  const candidates = [
+    path.join(projectRoot, ".env.local"),
+    path.join(projectRoot, ".env"),
+  ];
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) return candidate;
+  }
+  throw new Error(
+    `Nenhum .env.local ou .env na raiz. Copie .env.example e defina SUPABASE_DB_PASSWORD.`,
+  );
+}
 
 function parseEnvFile(filePath) {
-  if (!existsSync(filePath)) {
-    throw new Error(
-      `Arquivo ${filePath} não encontrado. Copie .env.example para .env.local.`,
-    );
-  }
 
   const env = {};
   for (const line of readFileSync(filePath, "utf8").split("\n")) {
@@ -54,6 +61,8 @@ function buildDbUrl(projectRef, password) {
 }
 
 const isDryRun = process.argv.includes("--dry-run");
+const envPath = resolveEnvPath();
+console.log(`Lendo env: ${path.basename(envPath)}`);
 const env = parseEnvFile(envPath);
 
 const supabaseUrl =
@@ -85,8 +94,17 @@ console.log(
     : "Aplicando migrations...",
 );
 
-execSync(`npx ${args.map((a) => `"${a.replace(/"/g, '\\"')}"`).join(" ")}`, {
-  cwd: projectRoot,
-  stdio: "inherit",
-  shell: true,
-});
+try {
+  execSync(`npx ${args.map((a) => JSON.stringify(a)).join(" ")}`, {
+    cwd: projectRoot,
+    stdio: "inherit",
+    shell: true,
+    env: { ...process.env },
+  });
+} catch (error) {
+  const status = typeof error?.status === "number" ? error.status : 1;
+  console.error(
+    `db push falhou (exit ${status}). Senha/URL omitidas deste log. Veja a mensagem do Supabase CLI acima.`,
+  );
+  process.exit(status);
+}

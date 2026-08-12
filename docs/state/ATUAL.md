@@ -2,34 +2,21 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | Plano curto |
+| Etapa | — |
 | Spec | — |
-| Autonomia | `medium` |
-| Status | Aguardando aprovação do plano — fatia 1 (F1-01…F1-06) |
+| Autonomia | — |
+| Status | Idle — fatia 1 Done (homologação UI pendente de chaves) |
 
-## Checklist da etapa
+## Checklist da etapa (fatia 1)
 
-- [x] Research
-- [x] Plano curto (este turno)
-- [ ] Aprovação humana do plano
-- [ ] Spec em `specs/`
-- [ ] Aprovação humana da Spec
-- [ ] Implementação
-- [ ] Done
-
-## Decisões fechadas
-
-1. Uma Spec com F1-01…F1-06
-2. Onboarding + DND
-3. Casa com lat/lng na fatia 1
-4. Billing = placeholder
-5. WA: caminho mais fácil (Meta Cloud API sandbox)
-6. OTP: código + magic link
-7. Painel Hoje mínimo alinhado ao protótipo
-8. RLS matriz completa
-9. Deps: `@supabase/ssr`, Inngest, WA
-10. Migrations no início; chaves sob demanda
+- [x] Spec aprovada (humana)
+- [x] Migrations + RLS no repo
+- [x] Domínio + Vitest
+- [x] Auth / onboarding / cartela / lembretes (dry-run)
+- [x] `pnpm typecheck|lint|test` verdes
+- [x] Registro em `docs/implementation/`
+- [ ] Homologação manual FL-01…FL-04 (adiada — ver `PENDENCIAS.md`)
 
 ## Próximo
 
-Aprovação deste plano → escrever Spec → nova aprovação → implementar.
+Aplicar migrations + preencher `.env.local` → homologação manual; depois Spec fatia 2 (SOS / PWA).

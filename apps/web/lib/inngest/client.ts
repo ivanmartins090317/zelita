@@ -1,19 +1,10 @@
-/**
- * Stub do cliente Inngest.
- * Sem env, jobs não disparam — fatias futuras registram functions reais.
- */
-export interface InngestStubConfig {
+import { Inngest } from "inngest";
+
+export const inngest = new Inngest({ id: "zelita" });
+
+export function isInngestConfigured(config?: {
   eventKey?: string;
-}
-
-export function isInngestConfigured(
-  config: InngestStubConfig = {
-    eventKey: process.env.INNGEST_EVENT_KEY,
-  },
-): boolean {
-  return Boolean(config.eventKey);
-}
-
-export function getInngestStubStatus(): "ready" | "unconfigured" {
-  return isInngestConfigured() ? "ready" : "unconfigured";
+}): boolean {
+  const eventKey = config?.eventKey ?? process.env.INNGEST_EVENT_KEY;
+  return Boolean(eventKey);
 }

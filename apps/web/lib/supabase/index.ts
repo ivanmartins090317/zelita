@@ -1,2 +1,10 @@
-export { getSupabaseStubStatus, isSupabaseConfigured } from "./client";
-export type { SupabaseStubConfig } from "./client";
+export {
+  createSupabaseBrowserClient,
+  isSupabaseBrowserConfigured,
+} from "./client";
+export {
+  createSupabaseServerClient,
+  createSupabaseServiceClient,
+  isSupabaseConfigured,
+} from "./server";
+export { updateSession } from "./middleware";

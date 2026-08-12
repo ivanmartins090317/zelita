@@ -1,16 +1,8 @@
-import { NextResponse } from "next/server";
+import { serve } from "inngest/next";
 
-/** Stub do endpoint Inngest — implementação fora desta Spec. */
-export function POST() {
-  return NextResponse.json(
-    { ok: false, message: "Inngest webhook stub" },
-    { status: 501 },
-  );
-}
+import { inngest, reminderFunctions } from "@/lib/inngest";
 
-export function GET() {
-  return NextResponse.json(
-    { ok: false, message: "Inngest webhook stub" },
-    { status: 501 },
-  );
-}
+export const { GET, POST, PUT } = serve({
+  client: inngest,
+  functions: reminderFunctions,
+});

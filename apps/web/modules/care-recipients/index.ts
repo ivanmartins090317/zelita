@@ -1,4 +1,7 @@
-/** API pública do módulo `care-recipients` (esqueleto — sem lógica de negócio nesta Spec). */
+import { completeOnboarding } from "./application/complete-onboarding";
+
 export const careRecipientsModule = {
   id: "care-recipients",
 } as const;
+
+export { completeOnboarding };

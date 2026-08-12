@@ -7,7 +7,9 @@
     "build": "pnpm --filter @zelita/web build",
     "typecheck": "pnpm --filter @zelita/web typecheck",
     "lint": "pnpm --filter @zelita/web lint",
-    "test": "pnpm --filter @zelita/web test"
+    "test": "pnpm --filter @zelita/web test",
+    "db:push": "node .cursor/skills/supabase-migrations/scripts/push-migrations.mjs",
+    "db:push:dry": "node .cursor/skills/supabase-migrations/scripts/push-migrations.mjs --dry-run"
   },
   "engines": {
     "node": ">=20"
