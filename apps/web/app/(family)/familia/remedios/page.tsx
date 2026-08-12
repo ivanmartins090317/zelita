@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { getFamilyContext, canManageMedications } from "@/modules/accounts";
-import { FamilyShell } from "@/modules/accounts/presentation/family-shell";
 import { NewMedicationForm } from "@/modules/medications/presentation/new-medication-form";
 import { pausePackAction } from "@/modules/medications/application/pause-pack-action";
 import {
@@ -30,7 +29,7 @@ export default async function RemediosPage() {
   const today = new Date();
 
   return (
-    <FamilyShell title="Remédios">
+    <>
       <p className="text-muted">
         Lista de cartelas. Só o admin altera. Nunca afirmamos que o idoso
         &quot;tomou&quot; só porque o lembrete saiu.
@@ -93,6 +92,6 @@ export default async function RemediosPage() {
           Seu papel não permite cadastrar cartelas. Peça ao admin da conta.
         </p>
       )}
-    </FamilyShell>
+    </>
   );
 }

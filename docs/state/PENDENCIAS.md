@@ -11,11 +11,17 @@ Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e e
 - [ ] Homologar FL-01…FL-04 com chaves Supabase + Inngest
 - [ ] Fatia 2: PWA + confirmar Casa (F2-05)
 
+## Abertas pela F4 · Painel
+
+- [ ] **Homologação manual F4.1** — smoke do shell (sidebar, trial, modal trocar) via skill `manual-report`; acumula F4.2+
+- [ ] **Conferência visual `/familia` e subrotas** — tipografia F0 + shell novo; exige sessão Supabase
+- [ ] **Review humano paths críticos F4.1** — layout autenticado, `selectAccountAction`, `getShellContext`
+
 ## Abertas pela F0 · Fundação de design
 
 - [ ] **Headers de segurança** (`SECURITY.md` A05) no `next.config.ts` — antes do deploy público da landing
 - [x] **Marca d'água da landing em Inter** — resolvido na F1 com `font-head` no wordmark
-- [ ] **Conferência visual de `/familia`, `/familia/remedios` e `/onboarding`** com a tipografia e os botões novos — exigem sessão Supabase
+- [ ] **Conferência visual de `/onboarding`** com a tipografia e os botões novos — exige sessão Supabase
 - [ ] **Peças sem consumidor** — reavaliar após F1; `ListRow` ainda sem uso na landing (reservado para arte do hero via composição manual)
 - [ ] **Medir LCP** com as duas famílias tipográficas na landing publicada (build/deploy)
 - [ ] **Confirmar o adiamento de "Texto grande"** para a F5 (a escala já está ancorada em `--fs-body` / `--fs-body-elder`)

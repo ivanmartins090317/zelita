@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { getFamilyContext } from "@/modules/accounts";
-import { FamilyShell } from "@/modules/accounts/presentation/family-shell";
 import {
   DEFAULT_REFILL_ALERT_DAYS,
   shouldWarnRefill,
@@ -55,7 +54,7 @@ export default async function FamiliaHojePage() {
     }) ?? [];
 
   return (
-    <FamilyShell title="Hoje">
+    <>
       <p className="text-muted">
         Olá{ctx.profileName ? `, ${ctx.profileName}` : ""}. Resumo do dia —
         lembrete enviado não confirma tomada.
@@ -110,6 +109,6 @@ export default async function FamiliaHojePage() {
           ))}
         </ul>
       )}
-    </FamilyShell>
+    </>
   );
 }
