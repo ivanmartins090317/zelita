@@ -71,12 +71,18 @@ export async function verifyEmailOtp(
   const emailResult = emailSchema.safeParse(
     String(formData.get("email") ?? "").trim(),
   );
-  const token = String(formData.get("token") ?? "").trim();
+  // Supabase pode emitir 6–8 dígitos (config Auth → OTP length).
+  const token = String(formData.get("token") ?? "")
+    .trim()
+    .replace(/\s+/g, "");
   if (!emailResult.success) {
     return { ok: false, message: emailResult.error.issues[0]?.message };
   }
-  if (!/^\d{6}$/.test(token)) {
-    return { ok: false, message: "Informe o código de 6 dígitos." };
+  if (!/^\d{6,8}$/.test(token)) {
+    return {
+      ok: false,
+      message: "Informe o código completo do e-mail (6 a 8 dígitos).",
+    };
   }
 
   const supabase = await createSupabaseServerClient();

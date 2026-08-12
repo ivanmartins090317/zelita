@@ -81,18 +81,20 @@ export function LoginForm() {
         <input type="hidden" name="email" value={email} />
         <div>
           <label className="mb-2 block text-sm font-semibold text-brand-900">
-            Código de 6 dígitos
+            Código do e-mail
           </label>
           <input
             name="token"
             inputMode="numeric"
-            pattern="\d{6}"
-            maxLength={6}
+            autoComplete="one-time-code"
+            pattern="\d{6,8}"
+            maxLength={8}
             className="h-12 w-full rounded-xl border border-border bg-white px-4 text-base tracking-widest"
-            placeholder="000000"
+            placeholder="00000000"
           />
           <p className="mt-2 text-sm text-muted">
-            Válido cerca de 10 minutos. Reenvio após 45 s invalida o anterior.
+            Digite o código completo (6 a 8 dígitos). Válido ~10 min; reenvio
+            invalida o anterior.
           </p>
         </div>
         <Button type="submit" disabled={verifyPending || !email}>

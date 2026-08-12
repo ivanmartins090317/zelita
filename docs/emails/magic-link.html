@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seu código Zelita</title>
+  </head>
+  <body style="margin:0;padding:0;background:#F2EFE8;font-family:Arial,Helvetica,sans-serif;color:#14201E;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#F2EFE8;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:520px;background:#FAF7F2;border:1px solid #E4E0D8;border-radius:16px;overflow:hidden;">
+            <tr>
+              <td style="padding:28px 28px 8px 28px;" align="left">
+                <img
+                  src="https://zelita-web.vercel.app/brand/zelita-mark.png"
+                  width="56"
+                  height="56"
+                  alt="Zelita"
+                  style="display:block;border:0;border-radius:12px;"
+                />
+                <p style="margin:14px 0 0 0;font-size:22px;font-weight:800;letter-spacing:-0.02em;color:#072B27;">
+                  Zelita
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:8px 28px 0 28px;">
+                <p style="margin:0;font-size:18px;font-weight:700;color:#072B27;">
+                  Seu código de acesso
+                </p>
+                <p style="margin:10px 0 0 0;font-size:15px;line-height:1.55;color:#4E5D5A;">
+                  Use o código completo abaixo na tela de entrar (todos os
+                  dígitos). Ele vale cerca de
+                  <strong style="color:#14201E;">10 minutos</strong>. Se você
+                  pedir um novo código, este deixa de valer.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 28px;" align="center">
+                <div style="display:inline-block;background:#E8F6F3;border:1px solid #A9E0D5;border-radius:12px;padding:16px 28px;">
+                  <p style="margin:0;font-size:32px;font-weight:800;letter-spacing:0.28em;color:#0F5B54;font-family:Consolas,'Courier New',monospace;">
+                    {{ .Token }}
+                  </p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 28px 8px 28px;">
+                <p style="margin:0;font-size:15px;line-height:1.55;color:#4E5D5A;">
+                  Prefere o link? Toque no botão para entrar neste aparelho:
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 28px 28px 28px;" align="center">
+                <a
+                  href="{{ .ConfirmationURL }}"
+                  style="display:inline-block;background:#12766E;color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:14px 28px;border-radius:12px;"
+                >
+                  Entrar na Zelita
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 28px 28px 28px;border-top:1px solid #E4E0D8;">
+                <p style="margin:20px 0 0 0;font-size:12px;line-height:1.5;color:#4E5D5A;">
+                  Este e-mail foi enviado para {{ .Email }}. Se você não pediu
+                  acesso à Zelita, pode ignorar esta mensagem com segurança.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

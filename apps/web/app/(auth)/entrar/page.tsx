@@ -11,7 +11,7 @@ export default function EntrarPage({
     <main className="mx-auto flex min-h-full w-full max-w-lg flex-1 flex-col justify-center px-6 py-16">
       <h1 className="text-3xl font-extrabold text-brand-900">Entrar</h1>
       <p className="mt-3 text-muted">
-        Sem senha. Receba um código de 6 dígitos ou um link mágico no e-mail.
+        Sem senha. Receba um código no e-mail ou um link mágico.
       </p>
       <Suspense fallback={<p className="mt-6 text-muted">Carregando…</p>}>
         <EntrarErro searchParams={searchParams} />
