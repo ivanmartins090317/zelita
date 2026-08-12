@@ -2,21 +2,19 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | Implementação |
-| Spec | `specs/2026-08-12-fatia-1-auth-care-recipient-cartela-lembrete.md` (ajuste Casa sem coords) + PRD §5.3 |
-| Autonomia | `tight` (accounts/RLS via subagente; location schema) |
-| Status | WIP — BG-01 RLS accounts resolvido; Casa pendente no onboarding |
+| Etapa | — |
+| Spec | Fatia 1 (ajuste Casa) + BG-01 |
+| Autonomia | `tight` |
+| Status | Idle — RLS accounts + Casa sem coords no onboarding feitos; aguarda deploy + homologação FL-02 |
 
-## Checklist
+## Feito nesta sessão
 
-- [x] Fix RLS onboarding (`003_bootstrap_family_account` + RPC)
-- [x] PRD: Casa sem coords no onboarding; confirmação no PWA (F2-05)
-- [x] Migration `004_safe_places_coords_optional`
-- [x] UI/onboarding sem lat/lng
-- [ ] `db:push` da 004
-- [ ] `pnpm typecheck|lint|test`
-- [ ] Homologação FL-02 onboarding
+- [x] BG-01: RPC `bootstrap_family_account` (migration 003) — subagente
+- [x] PRD §2.1 / §5.3 / F1-02 / F2-05 / F4-01–02: coords reais no PWA
+- [x] Migration 004 aplicada (lat/lng nullable + `coords_confirmed_at`)
+- [x] Onboarding sem campos lat/lng; Casa com endereço pendente
+- [x] `pnpm typecheck|lint|test` verdes (25 testes)
 
 ## Próximo
 
-Aplicar migration 004 → retestar onboarding em produção/local → Spec fatia 2 (PWA + confirmar Casa).
+Deploy Vercel → retestar onboarding → Spec fatia 2 (vínculo PWA + confirmar Casa F2-05).
