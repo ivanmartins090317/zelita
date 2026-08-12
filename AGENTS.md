@@ -8,6 +8,15 @@ Idioma de trabalho e respostas: **português (pt-BR)**.
 
 Docs de referência (read-only para contexto): `docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/architecture/` (quando existir). Marca/protótipo: `marca-zelita.html`, `zelita-prototipo.html/`.
 
+### Docs operacionais (obrigatório em toda tarefa)
+
+| Pasta | Papel |
+| --- | --- |
+| `docs/state/` | **Agora:** WIP (`ATUAL.md`), pendências (`PENDENCIAS.md`), bugs (`BUGS.md`) |
+| `docs/implementation/` | **Entregas feitas:** um markdown por Spec Done |
+
+Ao iniciar feature: atualizar `docs/state/ATUAL.md`. Ao Done: limpar/atualizar state + gravar em `docs/implementation/YYYY-MM-DD-<slug>.md`. Homologação UI: sincronizar `PENDENCIAS.md` (skill `manual-report`).
+
 ---
 
 ## Stack
@@ -15,11 +24,11 @@ Docs de referência (read-only para contexto): `docs/prd-mvp.md`, `docs/arquitet
 - **App:** Next.js (App Router) · React · TypeScript · Tailwind · shadcn/ui · Radix · monorepo (`apps/web`)
 - **Backend:** Supabase (Auth OTP, Postgres, Storage, RLS) — dependência intencional; não abstrair “banco genérico”
 - **Jobs:** Inngest (lembretes, fallback de voz, trial)
-- **Observabilidade:** Sentry (`@sentry/nextjs`)
+- **Observabilidade:** Sentry (`@sentry/nextjs`) desde o scaffold
 - **Hosting:** Vercel
 - **Canais:** WhatsApp Business API (+ voz no Cuidado+); ports/adapters para provedores
 - **Testes:** Vitest (domínio / casos de uso). Homologação UI/PWA via skill `manual-report`. **Sem Playwright no MVP**
-- **Package manager:** pnpm (workspace monorepo)
+- **Package manager:** pnpm workspace (`apps/*`). **Sem Turborepo no MVP** (reavaliar só com 2+ apps ou CI lento)
 
 ---
 
@@ -68,7 +77,10 @@ apps/web/
 supabase/
   migrations/
   policies/
-docs/                     # PRD, arquitetura
+docs/
+  prd-mvp.md · arquitetura-solucao.md
+  state/                  # WIP, pendências, bugs (vivo)
+  implementation/         # histórico de entregas
 specs/                    # Specs de feature (aprovação humana)
 ```
 
@@ -85,6 +97,7 @@ specs/                    # Specs de feature (aprovação humana)
 
 - Criar e editar arquivos dentro do **módulo da feature atual** (`apps/web/modules/<modulo>/`) e rotas/UI relacionadas em `app/(…)/` da mesma fatia
 - Criar testes Vitest de domínio/casos de uso relacionados à Spec aprovada
+- Atualizar `docs/state/` e, no Done, `docs/implementation/`
 - Atualizar plano/relatório de homologação via skill `manual-report` quando a Spec exigir fluxos UI/PWA
 - Rodar comandos de verificação locais (typecheck, lint, test)
 - Ler o restante do codebase e `docs/` para contexto
@@ -96,7 +109,7 @@ specs/                    # Specs de feature (aprovação humana)
 
 - Alterar este `AGENTS.md` sem pedido explícito
 - Alterar Spec aprovada em `specs/` sem pedido explícito
-- Alterar PRD / arquitetura em `docs/` sem pedido explícito
+- Alterar PRD / arquitetura (`docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/architecture/`) sem pedido explícito — **exceto** `docs/state/` e `docs/implementation/`, que devem ser atualizados a cada tarefa
 - Mexer em **paths críticos** sem pedido explícito (lista abaixo)
 - Criar migration / mudar schema / RLS / Storage sem aprovação
 - Adicionar dependência nova sem aprovação
@@ -137,11 +150,11 @@ No início de cada feature, declarar um nível:
 
 ## Fluxo obrigatório por feature
 
-1. **Research** (sem código) — ler PRD/arquitetura/protótipo e módulo vizinho
-2. **Plano curto** (sem código) — escopo, módulo dono, riscos, autonomia
+1. **Research** (sem código) — ler PRD/arquitetura/protótipo, `docs/state/` e módulo vizinho
+2. **Plano curto** (sem código) — escopo, módulo dono, riscos, autonomia; atualizar `docs/state/ATUAL.md`
 3. **Spec** em `specs/` → **esperar aprovação humana**
 4. **Implementar** só o que a Spec pede (conventional commits; branch `feature/...` quando houver git flow)
-5. **Verificar Done**
+5. **Verificar Done** + registrar em `docs/implementation/` e atualizar `docs/state/`
 6. **Parar** e reportar evidências (não expandir escopo)
 
 ### Regras de código (invioláveis no MVP)
@@ -186,6 +199,7 @@ E também:
 ## Resultado
 - Autonomia usada:
 - Spec:
+- State / implementation:
 - Comandos Done:
 - Arquivos alterados:
 - Riscos / dúvidas:

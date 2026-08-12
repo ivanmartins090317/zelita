@@ -1,0 +1,15 @@
+{
+  "name": "zelita",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "pnpm --filter @zelita/web dev",
+    "build": "pnpm --filter @zelita/web build",
+    "typecheck": "pnpm --filter @zelita/web typecheck",
+    "lint": "pnpm --filter @zelita/web lint",
+    "test": "pnpm --filter @zelita/web test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -21,6 +21,8 @@ Idioma: **sempre responda em português (pt-BR)**.
 
 Docs de referência: `docs/prd-mvp.md`, `docs/arquitetura-solucao.md`, `docs/architecture/` (quando existir).
 
+**Docs operacionais (sempre):** `docs/state/` (WIP, pendências, bugs) · `docs/implementation/` (entregas Done). Contrato completo: `AGENTS.md`.
+
 ## Arquitetura (monólito modular)
 
 ```text
