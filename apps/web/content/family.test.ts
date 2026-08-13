@@ -34,6 +34,7 @@ describe("familyContent", () => {
     expect(familyRoutes.consultas).toBe("/familia/consultas");
     expect(familyRoutes.guia).toBe("/familia/guia");
     expect(familyRoutes.ajustes).toBe("/familia/ajustes");
+    expect(familyRoutes.avisos).toBe("/familia/avisos");
   });
 
   it("tem copy de título e subtítulo para cada área", () => {
@@ -71,6 +72,13 @@ describe("familyContent", () => {
     expect(familyContent.hoje.welcomeModal.primary).toContain("painel");
     expect(familyContent.hoje.maduro.stats.locationValue).toBe("Em breve");
     expect(familyContent.hoje.maduro.stats.noticesValue).toBe("0");
+  });
+
+  it("expõe copy de Avisos F4.9", () => {
+    expect(familyContent.avisos.feed.cardTitle).toBe("Alertas e eventos");
+    expect(familyContent.avisos.matrix.cardTitle).toBe("Quem recebe o quê");
+    expect(familyContent.avisos.feed.filters.all).toBe("Todos");
+    expect(familyContent.avisos.hoje.noticesNoneUrgentHint).toContain("urgente");
   });
 
   it("expõe copy de Pedidos de ajuda F4.7", () => {

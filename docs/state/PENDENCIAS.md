@@ -13,6 +13,8 @@ Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e e
 
 ## Abertas pela F4 · Painel
 
+- [ ] **Homologação manual F4.9** — avisos: feed, filtros, matriz admin, stat/badge Hoje (`manual-report` FL-09 parcial)
+- [x] **`pnpm db:push` remoto** — migration `011_notifications.sql` (2026-08-13)
 - [ ] **Homologação manual F4.8** — localização: consentimento, lugares CRUD, link share, visualizadora negada, deep link SOS (`manual-report` FL-08 parcial)
 - [x] **`pnpm db:push` remoto** — migration `010_location.sql` (2026-08-13)
 - [ ] **Posição real / seed SQL** — homologação parcial até F5 ou seed documentado

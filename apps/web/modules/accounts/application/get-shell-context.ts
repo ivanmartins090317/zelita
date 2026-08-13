@@ -25,6 +25,7 @@ import {
 } from "@/modules/accounts/application/shell-context";
 import { countActiveMedications } from "@/modules/medications/infrastructure/medication-list-repo";
 import { DEFAULT_CARE_TIMEZONE } from "@/modules/medications/domain/hoje-timeline";
+import { getAvisosOpenCount } from "@/modules/alerts/application/get-avisos-page";
 
 function pickMembership(
   memberships: AccountMembershipSummary[],
@@ -105,6 +106,7 @@ export async function getShellContext(): Promise<ShellContext | null> {
     new Date(),
     DEFAULT_CARE_TIMEZONE,
   );
+  const openAlertsCount = await getAvisosOpenCount();
 
   return {
     userId: user.id,
@@ -130,5 +132,6 @@ export async function getShellContext(): Promise<ShellContext | null> {
     isPaused: isAccountPaused(accountStatus),
     memberships: mapShellMembershipOptions(memberships, membership.accountId),
     activeMedicationCount,
+    openAlertsCount,
   };
 }

@@ -33,6 +33,7 @@ export interface ShellContext {
   isPaused: boolean;
   memberships: ShellMembershipOption[];
   activeMedicationCount: number;
+  openAlertsCount: number;
 }
 
 const TRIAL_DAYS_BY_PLAN: Record<string, number> = {

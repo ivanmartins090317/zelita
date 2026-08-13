@@ -94,9 +94,8 @@ export function LoginForm({
   const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
   const [timerTick, setTimerTick] = useState(0);
   const [sendState, setSendState] = useState<AuthActionResult>(authInitial);
-  const [verifyState, setVerifyState] = useState<VerifyEmailOtpResult>(
-    authInitial,
-  );
+  const [verifyState, setVerifyState] =
+    useState<VerifyEmailOtpResult>(authInitial);
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSelecting, setIsSelecting] = useState(false);
@@ -250,10 +249,14 @@ export function LoginForm({
             <Link href={copy.email.signupHref}>{copy.email.signupLabel}</Link>
           </Button>
 
-          <Note tone="info" icon={copy.email.passwordNote.icon} className="mt-5">
+          {/* <Note
+            tone="info"
+            icon={copy.email.passwordNote.icon}
+            className="mt-5"
+          >
             <strong>{copy.email.passwordNote.title}</strong>{" "}
             {copy.email.passwordNote.body}
-          </Note>
+          </Note> */}
 
           <p className="mt-4 text-center text-compact text-muted">
             {copy.email.helpPrompt}{" "}

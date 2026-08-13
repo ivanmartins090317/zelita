@@ -21,6 +21,87 @@ export interface FamilyPlaceholderContent {
   description: string;
 }
 
+export interface FamilyAvisosContent {
+  pausedHint: string;
+  feed: {
+    cardTitle: string;
+    filtersAriaLabel: string;
+    filters: Record<"all" | "emergency" | "medications" | "location", string>;
+    status: { open: string; resolved: string };
+    emptyIcon: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    filterEmptyTitle: string;
+    filterEmpty: Partial<
+      Record<"all" | "emergency" | "medications" | "location", string>
+    >;
+    loadMore: string;
+    packRefillTitle: string;
+    packRefillSubtitle: string;
+    packLastDayTitle: string;
+    reminderUnreadTitle: string;
+    reminderUnreadSubtitle: string;
+    sosTitle: string;
+    sosSubtitleOpen: string;
+    sosSubtitleResolved: string;
+    zoneExitTitle: string;
+    zoneExitSubtitleOpen: string;
+    zoneExitSubtitleResolved: string;
+    inviteTitle: string;
+    inviteSubtitle: string;
+    examTitle: string;
+    examSubtitle: string;
+    removedSource: string;
+    linkView: string;
+  };
+  matrix: {
+    cardTitle: string;
+    editButton: string;
+    editCell: string;
+    eventTypeHeader: string;
+    rowLabels: Record<
+      "sos" | "pack_refill" | "zone_exit" | "reminder_unread",
+      string
+    >;
+    channelLabels: Record<
+      "panel" | "email" | "whatsapp" | "call",
+      string
+    >;
+    emergencyPhoneNote: string;
+    readOnlyNote: string;
+    footerHint: string;
+    settingsLink: string;
+    saveSuccess: string;
+    modal: {
+      title: string;
+      hint: string;
+      cancel: string;
+      save: string;
+      saving: string;
+    };
+  };
+  hoje: {
+    noticesNoneHint: string;
+    noticesNoneUrgentHint: string;
+    noticesUrgentHint: string;
+    noticesAttentionHint: string;
+    activityInvite: string;
+    activityExam: string;
+  };
+  errors: {
+    loadTitle: string;
+    loadFailed: string;
+    forbidden: string;
+    incomplete: string;
+    invalidPayload: string;
+    memberNotFound: string;
+    invalidChannels: string;
+    sosEmergencyRequired: string;
+    saveFailed: string;
+    accountPaused: string;
+  };
+}
+
 export interface FamilyContent {
   brand: {
     name: string;
@@ -72,6 +153,7 @@ export interface FamilyContent {
   hoje: FamilyHojeContent;
   remedios: FamilyRemediosContent;
   consultas: FamilyConsultasContent;
+  avisos: FamilyAvisosContent;
   pedidosDeAjuda: FamilyPedidosDeAjudaContent;
   localizacao: FamilyLocalizacaoContent;
   exames: FamilyExamesContent;
@@ -1965,6 +2047,112 @@ export const familyContent: FamilyContent = {
       shareUnavailable:
         "Link indisponível — precisa de consentimento vigente e posição registrada.",
       saveFailed: "Não foi possível salvar agora. Tente de novo.",
+    },
+  },
+  avisos: {
+    pausedHint:
+      "Conta pausada — você pode ver o histórico, mas não editar quem recebe o quê.",
+    feed: {
+      cardTitle: "Alertas e eventos",
+      filtersAriaLabel: "Filtrar avisos por assunto",
+      filters: {
+        all: "Todos",
+        emergency: "Emergência",
+        medications: "Medicamentos",
+        location: "Localização",
+      },
+      status: {
+        open: "Aberto",
+        resolved: "Resolvido",
+      },
+      emptyIcon: "🔔",
+      emptyTitle: "Nada por aqui ainda",
+      emptyDescription:
+        "Quando a Zelita avisar sobre remédios, pedidos de ajuda, convites ou outros assuntos, tudo ficará registrado aqui conforme a rotina.",
+      filterEmptyTitle: "Nenhum aviso neste filtro",
+      filterEmpty: {
+        emergency: "Nenhum pedido de ajuda registrado ainda.",
+        medications:
+          "Nenhum aviso de medicamento ou lembrete sem leitura neste período.",
+        location: "Nenhum aviso de localização ainda.",
+      },
+      loadMore: "Ver mais",
+      packRefillTitle: "Atenção: medicamento próximo do fim",
+      packRefillSubtitle:
+        "{nome} {dose} — cartela prevista para terminar em {fim} — faltam {dias} dias",
+      packLastDayTitle: "Último dia de cartela",
+      reminderUnreadTitle: "Lembrete sem leitura",
+      reminderUnreadSubtitle:
+        "Reforço por voz registrado às {hora} — lembrete enviado não implica tomada",
+      sosTitle: "Botão de ajuda acionado",
+      sosSubtitleOpen: "Aguardando desfecho — veja em Pedidos de ajuda",
+      sosSubtitleResolved:
+        "{data} às {hora} — resolvido por {nome} às {horaResolucao}",
+      zoneExitTitle: "Saída de zona segura",
+      zoneExitSubtitleOpen:
+        "{data} às {hora} — saiu de “{lugar}” — ainda fora",
+      zoneExitSubtitleResolved:
+        "{data} às {hora} — saiu de “{lugar}” — retornou às {horaRetorno}",
+      inviteTitle: "Convite não aceito",
+      inviteSubtitle: "{nome} ainda não entrou na conta",
+      examTitle: "Exame sem categoria",
+      examSubtitle: "{titulo} de {data} aguarda classificação",
+      removedSource: "Item removido",
+      linkView: "Ver",
+    },
+    matrix: {
+      cardTitle: "Quem recebe o quê",
+      editButton: "Editar preferências",
+      editCell: "Editar",
+      eventTypeHeader: "Tipo de evento",
+      rowLabels: {
+        sos: "Botão de ajuda (SOS)",
+        pack_refill: "Cartela acabando",
+        zone_exit: "Saída de zona segura",
+        reminder_unread: "Lembrete sem leitura",
+      },
+      channelLabels: {
+        panel: "Painel",
+        email: "E-mail",
+        whatsapp: "WhatsApp",
+        call: "ligação",
+      },
+      emergencyPhoneNote:
+        "+ contatos de emergência por ligação (sem coluna — só telefone)",
+      readOnlyNote: "Somente administradores configuram avisos.",
+      footerHint:
+        "Quem recebe o quê se edita aqui. Tom de mensagem e horários vêm em Ajustes.",
+      settingsLink: "Configurar canais e tom",
+      saveSuccess: "Preferências salvas.",
+      modal: {
+        title: "Editar preferências",
+        hint: "Canais para {membro} · {tipo}",
+        cancel: "Cancelar",
+        save: "Salvar",
+        saving: "Salvando…",
+      },
+    },
+    hoje: {
+      noticesNoneHint: "Nada pendente por aqui",
+      noticesNoneUrgentHint: "Nenhum é urgente",
+      noticesUrgentHint: "Há pedido de ajuda aberto — confira agora",
+      noticesAttentionHint: "Confira os avisos abertos",
+      activityInvite: "Convite enviado para {nome}",
+      activityExam: "Exame guardado · {titulo}",
+    },
+    errors: {
+      loadTitle: "Não foi possível carregar Avisos",
+      loadFailed:
+        "Não foi possível carregar os avisos agora. Tente de novo em instantes.",
+      forbidden: "Seu papel não permite acessar esta área.",
+      incomplete: "Cadastro incompleto.",
+      invalidPayload: "Dados inválidos para salvar preferências.",
+      memberNotFound: "Participante não encontrado nesta conta.",
+      invalidChannels: "Combinação de canais inválida para este papel.",
+      sosEmergencyRequired:
+        "Quem é contato de emergência sempre recebe pedido de ajuda.",
+      saveFailed: "Não foi possível salvar. Tente de novo.",
+      accountPaused: "Conta pausada — edição indisponível.",
     },
   },
   pedidosDeAjuda: {

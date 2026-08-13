@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Stat } from "@/components/ui/stat";
 import { familyContent, familyRoutes } from "@/content/family";
+import type { NoticesStatViewModel } from "@/modules/alerts/domain/alert-open-count";
 import type {
   NextMedicationStat,
   RefillAlertSummary,
@@ -12,12 +13,14 @@ interface HojeStatsProps {
   nextMedication: NextMedicationStat | null;
   refillSummary: RefillAlertSummary;
   locationStat: HojeLocationStat | null;
+  noticesStat: NoticesStatViewModel | null;
 }
 
 function HojeStats({
   nextMedication,
   refillSummary,
   locationStat,
+  noticesStat,
 }: HojeStatsProps) {
   const copy = familyContent.hoje.maduro.stats;
 
@@ -77,8 +80,27 @@ function HojeStats({
       />
       <Stat
         label={copy.noticesLabel}
-        value={copy.noticesValue}
-        hint={copy.noticesHint}
+        value={noticesStat?.value ?? "0"}
+        tone={
+          noticesStat?.tone === "critical"
+            ? "warning"
+            : (noticesStat?.tone ?? "default")
+        }
+        hint={
+          noticesStat ? (
+            <>
+              {noticesStat.hint} ·{" "}
+              <Link
+                href={familyRoutes.avisos}
+                className="font-semibold text-brand-600"
+              >
+                ver avisos
+              </Link>
+            </>
+          ) : (
+            copy.noticesHint
+          )
+        }
       />
     </div>
   );

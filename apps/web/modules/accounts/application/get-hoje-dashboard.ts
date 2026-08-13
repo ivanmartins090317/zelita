@@ -37,6 +37,8 @@ import {
 } from "@/modules/sos/application/get-hoje-sos-snapshot";
 import { getHojeLocationSnapshot } from "@/modules/location/application/get-hoje-location-snapshot";
 import type { HojeLocationStat } from "@/modules/location/application/get-hoje-location-snapshot";
+import { getHojeAlertsSnapshot } from "@/modules/alerts/application/get-hoje-alerts-snapshot";
+import type { NoticesStatViewModel } from "@/modules/alerts/domain/alert-open-count";
 import { isWhatsAppConfigured } from "@/modules/reminders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loginContent } from "@/content/login";
@@ -62,6 +64,7 @@ export interface HojeDashboardViewModel {
     nextMedication: NextMedicationStat | null;
     refillSummary: RefillAlertSummary;
     locationStat: HojeLocationStat | null;
+    noticesStat: NoticesStatViewModel | null;
   } | null;
   geoWidgetConfigured: boolean;
   geoWidgetStatus: string;
@@ -69,6 +72,7 @@ export interface HojeDashboardViewModel {
   refillAttention: RefillAttentionItem[];
   needsAttention: NeedsPriorityItem[];
   activityFeed: ActivityFeedItem[];
+  openAlertsCount: number;
   trialDays: number;
 }
 
@@ -178,6 +182,12 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
       now,
     });
 
+    const alertsSnapshot = await getHojeAlertsSnapshot({
+      careRecipientId: ctx.careRecipientId,
+      accountId: ctx.accountId,
+      now,
+    });
+
     const checklist = computeOnboardingChecklist({
       activeMedicationCount: meds.activeMedicationCount,
       activeMemberCount,
@@ -273,6 +283,7 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
                 nextMedication: meds.nextMedication,
                 refillSummary: meds.refillSummary,
                 locationStat: locationSnapshot.locationStat,
+                noticesStat: alertsSnapshot.noticesStat,
               }
             : null,
         geoWidgetConfigured: locationSnapshot.geoWidgetConfigured,
@@ -280,7 +291,10 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
         timeline,
         refillAttention: meds.refillAttention,
         needsAttention,
-        activityFeed: meds.activityFeed,
+        activityFeed: [...meds.activityFeed, ...alertsSnapshot.activityItems]
+          .sort((a, b) => b.sortKey - a.sortKey)
+          .slice(0, 5),
+        openAlertsCount: alertsSnapshot.openCount,
         trialDays: shell.trial?.totalDays ?? resolveTrialTotalDays(shell.accountPlan),
       },
     };

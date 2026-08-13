@@ -53,6 +53,7 @@ function HojeMaduroView({ data }: HojeMaduroViewProps) {
           nextMedication={stats.nextMedication}
           refillSummary={stats.refillSummary}
           locationStat={stats.locationStat}
+          noticesStat={stats.noticesStat}
         />
       ) : null}
 

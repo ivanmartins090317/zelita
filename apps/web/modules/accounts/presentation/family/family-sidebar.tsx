@@ -41,7 +41,9 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
               const badge =
                 item.id === "remedios" && shell.activeMedicationCount > 0
                   ? shell.activeMedicationCount
-                  : null;
+                  : item.id === "avisos" && shell.openAlertsCount > 0
+                    ? shell.openAlertsCount
+                    : null;
               return (
                 <Link
                   key={item.id}
