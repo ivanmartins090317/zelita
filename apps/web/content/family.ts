@@ -71,6 +71,105 @@ export interface FamilyContent {
   };
   hoje: FamilyHojeContent;
   remedios: FamilyRemediosContent;
+  consultas: FamilyConsultasContent;
+  participantes: FamilyParticipantesContent;
+}
+
+export interface FamilyConsultasContent {
+  loadError: string;
+  weekGrid: {
+    titleTemplate: string;
+    timeColumn: string;
+    prevWeek: string;
+    nextWeek: string;
+    emptyCell: string;
+  };
+  list: {
+    appointmentsTitle: string;
+    tasksTitle: string;
+    addButton: string;
+    todayLabel: string;
+    companionTag: string;
+    appointmentsEmpty: {
+      icon: string;
+      title: string;
+      description: string;
+    };
+    tasksEmpty: {
+      icon: string;
+      title: string;
+      description: string;
+    };
+    completedSection: string;
+  };
+  tasks: {
+    assignedToYou: string;
+    assignedToTemplate: string;
+    anyoneLabel: string;
+    untilTemplate: string;
+    metaSeparator: string;
+    completeButton: string;
+    reopenButton: string;
+    editButton: string;
+  };
+  appointmentModal: {
+    newTitle: string;
+    editTitle: string;
+    titleLabel: string;
+    titlePlaceholder: string;
+    specialtyLabel: string;
+    specialtyPlaceholder: string;
+    typeLabel: string;
+    dateLabel: string;
+    timeLabel: string;
+    timeOtherLabel: string;
+    datetimeLabel: string;
+    locationLabel: string;
+    locationPlaceholder: string;
+    companionLabel: string;
+    companionNone: string;
+    preparationLabel: string;
+    preparationPlaceholder: string;
+    cancel: string;
+    save: string;
+    saving: string;
+    cancelAppointment: string;
+    types: Array<{ slug: string; label: string }>;
+  };
+  taskModal: {
+    newTitle: string;
+    editTitle: string;
+    titleLabel: string;
+    titlePlaceholder: string;
+    typeLabel: string;
+    dueLabel: string;
+    assigneeLabel: string;
+    assigneeNone: string;
+    linkAppointmentLabel: string;
+    linkAppointmentNone: string;
+    cancel: string;
+    save: string;
+    saving: string;
+    types: Array<{ slug: string; label: string }>;
+  };
+  feedback: {
+    appointmentSaved: string;
+    appointmentCancelled: string;
+    taskSaved: string;
+    taskCompleted: string;
+    taskReopened: string;
+  };
+  errors: {
+    titleRequired: string;
+    datetimeRequired: string;
+    datetimeInvalid: string;
+    taskTitleRequired: string;
+    invalidCompanion: string;
+    invalidLinkedAppointment: string;
+    noPermission: string;
+    paused: string;
+    generic: string;
+  };
 }
 
 export interface FamilyRemediosContent {
@@ -297,6 +396,80 @@ export interface FamilyHojeContent {
     title: string;
     description: string;
   };
+}
+
+export interface FamilyParticipantesContent {
+  loadError: string;
+  selfSuffix: string;
+  emergencyPhoneNote: string;
+  listCard: {
+    titleTemplate: string;
+    inviteButton: string;
+    resendButton: string;
+  };
+  situation: Record<
+    "active" | "pending" | "expired",
+    { label: string; tone: "ok" | "warning" | "muted" }
+  >;
+  matrix: {
+    title: string;
+    legend: string;
+    roleHeaders: Record<
+      "admin" | "caregiver" | "viewer" | "emergency_contact",
+      string
+    >;
+  };
+  modal: {
+    title: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    relationshipLabel: string;
+    relationshipPlaceholder: string;
+    contactLabel: string;
+    contactPlaceholder: string;
+    roleLabel: string;
+    rolesHint: string;
+    cancel: string;
+    submit: string;
+    submitting: string;
+    nameRequired: string;
+    contactInvalid: string;
+    duplicatePending: string;
+    duplicateActive: string;
+    genericError: string;
+    roles: Array<{ slug: string; label: string; description: string }>;
+  };
+  feedback: {
+    inviteCreated: string;
+    inviteResent: string;
+    emergencyActive: string;
+    copyLink: string;
+    copied: string;
+    resendError: string;
+    validityNote: string;
+    manualShareNote: string;
+  };
+  accept: {
+    title: string;
+    expiredTitle: string;
+    expiredBody: string;
+    alreadyAcceptedTitle: string;
+    alreadyAcceptedBody: string;
+    notFoundTitle: string;
+    notFoundBody: string;
+    emailMismatchTitle: string;
+    emailMismatchBody: string;
+    invitedByTemplate: string;
+    roleTemplate: string;
+    recipientTemplate: string;
+    loginCta: string;
+    acceptCta: string;
+    accepting: string;
+    enterPanelCta: string;
+    successMessage: string;
+  };
+  viewerHint: string;
+  pausedHint: string;
 }
 
 export const familyRoutes = {
@@ -713,7 +886,7 @@ export const familyContent: FamilyContent = {
           "Quem cuida sozinha se cansa. Cada pessoa vê só o que você permitir.",
         durationTag: "1 minuto",
         ctaLabel: "Convidar",
-        href: familyRoutes.participantes,
+        href: `${familyRoutes.participantes}?modal=convite`,
       },
       {
         title: "Guarde um exame ou uma receita",
@@ -885,6 +1058,235 @@ export const familyContent: FamilyContent = {
     },
     pausedActionHint:
       "Conta pausada — ações de cadastro e pausa ficam indisponíveis.",
+  },
+  consultas: {
+    loadError:
+      "Não foi possível carregar consultas e tarefas agora. Recarregue a página ou tente de novo em instantes.",
+    weekGrid: {
+      titleTemplate: "Semana de {inicio} a {fim} de {mes}",
+      timeColumn: "Horário",
+      prevWeek: "‹ anterior",
+      nextWeek: "próxima ›",
+      emptyCell: "—",
+    },
+    list: {
+      appointmentsTitle: "Próximas consultas",
+      tasksTitle: "Tarefas da família",
+      addButton: "+ Adicionar",
+      todayLabel: "Hoje",
+      companionTag: "{nome} acompanha",
+      appointmentsEmpty: {
+        icon: "🗓",
+        title: "Nenhuma consulta marcada",
+        description:
+          "Adicione consultas, exames ou fisioterapia para ver na grade da semana.",
+      },
+      tasksEmpty: {
+        icon: "✓",
+        title: "Nenhuma tarefa aberta",
+        description:
+          "Anote o que falta fazer — comprar remédio, ligar para o convênio, levar na consulta.",
+      },
+      completedSection: "Concluídas",
+    },
+    tasks: {
+      assignedToYou: "atribuída a você",
+      assignedToTemplate: "atribuída a {nome}",
+      anyoneLabel: "qualquer um da família",
+      untilTemplate: "Até {data}",
+      metaSeparator: " · ",
+      completeButton: "Concluir",
+      reopenButton: "Reabrir",
+      editButton: "Editar",
+    },
+    appointmentModal: {
+      newTitle: "Nova consulta",
+      editTitle: "Editar consulta",
+      titleLabel: "O que é",
+      titlePlaceholder: "Ex.: Dr. Aurélio ou Fisioterapia",
+      specialtyLabel: "Especialidade ou tipo",
+      specialtyPlaceholder: "Ex.: cardiologia",
+      typeLabel: "Tipo",
+      dateLabel: "Data",
+      timeLabel: "Horário",
+      timeOtherLabel: "Ou escolha outro horário",
+      datetimeLabel: "Data e hora",
+      locationLabel: "Local",
+      locationPlaceholder: "Clínica, endereço ou sala",
+      companionLabel: "Quem acompanha",
+      companionNone: "Ninguém designado",
+      preparationLabel: "Observação de preparo",
+      preparationPlaceholder: "Ex.: jejum de 12h, levar exames",
+      cancel: "Cancelar",
+      save: "Salvar",
+      saving: "Salvando…",
+      cancelAppointment: "Cancelar consulta",
+      types: [
+        { slug: "medical", label: "Consulta médica" },
+        { slug: "physio", label: "Fisioterapia" },
+        { slug: "exam", label: "Exame / laboratório" },
+        { slug: "other", label: "Outro" },
+      ],
+    },
+    taskModal: {
+      newTitle: "Nova tarefa",
+      editTitle: "Editar tarefa",
+      titleLabel: "O que fazer",
+      titlePlaceholder: "Ex.: Comprar Losartana",
+      typeLabel: "Tipo",
+      dueLabel: "Prazo (opcional)",
+      assigneeLabel: "Atribuir a",
+      assigneeNone: "Qualquer um da família",
+      linkAppointmentLabel: "Vincular a consulta",
+      linkAppointmentNone: "Nenhuma consulta",
+      cancel: "Cancelar",
+      save: "Salvar",
+      saving: "Salvando…",
+      types: [
+        { slug: "shopping", label: "Compras" },
+        { slug: "call", label: "Ligação" },
+        { slug: "transport", label: "Transporte / logística" },
+        { slug: "other", label: "Outro" },
+      ],
+    },
+    feedback: {
+      appointmentSaved: "Consulta salva.",
+      appointmentCancelled: "Consulta cancelada.",
+      taskSaved: "Tarefa salva.",
+      taskCompleted: "Tarefa concluída.",
+      taskReopened: "Tarefa reaberta.",
+    },
+    errors: {
+      titleRequired: "Informe o nome da consulta ou compromisso.",
+      datetimeRequired: "Informe data e hora.",
+      datetimeInvalid: "Data ou hora inválida.",
+      taskTitleRequired: "Informe o que precisa ser feito.",
+      invalidCompanion:
+        "Escolha outro membro ativo ou deixe em branco — o acompanhante selecionado não está mais na conta.",
+      invalidLinkedAppointment:
+        "A consulta vinculada não existe ou foi cancelada.",
+      noPermission:
+        "Seu papel não permite alterar consultas ou tarefas nesta conta.",
+      paused:
+        "Conta pausada: você pode ver a agenda, mas não alterar até reativar o plano.",
+      generic:
+        "Não foi possível concluir agora. Verifique a conexão e tente de novo.",
+    },
+  },
+  participantes: {
+    loadError:
+      "Não foi possível carregar quem participa agora. Recarregue a página ou tente de novo em instantes.",
+    selfSuffix: " (você)",
+    emergencyPhoneNote:
+      "Será avisado em emergências pelo telefone cadastrado — sem acesso ao painel.",
+    listCard: {
+      titleTemplate: "Quem participa do cuidado de {apelido}",
+      inviteButton: "+ Convidar pessoa",
+      resendButton: "Reenviar",
+    },
+    situation: {
+      active: { label: "Ativa", tone: "ok" },
+      pending: { label: "Convite pendente", tone: "warning" },
+      expired: { label: "Expirado", tone: "muted" },
+    },
+    matrix: {
+      title: "O que cada papel pode fazer",
+      legend:
+        "● permitido · ◐ depende de autorização por item · — sem acesso",
+      roleHeaders: {
+        admin: "Administrador",
+        caregiver: "Cuidador",
+        viewer: "Visualizador",
+        emergency_contact: "Contato de emergência",
+      },
+    },
+    modal: {
+      title: "Convidar pessoa",
+      nameLabel: "Nome",
+      namePlaceholder: "Como chamar essa pessoa",
+      relationshipLabel: "Relação (opcional)",
+      relationshipPlaceholder: "Ex.: filha, cuidadora, irmã",
+      contactLabel: "E-mail ou WhatsApp",
+      contactPlaceholder: "nome@email.com ou (11) 90000-0000",
+      roleLabel: "Papel",
+      rolesHint:
+        "Administrador edita tudo · Cuidador acompanha e registra · Visualizador só olha · Contato de emergência recebe o pedido de ajuda",
+      cancel: "Cancelar",
+      submit: "Enviar convite",
+      submitting: "Enviando…",
+      nameRequired: "Informe como chamar a pessoa.",
+      contactInvalid:
+        "Informe um e-mail válido ou celular com DDD para convidar.",
+      duplicatePending:
+        "Já existe um convite pendente para este contato. Use Reenviar na lista.",
+      duplicateActive: "Esta pessoa já participa do cuidado desta conta.",
+      genericError:
+        "Não foi possível enviar o convite agora. Tente de novo em instantes.",
+      roles: [
+        {
+          slug: "caregiver",
+          label: "Cuidador",
+          description: "Acompanha a rotina, registra observações e confirma tomadas.",
+        },
+        {
+          slug: "viewer",
+          label: "Visualizador",
+          description: "Vê horários e rotina — sem alterar cadastros.",
+        },
+        {
+          slug: "emergency_contact",
+          label: "Contato de emergência",
+          description:
+            "Recebe alertas de SOS. Só telefone entra ativo sem login no painel.",
+        },
+        {
+          slug: "admin",
+          label: "Administrador",
+          description: "Gerencia tudo, convites e assinatura.",
+        },
+      ],
+    },
+    feedback: {
+      inviteCreated:
+        "Convite criado. Ele vale 7 dias — compartilhe o link abaixo.",
+      inviteResent:
+        "Convite reenviado com novo prazo de 7 dias. Compartilhe o link abaixo.",
+      emergencyActive:
+        "Contato adicionado para emergências. Escalonamento completo virá em Pedidos de ajuda.",
+      copyLink: "Copiar link",
+      copied: "Link copiado!",
+      resendError: "Não foi possível reenviar agora. Tente de novo.",
+      validityNote: "Convite válido por 7 dias.",
+      manualShareNote:
+        "Envio automático por e-mail ainda não está disponível — copie e compartilhe o link manualmente.",
+    },
+    accept: {
+      title: "Você foi convidado para cuidar com a Zelita",
+      expiredTitle: "Este convite expirou",
+      expiredBody:
+        "Convite vale 7 dias. Peça para quem convidou clicar em Reenviar — leva um segundo.",
+      alreadyAcceptedTitle: "Convite já aceito",
+      alreadyAcceptedBody:
+        "Este convite já foi usado. Entre no painel se você já faz parte da conta.",
+      notFoundTitle: "Convite não encontrado",
+      notFoundBody:
+        "Este link não existe ou não é mais válido. Peça um novo convite à administradora.",
+      emailMismatchTitle: "Entre com o e-mail convidado",
+      emailMismatchBody:
+        "Você está logado com outro e-mail. Saia e entre com o endereço que recebeu o convite, ou peça reenvio.",
+      invitedByTemplate: "{nome} convidou você",
+      roleTemplate: "Papel: {papel}",
+      recipientTemplate: "Para cuidar de {apelido}",
+      loginCta: "Entrar com o e-mail convidado",
+      acceptCta: "Aceitar convite",
+      accepting: "Aceitando…",
+      enterPanelCta: "Ir para o painel",
+      successMessage: "Convite aceito! Redirecionando…",
+    },
+    viewerHint:
+      "Seu papel permite ver quem participa, mas não convidar ou reenviar convites.",
+    pausedHint:
+      "Conta pausada — convites e reenvios ficam indisponíveis até reativar.",
   },
 };
 

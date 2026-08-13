@@ -81,6 +81,32 @@ describe("familyContent", () => {
       "Em breve",
     );
   });
+
+  it("expõe copy de Quem participa F4.4", () => {
+    expect(familyContent.participantes.listCard.inviteButton).toBe(
+      "+ Convidar pessoa",
+    );
+    expect(familyContent.participantes.matrix.title).toBe(
+      "O que cada papel pode fazer",
+    );
+    expect(familyContent.participantes.feedback.validityNote).toContain("7 dias");
+    expect(familyContent.participantes.modal.roles).toHaveLength(4);
+  });
+
+  it("expõe copy de Consultas e tarefas F4.5", () => {
+    expect(familyContent.consultas.list.appointmentsTitle).toBe(
+      "Próximas consultas",
+    );
+    expect(familyContent.consultas.list.tasksTitle).toBe("Tarefas da família");
+    expect(familyContent.consultas.weekGrid.titleTemplate).toContain("{inicio}");
+    expect(familyContent.consultas.appointmentModal.types).toHaveLength(4);
+    expect(familyContent.consultas.appointmentModal.dateLabel).toBe("Data");
+    expect(familyContent.consultas.appointmentModal.timeLabel).toBe("Horário");
+    expect(familyContent.consultas.appointmentModal.timeOtherLabel).toBe(
+      "Ou escolha outro horário",
+    );
+    expect(familyContent.consultas.taskModal.types).toHaveLength(4);
+  });
 });
 
 describe("formatChecklistProgress", () => {

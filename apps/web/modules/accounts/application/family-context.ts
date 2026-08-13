@@ -5,6 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   ACCOUNT_ROLES,
   type AccountRole,
+  canInviteOrChangeRoles,
   canManageMedications,
   canViewCareRoutine,
   isAccountPaused,
@@ -222,6 +223,21 @@ export async function countActiveAccountMembers(
   }
 
   return count ?? 0;
+}
+
+export async function requireAdminForInvites() {
+  const ctx = await getFamilyContext();
+  if (!ctx.accountId || !ctx.role || !canInviteOrChangeRoles(ctx.role)) {
+    throw new Error(
+      "Só quem administra a conta pode convidar ou reenviar convites.",
+    );
+  }
+  if (ctx.accountStatus && isAccountPaused(ctx.accountStatus)) {
+    throw new Error(
+      "Conta pausada: convites ficam bloqueados até reativar o plano.",
+    );
+  }
+  return ctx;
 }
 
 export { ACCOUNT_ROLES };

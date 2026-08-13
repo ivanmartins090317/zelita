@@ -1,5 +1,4 @@
-import { loginContent } from "@/content/login";
-import { familyContent } from "@/content/family";
+import { familyContent, familyRoutes } from "@/content/family";
 import {
   computeOnboardingChecklist,
   isFirstAccessMode,
@@ -14,6 +13,8 @@ import {
 } from "@/modules/accounts/domain/roles";
 import { getShellContext } from "@/modules/accounts/application/get-shell-context";
 import { resolveTrialTotalDays } from "@/modules/accounts/application/shell-context";
+import { getTodayAgendaSnapshot } from "@/modules/agenda/application/get-today-agenda-snapshot";
+import type { NeedsPriorityItem } from "@/modules/agenda/domain/needs-priority";
 import { getHojeMedications } from "@/modules/medications/application/get-hoje-medications";
 import { DEFAULT_CARE_TIMEZONE } from "@/modules/medications/domain/hoje-timeline";
 import {
@@ -31,6 +32,7 @@ import type {
 import type { OnboardingChecklistResult } from "@/modules/accounts/application/onboarding-checklist";
 import { isWhatsAppConfigured } from "@/modules/reminders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { loginContent } from "@/content/login";
 
 export interface HojeDashboardViewModel {
   mode: "primeiro_acesso" | "hoje_maduro";
@@ -53,6 +55,7 @@ export interface HojeDashboardViewModel {
   } | null;
   timeline: TimelineItem[];
   refillAttention: RefillAttentionItem[];
+  needsAttention: NeedsPriorityItem[];
   activityFeed: ActivityFeedItem[];
   trialDays: number;
 }
@@ -142,6 +145,46 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
       ? "primeiro_acesso"
       : "hoje_maduro";
 
+    const refillNeeds: NeedsPriorityItem[] = meds.refillAttention.map(
+      (item) => ({
+        id: `refill-${item.medicationId}`,
+        kind: "refill",
+        sortKey: 0,
+        title: familyContent.hoje.maduro.needsBuyTitle.replace(
+          "{medicamento}",
+          item.medicationName,
+        ),
+        subtitle: familyContent.hoje.maduro.needsBuySubtitle
+          .replace("{fim}", item.endDateEstimated.split("-").reverse().join("/"))
+          .replace(
+            "{comprar}",
+            item.buyUntilDate.split("-").reverse().join("/"),
+          ),
+        icon: "💊",
+        href: familyRoutes.remedios,
+      }),
+    );
+
+    let timeline = meds.timeline;
+    let needsAttention: NeedsPriorityItem[] = refillNeeds;
+
+    if (mode === "hoje_maduro") {
+      const companionNames = new Map(actorNames);
+      const agendaSnapshot = await getTodayAgendaSnapshot({
+        careRecipientId: ctx.careRecipientId,
+        accountId: ctx.accountId,
+        currentUserId: ctx.userId,
+        now,
+        timeZone,
+        companionNames,
+        refillNeedsItems: refillNeeds,
+      });
+      timeline = [...meds.timeline, ...agendaSnapshot.timelineItems].sort(
+        (a, b) => a.sortKey - b.sortKey,
+      );
+      needsAttention = agendaSnapshot.needsItems;
+    }
+
     const apelido = shell.careRecipientDisplayName;
     const refillCount = meds.refillSummary.count;
     const copy = familyContent.hoje;
@@ -183,8 +226,9 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
                 refillSummary: meds.refillSummary,
               }
             : null,
-        timeline: meds.timeline,
+        timeline,
         refillAttention: meds.refillAttention,
+        needsAttention,
         activityFeed: meds.activityFeed,
         trialDays: shell.trial?.totalDays ?? resolveTrialTotalDays(shell.accountPlan),
       },

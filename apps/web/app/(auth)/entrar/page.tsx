@@ -5,7 +5,7 @@ import { LoginMark } from "@/modules/accounts/presentation/login-mark";
 export default async function EntrarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ erro?: string }>;
+  searchParams: Promise<{ erro?: string; retorno?: string }>;
 }) {
   const params = await searchParams;
   const pageState = await resolveEntrarPageState();
@@ -17,6 +17,7 @@ export default async function EntrarPage({
         initialStep={pageState.kind === "account-picker" ? "picker" : "email"}
         initialAccounts={pageState.accounts ?? []}
         urlError={params.erro ?? null}
+        returnTo={params.retorno ?? null}
       />
     </main>
   );

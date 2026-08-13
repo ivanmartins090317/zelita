@@ -40,6 +40,7 @@ interface LoginFormProps {
   initialStep?: LoginStep;
   initialAccounts?: LoginAccountOption[];
   urlError?: string | null;
+  returnTo?: string | null;
 }
 
 const authInitial: AuthActionResult = { ok: false };
@@ -82,6 +83,7 @@ export function LoginForm({
   initialStep = "email",
   initialAccounts = [],
   urlError = null,
+  returnTo = null,
 }: LoginFormProps) {
   const copy = loginContent;
   const [step, setStep] = useState<LoginStep>(initialStep);
@@ -334,6 +336,9 @@ export function LoginForm({
             <form onSubmit={handleVerifySubmit} className="space-y-3">
               <input type="hidden" name="email" value={email} />
               <input type="hidden" name="token" value={code} />
+              {returnTo ? (
+                <input type="hidden" name="returnTo" value={returnTo} />
+              ) : null}
               <Button
                 type="submit"
                 variant="primary"

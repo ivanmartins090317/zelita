@@ -165,6 +165,11 @@ export async function verifyEmailOtp(
     return { ok: false, message: loginContent.messages.verifyFailure };
   }
 
+  const returnTo = String(formData.get("returnTo") ?? "").trim();
+  if (returnTo.startsWith("/convite/")) {
+    redirect(returnTo);
+  }
+
   const pickerResult = await routeAfterAuth(user.id);
   if (pickerResult) {
     return {

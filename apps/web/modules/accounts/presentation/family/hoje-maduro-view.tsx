@@ -17,11 +17,6 @@ interface HojeMaduroViewProps {
   data: HojeDashboardViewModel;
 }
 
-function formatDisplayDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split("-");
-  return `${day}/${month}/${year}`;
-}
-
 function HojeMaduroView({ data }: HojeMaduroViewProps) {
   const copy = familyContent.hoje;
   const apelido = data.careRecipientDisplayName;
@@ -106,20 +101,22 @@ function HojeMaduroView({ data }: HojeMaduroViewProps) {
             <CardHeader>
               <CardTitle>{copy.maduro.needsTitle}</CardTitle>
             </CardHeader>
-            {data.refillAttention.length > 0 ? (
+            {data.needsAttention.length > 0 ? (
               <div>
-                {data.refillAttention.map((item) => (
+                {data.needsAttention.map((item) => (
                   <ListRow
-                    key={item.medicationId}
-                    icon="💊"
-                    title={copy.maduro.needsBuyTitle.replace(
-                      "{medicamento}",
-                      item.medicationName,
-                    )}
-                    subtitle={copy.maduro.needsBuySubtitle
-                      .replace("{fim}", formatDisplayDate(item.endDateEstimated))
-                      .replace("{comprar}", formatDisplayDate(item.buyUntilDate))}
+                    key={item.id}
+                    icon={item.icon}
+                    title={item.title}
+                    subtitle={item.subtitle}
                     className="bg-amber-bg/30"
+                    trailing={
+                      item.href ? (
+                        <Button variant="secondary" size="xs" asChild>
+                          <Link href={item.href}>{copy.maduro.weekButton}</Link>
+                        </Button>
+                      ) : null
+                    }
                   />
                 ))}
               </div>

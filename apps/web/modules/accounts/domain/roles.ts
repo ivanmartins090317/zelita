@@ -48,3 +48,15 @@ export function computeTrialEndsAt(from: Date = new Date()): Date {
 export function isAccountPaused(status: AccountStatus): boolean {
   return status === ACCOUNT_STATUSES.paused || status === ACCOUNT_STATUSES.canceled;
 }
+
+/** Labels de papel para UI — neutros quando gênero não é conhecido. */
+export const ROLE_DISPLAY_LABELS: Record<AccountRole, string> = {
+  [ACCOUNT_ROLES.admin]: "Administrador",
+  [ACCOUNT_ROLES.caregiver]: "Cuidador",
+  [ACCOUNT_ROLES.viewer]: "Visualizador",
+  [ACCOUNT_ROLES.emergency_contact]: "Contato de emergência",
+};
+
+export function getRoleDisplayLabel(role: AccountRole): string {
+  return ROLE_DISPLAY_LABELS[role];
+}
