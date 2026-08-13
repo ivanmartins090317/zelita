@@ -2,17 +2,13 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | **F4.6** — Exames e receitas |
-| Spec | `specs/2026-08-13-f4-06-exames-receitas.md` (**aprovada**) |
-| Autonomia | `medium` |
-| Status | **Implementação concluída** — aguardando homologação manual (`manual-report` FL-08 parcial) e `pnpm db:push` remoto |
-
-## Pendente pós-implementação
-
-- Homologação manual via `manual-report` (upload, filtros, share, cuidadora, Hoje)
-- `pnpm db:push` remoto (`007_exams_storage.sql`) se Supabase configurado
+| Etapa | **F4.8** — Onde ele está (Localização) |
+| Spec | `specs/2026-08-13-f4-08-localizacao.md` (**draft** — aguardando aprovação) |
+| Autonomia | `tight` |
+| Status | **Spec redigida** — sem implementação até aprovação explícita |
 
 ## Anterior (Done técnico)
 
+- **F4.7 · Pedidos de ajuda (SOS)** — aguardando homologação manual (`manual-report` FL-06 parcial) e `pnpm db:push` remoto (`009_sos.sql`)
+- **F4.6 · Exames e receitas** — aguardando homologação / db push
 - **F4.5 · Consultas e tarefas** — aguardando homologação / db push
-- **F4.4 · Quem participa** — convites e matriz de permissões

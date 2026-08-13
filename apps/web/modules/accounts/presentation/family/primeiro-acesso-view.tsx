@@ -15,7 +15,7 @@ interface PrimeiroAcessoViewProps {
 }
 
 function resolveEmptyStatus(
-  statusKey: "medications" | "members" | "geo" | "exams",
+  statusKey: "medications" | "members" | "geo" | "exams" | "sos",
   data: HojeDashboardViewModel,
 ): string {
   switch (statusKey) {
@@ -25,6 +25,13 @@ function resolveEmptyStatus(
       return data.activeMemberCount <= 1
         ? "Só você seria avisada"
         : `${data.activeMemberCount} pessoas na conta`;
+    case "sos":
+      return data.sosEscalationContactCount >= 2
+        ? familyContent.pedidosDeAjuda.hoje.emptyPanelConfigured.replace(
+            "{count}",
+            String(data.sosEscalationContactCount),
+          )
+        : familyContent.pedidosDeAjuda.hoje.emptyPanelPending;
     case "geo":
       return "Aguardando ele autorizar";
     case "exams":

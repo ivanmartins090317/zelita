@@ -73,6 +73,15 @@ describe("familyContent", () => {
     expect(familyContent.hoje.maduro.stats.noticesValue).toBe("0");
   });
 
+  it("expõe copy de Pedidos de ajuda F4.7", () => {
+    expect(familyContent.pedidosDeAjuda.disclaimer.samu).toContain("192");
+    expect(familyContent.pedidosDeAjuda.lastAlert.resolveButton).toContain(
+      "resolvido",
+    );
+    expect(familyContent.pedidosDeAjuda.escalation.title).toBeTruthy();
+    expect(familyContent.pedidosDeAjuda.hoje.needsTitle).toContain("{apelido}");
+  });
+
   it("expõe copy de Remédios F4.3", () => {
     expect(familyContent.remedios.listCard.title).toBe("Remédios que ele toma");
     expect(familyContent.remedios.modal.previewTitle).toContain("conta");

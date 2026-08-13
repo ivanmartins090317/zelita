@@ -1,3 +1,5 @@
+import { isSosEscalationChecklistComplete } from "@/modules/sos/domain/sos-eligibility";
+
 /** Fuso padrão quando a pessoa cuidada não tem timezone no cadastro (MVP F4.2). */
 export const DEFAULT_CARE_TIMEZONE = "America/Sao_Paulo";
 
@@ -5,6 +7,7 @@ export interface OnboardingChecklistInput {
   activeMedicationCount: number;
   activeMemberCount: number;
   activeExamCount: number;
+  sosEscalationContactCount: number;
 }
 
 export interface OnboardingChecklistTask {
@@ -27,7 +30,7 @@ export function computeOnboardingChecklist(
 ): OnboardingChecklistResult {
   const tasks: OnboardingChecklistTask[] = [
     { id: 1, completed: input.activeMedicationCount >= 1 },
-    { id: 2, completed: false },
+    { id: 2, completed: isSosEscalationChecklistComplete(input.sosEscalationContactCount) },
     { id: 3, completed: input.activeMemberCount >= 2 },
     { id: 4, completed: input.activeExamCount >= 1 },
   ];

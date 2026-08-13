@@ -72,6 +72,7 @@ export interface FamilyContent {
   hoje: FamilyHojeContent;
   remedios: FamilyRemediosContent;
   consultas: FamilyConsultasContent;
+  pedidosDeAjuda: FamilyPedidosDeAjudaContent;
   exames: FamilyExamesContent;
   participantes: FamilyParticipantesContent;
 }
@@ -306,7 +307,7 @@ export interface FamilyHojeContent {
       id: string;
       icon: string;
       title: string;
-      getStatus: "medications" | "members" | "geo" | "exams";
+      getStatus: "medications" | "members" | "geo" | "exams" | "sos";
       ctaLabel?: string;
       href?: string;
       tag?: string;
@@ -590,6 +591,127 @@ export interface FamilyParticipantesContent {
   };
   viewerHint: string;
   pausedHint: string;
+}
+
+export interface FamilyPedidosDeAjudaContent {
+  loadError: string;
+  disclaimer: {
+    icon: string;
+    body: string;
+    samu: string;
+    bombeiros: string;
+    elderNote: string;
+  };
+  lastAlert: {
+    title: string;
+    emptyIcon: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    resolveButton: string;
+    pdfButton: string;
+    pdfSoon: string;
+    mapButton: string;
+    mapDisabledHint: string;
+    fields: {
+      person: string;
+      time: string;
+      alertType: string;
+      location: string;
+      callback: string;
+      notified: string;
+      outcome: string;
+    };
+  };
+  escalation: {
+    title: string;
+    changeOrderButton: string;
+    emptyHint: string;
+    invalidWarning: string;
+    singleContactWarning: string;
+    saveSuccess: string;
+    channels: {
+      adminChannel: string;
+      caregiverChannel: string;
+      viewerChannel: string;
+      emergencyImmediate: string;
+      emergencyDelayed: string;
+    };
+    roleLabels: Record<
+      "admin" | "caregiver" | "viewer" | "emergency_contact",
+      string
+    >;
+    modal: {
+      title: string;
+      hint: string;
+      viewerOptInHint: string;
+      includeViewerButton: string;
+      saveButton: string;
+      saving: string;
+      cancel: string;
+      moveUp: string;
+      moveDown: string;
+    };
+  };
+  history: {
+    title: string;
+    testButton: string;
+    testModalTitle: string;
+    testModalBody: string;
+    testModalClose: string;
+    sosIcon: string;
+    cancelledIcon: string;
+    summary: {
+      resolvedInMinutes: string;
+      resolvedWithNote: string;
+      cancelled: string;
+      open: string;
+    };
+  };
+  detail: {
+    headline: string;
+    personTemplate: string;
+    alertType: string;
+    locationUnavailable: string;
+    locationAccuracy: string;
+    locationTime: string;
+    locationZone: string;
+    notifiedLineTemplate: string;
+    notifiedPending: string;
+    outcomeWithNote: string;
+    outcomeWithoutNote: string;
+    callbackUnavailable: string;
+  };
+  resolve: {
+    title: string;
+    noteLabel: string;
+    notePlaceholder: string;
+    confirm: string;
+    saving: string;
+    cancel: string;
+    saveSuccess: string;
+  };
+  hoje: {
+    needsTitle: string;
+    needsSubtitle: string;
+    timelineTriggered: string;
+    timelineResolved: string;
+    emptyPanelConfigured: string;
+    emptyPanelPending: string;
+  };
+  errors: {
+    incompleteAccount: string;
+    accessDenied: string;
+    loadFailed: string;
+    escalationForbidden: string;
+    accountPaused: string;
+    invalidEscalation: string;
+    saveFailed: string;
+    resolveForbidden: string;
+    invalidResolve: string;
+    alertNotFound: string;
+    alreadyResolved: string;
+    concurrentResolve: string;
+  };
 }
 
 export const familyRoutes = {
@@ -884,7 +1006,7 @@ export const familyContent: FamilyContent = {
           id: "sos",
           icon: "🆘",
           title: "Pedidos de ajuda",
-          getStatus: "members",
+          getStatus: "sos",
           ctaLabel: "Configurar",
           href: familyRoutes.pedidosDeAjuda,
         },
@@ -1533,6 +1655,144 @@ export const familyContent: FamilyContent = {
       "Seu papel permite ver quem participa, mas não convidar ou reenviar convites.",
     pausedHint:
       "Conta pausada — convites e reenvios ficam indisponíveis até reativar.",
+  },
+  pedidosDeAjuda: {
+    loadError:
+      "Não foi possível carregar pedidos de ajuda agora. Recarregue a página ou tente de novo em instantes.",
+    disclaimer: {
+      icon: "⚠",
+      body:
+        "A Zelita não substitui serviço público de emergência (SAMU ou Bombeiros). O botão avisa a rede familiar cadastrada — ligue {samu} ou {bombeiros} se houver risco imediato.",
+      samu: "192 (SAMU)",
+      bombeiros: "193 (Bombeiros)",
+      elderNote:
+        "O mesmo aviso aparece na tela do idoso depois que ele confirma o pedido de ajuda.",
+    },
+    lastAlert: {
+      title: "Último acionamento",
+      emptyIcon: "🆘",
+      emptyTitle: "Nenhum pedido de ajuda ainda",
+      emptyDescription:
+        "Quando ele apertar o botão de ajuda no aplicativo, você verá aqui o horário, quem foi avisado e o que aconteceu.",
+      resolveButton: "Marcar como resolvido",
+      pdfButton: "Baixar registro em PDF",
+      pdfSoon: "Em breve",
+      mapButton: "Ver no mapa",
+      mapDisabledHint: "Localização disponível em Onde ele está",
+      fields: {
+        person: "Pessoa",
+        time: "Horário",
+        alertType: "Tipo do alerta",
+        location: "Localização",
+        callback: "Telefone para retorno",
+        notified: "Notificados",
+        outcome: "Desfecho",
+      },
+    },
+    escalation: {
+      title: "Quem a Zelita avisa primeiro",
+      changeOrderButton: "Mudar ordem",
+      emptyHint:
+        "Configure quem recebe o alerta quando ele apertar o botão de ajuda.",
+      invalidWarning:
+        "Alguém saiu da conta desde a última configuração. Atualize a ordem de aviso.",
+      singleContactWarning:
+        "Com pelo menos dois contatos, o botão avisa mais gente. Ordem salva com um contato.",
+      saveSuccess: "Ordem de aviso atualizada.",
+      channels: {
+        adminChannel: "Ligação + WhatsApp · imediato",
+        caregiverChannel: "WhatsApp · imediato",
+        viewerChannel: "WhatsApp · imediato (opt-in)",
+        emergencyImmediate: "Ligação + WhatsApp · imediato",
+        emergencyDelayed: "Ligação · se ninguém responder em 2 min",
+      },
+      roleLabels: {
+        admin: "Administrador",
+        caregiver: "Cuidador",
+        viewer: "Visualizador",
+        emergency_contact: "Contato de emergência",
+      },
+      modal: {
+        title: "Quem avisar primeiro",
+        hint: "Arraste para reordenar. Quem está em primeiro recebe o alerta na hora.",
+        viewerOptInHint:
+          "Alerta SOS para visualizador só entra se você incluir explicitamente.",
+        includeViewerButton: "Incluir visualizador",
+        saveButton: "Salvar ordem",
+        saving: "Salvando…",
+        cancel: "Cancelar",
+        moveUp: "Subir",
+        moveDown: "Descer",
+      },
+    },
+    history: {
+      title: "Histórico",
+      testButton: "Testar o botão na tela do idoso",
+      testModalTitle: "Teste na tela do idoso",
+      testModalBody:
+        "O teste real do botão de ajuda será feito na área do idoso (PWA), em uma atualização futura. Por enquanto, não simulamos SOS pelo painel da família.",
+      testModalClose: "Entendi",
+      sosIcon: "🆘",
+      cancelledIcon: "↩",
+      summary: {
+        resolvedInMinutes: "Resolvido em {minutos} min",
+        resolvedWithNote: "Resolvido em {minutos} min · {observacao}",
+        cancelled: "Cancelado pelo idoso na confirmação",
+        open: "Aberto",
+      },
+    },
+    detail: {
+      headline: "🆘 {apelido} pediu ajuda",
+      personTemplate: "{pessoa}",
+      alertType: "Botão de ajuda no aplicativo (confirmado pelo idoso)",
+      locationUnavailable: "Localização indisponível",
+      locationAccuracy: "Precisão ~{metros} m",
+      locationTime: "atualizada às {hora}",
+      locationZone: "Zona: {zona}",
+      notifiedLineTemplate: "{nome} ({hora}, {canal} · {status})",
+      notifiedPending:
+        "Avisos serão registrados quando o envio estiver ativo.",
+      outcomeWithNote: "Resolvido por {nome} às {hora} — {observacao}",
+      outcomeWithoutNote: "Resolvido por {nome} às {hora}",
+      callbackUnavailable: "Não cadastrado",
+    },
+    resolve: {
+      title: "Marcar como resolvido",
+      noteLabel: "O que aconteceu? (opcional)",
+      notePlaceholder: "Ex.: tontura ao levantar, passou; sem queda",
+      confirm: "Confirmar resolução",
+      saving: "Salvando…",
+      cancel: "Cancelar",
+      saveSuccess: "Pedido marcado como resolvido.",
+    },
+    hoje: {
+      needsTitle: "{apelido} pediu ajuda",
+      needsSubtitle: "Acionado às {horario}",
+      timelineTriggered: "Botão de ajuda acionado",
+      timelineResolved: "Pedido de ajuda resolvido",
+      emptyPanelConfigured: "{count} contatos na ordem de aviso",
+      emptyPanelPending: "Ordem de aviso não configurada",
+    },
+    errors: {
+      incompleteAccount: "Cadastro incompleto para ver pedidos de ajuda.",
+      accessDenied:
+        "Seu papel não permite ver pedidos de ajuda nesta conta.",
+      loadFailed:
+        "Não foi possível carregar pedidos de ajuda agora. Recarregue a página ou tente de novo em instantes.",
+      escalationForbidden:
+        "Só quem administra a conta pode alterar a ordem de aviso.",
+      accountPaused:
+        "Conta pausada: leitura permitida, mas não dá para salvar nova ordem até reativar.",
+      invalidEscalation: "Selecione contatos válidos para a ordem de aviso.",
+      saveFailed: "Não foi possível salvar agora. Tente de novo.",
+      resolveForbidden:
+        "Seu papel não permite marcar pedidos de ajuda como resolvidos.",
+      invalidResolve: "Dados inválidos para resolver o pedido.",
+      alertNotFound: "Pedido de ajuda não encontrado.",
+      alreadyResolved: "Este pedido já foi marcado como resolvido por {nome}.",
+      concurrentResolve:
+        "Este pedido já foi marcado como resolvido por outra pessoa.",
+    },
   },
 };
 

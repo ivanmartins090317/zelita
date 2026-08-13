@@ -31,6 +31,10 @@ import type {
 } from "@/modules/medications/domain/hoje-timeline";
 import type { OnboardingChecklistResult } from "@/modules/accounts/application/onboarding-checklist";
 import { getHojeExamsSnapshot } from "@/modules/exams/application/get-hoje-exams-snapshot";
+import {
+  getHojeSosSnapshot,
+  mergeSosNeedsItems,
+} from "@/modules/sos/application/get-hoje-sos-snapshot";
 import { isWhatsAppConfigured } from "@/modules/reminders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loginContent } from "@/content/login";
@@ -47,6 +51,7 @@ export interface HojeDashboardViewModel {
   activeMemberCount: number;
   activeMedicationCount: number;
   activeExamCount: number;
+  sosEscalationContactCount: number;
   greeting: {
     headline: string;
     contextLine: string;
@@ -142,10 +147,18 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
       careRecipientId: ctx.careRecipientId,
     });
 
+    const apelido = shell.careRecipientDisplayName;
+    const sosSnapshot = await getHojeSosSnapshot({
+      careRecipientId: ctx.careRecipientId,
+      careRecipientDisplayName: apelido,
+      now,
+    });
+
     const checklist = computeOnboardingChecklist({
       activeMedicationCount: meds.activeMedicationCount,
       activeMemberCount,
       activeExamCount: examSnapshot.examCount,
+      sosEscalationContactCount: sosSnapshot.escalationContactCount,
     });
 
     const mode = isFirstAccessMode(meds.activeMedicationCount)
@@ -186,17 +199,17 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
         companionNames,
         refillNeedsItems: refillNeeds,
       });
-      timeline = [...meds.timeline, ...agendaSnapshot.timelineItems].sort(
+      timeline = [...meds.timeline, ...agendaSnapshot.timelineItems, ...sosSnapshot.timelineItems].sort(
         (a, b) => a.sortKey - b.sortKey,
       );
-      needsAttention = [...agendaSnapshot.needsItems, ...examSnapshot.needsItems]
-        .sort((a, b) => a.sortKey - b.sortKey)
-        .slice(0, 3);
+      needsAttention = mergeSosNeedsItems(
+        [...agendaSnapshot.needsItems, ...examSnapshot.needsItems],
+        sosSnapshot.needsItems,
+      );
     }
 
-    const apelido = shell.careRecipientDisplayName;
-    const refillCount = meds.refillSummary.count;
     const copy = familyContent.hoje;
+    const refillCount = meds.refillSummary.count;
 
     const greeting =
       mode === "primeiro_acesso"
@@ -228,6 +241,7 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
         activeMemberCount,
         activeMedicationCount: meds.activeMedicationCount,
         activeExamCount: examSnapshot.examCount,
+        sosEscalationContactCount: sosSnapshot.escalationContactCount,
         greeting,
         stats:
           mode === "hoje_maduro"

@@ -21,6 +21,7 @@ describe("computeOnboardingChecklist", () => {
       activeMedicationCount: 1,
       activeMemberCount: 1,
       activeExamCount: 0,
+      sosEscalationContactCount: 0,
     });
     expect(result.tasks[0]?.completed).toBe(true);
     expect(result.completedCount).toBe(1);
@@ -32,6 +33,7 @@ describe("computeOnboardingChecklist", () => {
       activeMedicationCount: 0,
       activeMemberCount: 2,
       activeExamCount: 0,
+      sosEscalationContactCount: 0,
     });
     expect(result.tasks[2]?.completed).toBe(true);
     expect(result.completedCount).toBe(1);
@@ -42,19 +44,30 @@ describe("computeOnboardingChecklist", () => {
       activeMedicationCount: 0,
       activeMemberCount: 1,
       activeExamCount: 1,
+      sosEscalationContactCount: 0,
     });
     expect(result.tasks[3]?.completed).toBe(true);
   });
 
-  it("nunca conclui tarefa 2 no MVP F4.2", () => {
+  it("marca tarefa 2 concluída com dois contatos na ordem SOS", () => {
     const result = computeOnboardingChecklist({
       activeMedicationCount: 5,
       activeMemberCount: 4,
       activeExamCount: 0,
+      sosEscalationContactCount: 2,
+    });
+    expect(result.tasks[1]?.completed).toBe(true);
+    expect(result.completedCount).toBe(3);
+    expect(result.progressPercent).toBe(75);
+  });
+
+  it("mantém tarefa 2 pendente com um contato na ordem SOS", () => {
+    const result = computeOnboardingChecklist({
+      activeMedicationCount: 5,
+      activeMemberCount: 4,
+      activeExamCount: 0,
+      sosEscalationContactCount: 1,
     });
     expect(result.tasks[1]?.completed).toBe(false);
-    expect(result.tasks[3]?.completed).toBe(false);
-    expect(result.completedCount).toBe(2);
-    expect(result.progressPercent).toBe(50);
   });
 });

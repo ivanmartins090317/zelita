@@ -110,11 +110,19 @@ function HojeMaduroView({ data }: HojeMaduroViewProps) {
                     icon={item.icon}
                     title={item.title}
                     subtitle={item.subtitle}
-                    className="bg-amber-bg/30"
+                    className={
+                      item.id.startsWith("sos-open-")
+                        ? "bg-coral-bg/40"
+                        : "bg-amber-bg/30"
+                    }
                     trailing={
                       item.href ? (
                         <Button variant="secondary" size="xs" asChild>
-                          <Link href={item.href}>{copy.maduro.weekButton}</Link>
+                          <Link href={item.href}>
+                            {item.id.startsWith("sos-open-")
+                              ? "Ver pedido"
+                              : copy.maduro.weekButton}
+                          </Link>
                         </Button>
                       ) : null
                     }
