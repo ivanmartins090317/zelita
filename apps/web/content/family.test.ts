@@ -80,6 +80,16 @@ describe("familyContent", () => {
     );
     expect(familyContent.pedidosDeAjuda.escalation.title).toBeTruthy();
     expect(familyContent.pedidosDeAjuda.hoje.needsTitle).toContain("{apelido}");
+    expect(familyContent.pedidosDeAjuda.detail.locationInsideZone).toContain(
+      "{zona}",
+    );
+  });
+
+  it("expõe copy de Localização F4.8", () => {
+    expect(familyContent.localizacao.map.title).toBe("Onde ele está");
+    expect(familyContent.localizacao.consent.footer).toBeTruthy();
+    expect(familyContent.localizacao.limitations.paragraphs).toHaveLength(4);
+    expect(familyContent.localizacao.sharePublic.expiredTitle).toBeTruthy();
   });
 
   it("expõe copy de Remédios F4.3", () => {

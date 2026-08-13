@@ -73,6 +73,7 @@ export interface FamilyContent {
   remedios: FamilyRemediosContent;
   consultas: FamilyConsultasContent;
   pedidosDeAjuda: FamilyPedidosDeAjudaContent;
+  localizacao: FamilyLocalizacaoContent;
   exames: FamilyExamesContent;
   participantes: FamilyParticipantesContent;
 }
@@ -675,6 +676,7 @@ export interface FamilyPedidosDeAjudaContent {
     locationAccuracy: string;
     locationTime: string;
     locationZone: string;
+    locationInsideZone: string;
     notifiedLineTemplate: string;
     notifiedPending: string;
     outcomeWithNote: string;
@@ -711,6 +713,149 @@ export interface FamilyPedidosDeAjudaContent {
     alertNotFound: string;
     alreadyResolved: string;
     concurrentResolve: string;
+  };
+}
+
+export interface FamilyLocalizacaoContent {
+  loadError: string;
+  consent: {
+    activeTitle: string;
+    activeBody: string;
+    pendingTitle: string;
+    pendingBody: string;
+    revokedTitle: string;
+    revokedBody: string;
+    footer: string;
+  };
+  map: {
+    title: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    frozenHint: string;
+    pinLabel: string;
+    zoneSafe: string;
+    zoneOutside: string;
+    accuracy: string;
+    openExternal: string;
+    shareQuickButton: string;
+  };
+  stats: {
+    updated: string;
+    battery: string;
+    permission: string;
+    signal: string;
+    empty: string;
+    deviceHint: string;
+    batteryHint: string;
+    permissionActive: string;
+    permissionInactive: string;
+    permissionHintActive: string;
+    signalHintOk: string;
+  };
+  relativeTime: {
+    justNow: string;
+    minutes: string;
+    hours: string;
+    days: string;
+  };
+  places: {
+    title: string;
+    addButton: string;
+    editButton: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    tagPending: string;
+    tagInside: string;
+    tagOutside: string;
+    subtitlePending: string;
+    subtitleConfirmed: string;
+    alertOnExitSuffix: string;
+  };
+  placeModal: {
+    addTitle: string;
+    editTitle: string;
+    nameLabel: string;
+    addressLabel: string;
+    radiusLabel: string;
+    iconLabel: string;
+    alertOnExitLabel: string;
+    alertOnExitHint: string;
+    save: string;
+    saving: string;
+    cancel: string;
+    deleteButton: string;
+    saveSuccess: string;
+    deleteSuccess: string;
+  };
+  share: {
+    title: string;
+    body: string;
+    createButton: string;
+    disabledReason: string;
+  };
+  shareModal: {
+    title: string;
+    hint: string;
+    durationLabel: string;
+    duration1h: string;
+    duration3h: string;
+    duration24h: string;
+    confirm: string;
+    creating: string;
+    cancel: string;
+    success: string;
+    readyBody: string;
+    copyButton: string;
+    copied: string;
+    close: string;
+  };
+  sharePublic: {
+    title: string;
+    expiredTitle: string;
+    expiredBody: string;
+    openMap: string;
+    privacyNote: string;
+  };
+  history: {
+    title: string;
+    filterTag: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    columns: {
+      when: string;
+      where: string;
+      situation: string;
+    };
+    situations: {
+      safeZone: string;
+      zoneExit: string;
+      returned: string;
+    };
+  };
+  limitations: {
+    title: string;
+    paragraphs: string[];
+  };
+  hoje: {
+    statHint: string;
+    statOutside: string;
+    statUnavailable: string;
+    widgetConfigured: string;
+    widgetPending: string;
+  };
+  errors: {
+    accessDenied: string;
+    loadFailed: string;
+    manageForbidden: string;
+    shareForbidden: string;
+    accountPaused: string;
+    invalidPlace: string;
+    invalidShare: string;
+    placeNotFound: string;
+    cannotDeleteHome: string;
+    alertNeedsCoords: string;
+    shareUnavailable: string;
+    saveFailed: string;
   };
 }
 
@@ -1656,6 +1801,172 @@ export const familyContent: FamilyContent = {
     pausedHint:
       "Conta pausada — convites e reenvios ficam indisponíveis até reativar.",
   },
+  localizacao: {
+    loadError:
+      "Não foi possível carregar a localização agora. Recarregue a página ou tente de novo em instantes.",
+    consent: {
+      activeTitle: "Ele autorizou compartilhar a localização",
+      activeBody:
+        "Autorizou em {data}. Pode revogar quando quiser no aparelho dele. A Zelita mostra segurança, não vigilância — sem trajeto minuto a minuto.",
+      pendingTitle: "Aguardando autorização dele",
+      pendingBody:
+        "Nada aparece aqui sem o consentimento dele no aparelho vinculado. Quando autorizar, a última posição conhecida aparecerá nesta área.",
+      revokedTitle: "Autorização desligada",
+      revokedBody:
+        "Ele revogou o compartilhamento. A posição abaixo pode estar desatualizada — é a última conhecida antes de desligar.",
+      footer:
+        "A Zelita prioriza segurança, não vigilância. Revogação é sempre possível no aparelho dele.",
+    },
+    map: {
+      title: "Onde ele está",
+      emptyTitle: "Localização indisponível",
+      emptyDescription:
+        "Quando ele autorizar no aparelho vinculado, a última posição conhecida aparecerá aqui — sempre com horário ao lado.",
+      frozenHint:
+        "Autorização desligada — posição pode estar desatualizada.",
+      pinLabel: "{apelido} · {hora}",
+      zoneSafe: "Zona segura · {lugar}",
+      zoneOutside: "Fora das zonas",
+      accuracy: "Precisão ~{metros} m",
+      openExternal: "Abrir no mapa",
+      shareQuickButton: "Compartilhar por 1h",
+    },
+    stats: {
+      updated: "Atualizado",
+      battery: "Bateria",
+      permission: "Permissão",
+      signal: "Sinal",
+      empty: "—",
+      deviceHint: "Disponível após vínculo do aparelho",
+      batteryHint: "celular do {apelido}",
+      permissionActive: "Ativa",
+      permissionInactive: "Desligada",
+      permissionHintActive: "segundo plano ligado",
+      signalHintOk: "sem falhas de rede",
+    },
+    relativeTime: {
+      justNow: "agora",
+      minutes: "há {n} min",
+      hours: "há {n} h",
+      days: "há {n} d",
+    },
+    places: {
+      title: "Lugares de sempre",
+      addButton: "+ Adicionar",
+      editButton: "Editar",
+      emptyTitle: "Nenhum lugar cadastrado",
+      emptyDescription:
+        "Casa vem do cadastro. Adicione mercado, clínica ou outros lugares que ele frequenta.",
+      tagPending: "Posição pendente",
+      tagInside: "Dentro",
+      tagOutside: "Fora",
+      subtitlePending:
+        "Confirme no aparelho dele para ligar aviso ao sair",
+      subtitleConfirmed: "Raio de {raio} m{alerta}",
+      alertOnExitSuffix: " · avisar ao sair",
+    },
+    placeModal: {
+      addTitle: "Adicionar lugar",
+      editTitle: "Editar lugar",
+      nameLabel: "Nome",
+      addressLabel: "Endereço",
+      radiusLabel: "Raio (metros)",
+      iconLabel: "Ícone (opcional)",
+      alertOnExitLabel: "Avisar ao sair deste lugar",
+      alertOnExitHint:
+        "Só é possível ligar depois que a posição for confirmada no aparelho dele.",
+      save: "Salvar",
+      saving: "Salvando…",
+      cancel: "Cancelar",
+      deleteButton: "Remover",
+      saveSuccess: "Lugar salvo.",
+      deleteSuccess: "Lugar removido.",
+    },
+    share: {
+      title: "Mostrar por um tempo",
+      body:
+        "Gere um link temporário para vizinho ou motorista ver a posição aproximada por algumas horas — expira sozinho.",
+      createButton: "Criar link",
+      disabledReason:
+        "Precisa de consentimento vigente e ao menos uma posição registrada.",
+    },
+    shareModal: {
+      title: "Compartilhar localização",
+      hint:
+        "Quem abrir o link vê só a posição aproximada e o horário — sem medicamentos, exames ou dados pessoais.",
+      durationLabel: "Por quanto tempo",
+      duration1h: "1 hora",
+      duration3h: "3 horas",
+      duration24h: "24 horas",
+      confirm: "Gerar link",
+      creating: "Gerando…",
+      cancel: "Cancelar",
+      success: "Link criado.",
+      readyBody: "Copie e envie para quem precisa ver onde ele está agora:",
+      copyButton: "Copiar link",
+      copied: "Copiado!",
+      close: "Fechar",
+    },
+    sharePublic: {
+      title: "Localização compartilhada",
+      expiredTitle: "Link expirado ou inválido",
+      expiredBody:
+        "Este link não está mais disponível. Peça um novo link para quem cuida dele.",
+      openMap: "Abrir no mapa",
+      privacyNote:
+        "Posição aproximada compartilhada temporariamente. A Zelita não garante precisão indoor ou com bateria zerada.",
+    },
+    history: {
+      title: "Onde ele esteve",
+      filterTag: "Últimos 7 dias",
+      emptyTitle: "Nenhum registro ainda",
+      emptyDescription:
+        "Quando houver entradas e saídas de zonas seguras, aparecerão aqui.",
+      columns: {
+        when: "Quando",
+        where: "Onde",
+        situation: "Situação",
+      },
+      situations: {
+        safeZone: "Zona segura",
+        zoneExit: "Saída de zona segura",
+        returned: "Retornou",
+      },
+    },
+    limitations: {
+      title: "O que este mapa não garante",
+      paragraphs: [
+        "Ele decide o que compartilhar — e pode revogar quando quiser no aparelho dele.",
+        "Se o celular estiver desligado ou sem bateria, nenhuma localização é enviada.",
+        "Dentro de prédios, o GPS pode errar por centenas de metros.",
+        "Sem internet, os avisos chegam atrasados — a última posição pode ser antiga.",
+      ],
+    },
+    hoje: {
+      statHint: "Atualizado às {hora}",
+      statOutside: "Fora das zonas",
+      statUnavailable: "Sem posição",
+      widgetConfigured: "Autorizado · aguardando posição ou Casa ok",
+      widgetPending: "Aguardando ele autorizar",
+    },
+    errors: {
+      accessDenied: "Seu papel não permite ver localização.",
+      loadFailed:
+        "Não foi possível carregar a localização agora. Tente de novo.",
+      manageForbidden: "Somente a administradora pode gerenciar lugares.",
+      shareForbidden: "Somente a administradora pode criar links temporários.",
+      accountPaused: "Conta pausada — ações indisponíveis até reativar.",
+      invalidPlace: "Dados do lugar inválidos. Confira nome, endereço e raio.",
+      invalidShare: "Duração do link inválida.",
+      placeNotFound: "Lugar não encontrado.",
+      cannotDeleteHome: "Casa não pode ser excluída — só ajustada.",
+      alertNeedsCoords:
+        "Confirme a posição no aparelho dele antes de ligar aviso ao sair.",
+      shareUnavailable:
+        "Link indisponível — precisa de consentimento vigente e posição registrada.",
+      saveFailed: "Não foi possível salvar agora. Tente de novo.",
+    },
+  },
   pedidosDeAjuda: {
     loadError:
       "Não foi possível carregar pedidos de ajuda agora. Recarregue a página ou tente de novo em instantes.",
@@ -1749,6 +2060,7 @@ export const familyContent: FamilyContent = {
       locationAccuracy: "Precisão ~{metros} m",
       locationTime: "atualizada às {hora}",
       locationZone: "Zona: {zona}",
+      locationInsideZone: "dentro da zona “{zona}”",
       notifiedLineTemplate: "{nome} ({hora}, {canal} · {status})",
       notifiedPending:
         "Avisos serão registrados quando o envio estiver ativo.",

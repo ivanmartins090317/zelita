@@ -4,6 +4,11 @@ import { getShellContext } from "@/modules/accounts/application/get-shell-contex
 import { isAccountPaused } from "@/modules/accounts/domain/roles";
 import { fetchParticipantRows } from "@/modules/accounts/infrastructure/member-list-repo";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  resolveLocationForSos,
+  toSafePlaceCoords,
+} from "@/modules/location/application/resolve-location-for-sos";
+import { fetchSafePlacesForCareRecipient } from "@/modules/location/infrastructure/safe-place-repo";
 
 import { canViewSosAreaForRole } from "./can-view-sos-area";
 import { canManageSosEscalationForRole } from "./can-manage-sos-escalation";
@@ -144,11 +149,22 @@ function buildPersonLine(
 
 function buildLocationBlock(
   alert: Awaited<ReturnType<typeof fetchSosAlertsForCareRecipient>>[number],
+  safePlaces: ReturnType<typeof toSafePlaceCoords>,
   copy: typeof familyContent.pedidosDeAjuda,
-): { line: string; meta: string | null } {
-  if (!alert.locationText) {
-    return { line: copy.detail.locationUnavailable, meta: null };
-  }
+): { line: string; meta: string | null; hasMapTarget: boolean } {
+  const resolved = resolveLocationForSos(
+    {
+      lat: null,
+      lng: null,
+      locationText: alert.locationText,
+      safeZoneName: alert.safeZoneName,
+      safePlaces,
+    },
+    {
+      unavailable: copy.detail.locationUnavailable,
+      insideZone: copy.detail.locationInsideZone,
+    },
+  );
 
   let meta: string | null = null;
   const metaParts: string[] = [];
@@ -168,7 +184,9 @@ function buildLocationBlock(
       ),
     );
   }
-  if (alert.safeZoneName) {
+  if (resolved.zoneLine) {
+    metaParts.push(resolved.zoneLine);
+  } else if (alert.safeZoneName) {
     metaParts.push(
       copy.detail.locationZone.replace("{zona}", alert.safeZoneName),
     );
@@ -177,7 +195,11 @@ function buildLocationBlock(
     meta = metaParts.join(" · ");
   }
 
-  return { line: alert.locationText, meta };
+  return {
+    line: resolved.locationLine,
+    meta,
+    hasMapTarget: resolved.hasMapTarget,
+  };
 }
 
 function mapEscalationEntry(
@@ -288,7 +310,7 @@ export async function getPedidosDeAjudaPage(input?: {
         .map((row) => row.id),
     );
 
-    const [alerts, escalationConfig, careRecipient] = await Promise.all([
+    const [alerts, escalationConfig, careRecipient, safePlaces] = await Promise.all([
       fetchSosAlertsForCareRecipient(supabase, ctx.careRecipientId),
       fetchSosEscalationConfig(supabase, ctx.careRecipientId),
       supabase
@@ -296,6 +318,7 @@ export async function getPedidosDeAjudaPage(input?: {
         .select("full_name, display_name, birth_date, whatsapp")
         .eq("id", ctx.careRecipientId)
         .single(),
+      fetchSafePlacesForCareRecipient(supabase, ctx.careRecipientId),
     ]);
 
     if (careRecipient.error) {
@@ -373,7 +396,11 @@ export async function getPedidosDeAjudaPage(input?: {
             : [];
 
         const triggered = formatDateTime(alert.triggeredAt);
-        const location = buildLocationBlock(alert, copy);
+        const location = buildLocationBlock(
+          alert,
+          toSafePlaceCoords(safePlaces),
+          copy,
+        );
 
         let outcomeLine: string | null = null;
         if (alert.status === SOS_ALERT_STATUS.resolved && alert.resolvedAt) {
@@ -406,8 +433,8 @@ export async function getPedidosDeAjudaPage(input?: {
           notifiedEmptyCopy: copy.detail.notifiedPending,
           outcomeLine,
           showResolveAction: shouldShowResolveAction(alert.status, ctx.role),
-          showMapLink: Boolean(alert.locationText),
-          mapHref: familyRoutes.localizacao,
+          showMapLink: location.hasMapTarget,
+          mapHref: `${familyRoutes.localizacao}?focus=alert&alerta=${alert.id}`,
         };
       }
     }

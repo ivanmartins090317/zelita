@@ -33,7 +33,9 @@ function resolveEmptyStatus(
           )
         : familyContent.pedidosDeAjuda.hoje.emptyPanelPending;
     case "geo":
-      return "Aguardando ele autorizar";
+      return data.geoWidgetConfigured
+        ? data.geoWidgetStatus
+        : "Aguardando ele autorizar";
     case "exams":
       return "Nenhum guardado";
   }
@@ -140,7 +142,9 @@ function PrimeiroAcessoView({ data }: PrimeiroAcessoViewProps) {
                   title={item.title}
                   subtitle={resolveEmptyStatus(item.getStatus, data)}
                   trailing={
-                    item.tag ? (
+                    item.tag && !data.geoWidgetConfigured && item.id === "geo" ? (
+                      <Tag tone="warning">{item.tag}</Tag>
+                    ) : item.tag && item.id !== "geo" ? (
                       <Tag tone="warning">{item.tag}</Tag>
                     ) : item.href && showMedCta && item.id === "medications" ? (
                       <Button variant="secondary" size="xs" asChild>

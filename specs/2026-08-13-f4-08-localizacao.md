@@ -1,6 +1,6 @@
 # Spec: F4.8 — Onde ele está (Localização)
 
-- Status: `draft`
+- Status: `approved`
 - Data: 2026-08-13
 - Autonomia: `tight` (geo, consentimento revogável, paths críticos `location` + schema/RLS, PHI de coordenadas, link público temporário)
 - Projeto: Zelita (`apps/web`)

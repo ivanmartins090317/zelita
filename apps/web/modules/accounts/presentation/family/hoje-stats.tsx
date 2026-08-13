@@ -6,13 +6,19 @@ import type {
   NextMedicationStat,
   RefillAlertSummary,
 } from "@/modules/medications/domain/hoje-timeline";
+import type { HojeLocationStat } from "@/modules/location/application/get-hoje-location-snapshot";
 
 interface HojeStatsProps {
   nextMedication: NextMedicationStat | null;
   refillSummary: RefillAlertSummary;
+  locationStat: HojeLocationStat | null;
 }
 
-function HojeStats({ nextMedication, refillSummary }: HojeStatsProps) {
+function HojeStats({
+  nextMedication,
+  refillSummary,
+  locationStat,
+}: HojeStatsProps) {
   const copy = familyContent.hoje.maduro.stats;
 
   return (
@@ -44,17 +50,29 @@ function HojeStats({ nextMedication, refillSummary }: HojeStatsProps) {
       />
       <Stat
         label={copy.locationLabel}
-        value={copy.locationValue}
+        value={locationStat?.value ?? copy.locationValue}
         hint={
-          <>
-            {copy.locationHint} ·{" "}
-            <Link
-              href={familyRoutes.localizacao}
-              className="font-semibold text-brand-600"
-            >
-              saiba mais
-            </Link>
-          </>
+          locationStat ? (
+            <>
+              {locationStat.hint} ·{" "}
+              <Link
+                href={locationStat.href}
+                className="font-semibold text-brand-600"
+              >
+                ver mapa
+              </Link>
+            </>
+          ) : (
+            <>
+              {copy.locationHint} ·{" "}
+              <Link
+                href={familyRoutes.localizacao}
+                className="font-semibold text-brand-600"
+              >
+                saiba mais
+              </Link>
+            </>
+          )
         }
       />
       <Stat

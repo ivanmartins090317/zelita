@@ -13,7 +13,11 @@ Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e e
 
 ## Abertas pela F4 · Painel
 
-- [ ] **Homologação manual F4.7** — pedidos de ajuda: disclaimer, ordem 2+ contatos, resolver, acesso visualizador (`manual-report` FL-06 parcial)
+- [ ] **Homologação manual F4.8** — localização: consentimento, lugares CRUD, link share, visualizadora negada, deep link SOS (`manual-report` FL-08 parcial)
+- [x] **`pnpm db:push` remoto** — migration `010_location.sql` (2026-08-13)
+- [ ] **Posição real / seed SQL** — homologação parcial até F5 ou seed documentado
+- [ ] **Timeline Hoje — eventos de zona** — N/A nesta subfase (agregador sem extensão)
+- [ ] **Precisa de você — Casa pendente 48h** — N/A nesta subfase (cenário 38 opcional)
 - [ ] **`pnpm db:push` remoto** — migration `009_sos.sql`
 - [ ] **Homologação manual F4.6** — exames/receitas: upload, filtros, share, cuidadora autorizada, Hoje (`manual-report` FL-08 parcial)
 - [ ] **`pnpm db:push` remoto** — migration `007_exams_storage.sql`

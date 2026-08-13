@@ -35,6 +35,8 @@ import {
   getHojeSosSnapshot,
   mergeSosNeedsItems,
 } from "@/modules/sos/application/get-hoje-sos-snapshot";
+import { getHojeLocationSnapshot } from "@/modules/location/application/get-hoje-location-snapshot";
+import type { HojeLocationStat } from "@/modules/location/application/get-hoje-location-snapshot";
 import { isWhatsAppConfigured } from "@/modules/reminders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loginContent } from "@/content/login";
@@ -59,7 +61,10 @@ export interface HojeDashboardViewModel {
   stats: {
     nextMedication: NextMedicationStat | null;
     refillSummary: RefillAlertSummary;
+    locationStat: HojeLocationStat | null;
   } | null;
+  geoWidgetConfigured: boolean;
+  geoWidgetStatus: string;
   timeline: TimelineItem[];
   refillAttention: RefillAttentionItem[];
   needsAttention: NeedsPriorityItem[];
@@ -154,6 +159,25 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
       now,
     });
 
+    const careRecipientGeo = await supabase
+      .from("care_recipients")
+      .select("geo_consent_at, geo_consent_revoked_at")
+      .eq("id", ctx.careRecipientId)
+      .single();
+
+    if (careRecipientGeo.error) {
+      throw new Error(careRecipientGeo.error.message);
+    }
+
+    const locationSnapshot = await getHojeLocationSnapshot({
+      careRecipientId: ctx.careRecipientId,
+      geoConsentAt:
+        (careRecipientGeo.data.geo_consent_at as string | null) ?? null,
+      geoConsentRevokedAt:
+        (careRecipientGeo.data.geo_consent_revoked_at as string | null) ?? null,
+      now,
+    });
+
     const checklist = computeOnboardingChecklist({
       activeMedicationCount: meds.activeMedicationCount,
       activeMemberCount,
@@ -199,7 +223,7 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
         companionNames,
         refillNeedsItems: refillNeeds,
       });
-      timeline = [...meds.timeline, ...agendaSnapshot.timelineItems, ...sosSnapshot.timelineItems].sort(
+      timeline = [...meds.timeline, ...agendaSnapshot.timelineItems, ...sosSnapshot.timelineItems, ...locationSnapshot.timelineItems].sort(
         (a, b) => a.sortKey - b.sortKey,
       );
       needsAttention = mergeSosNeedsItems(
@@ -248,8 +272,11 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
             ? {
                 nextMedication: meds.nextMedication,
                 refillSummary: meds.refillSummary,
+                locationStat: locationSnapshot.locationStat,
               }
             : null,
+        geoWidgetConfigured: locationSnapshot.geoWidgetConfigured,
+        geoWidgetStatus: locationSnapshot.geoWidgetStatus,
         timeline,
         refillAttention: meds.refillAttention,
         needsAttention,
