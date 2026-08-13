@@ -30,6 +30,7 @@ import type {
   TimelineItem,
 } from "@/modules/medications/domain/hoje-timeline";
 import type { OnboardingChecklistResult } from "@/modules/accounts/application/onboarding-checklist";
+import { getHojeExamsSnapshot } from "@/modules/exams/application/get-hoje-exams-snapshot";
 import { isWhatsAppConfigured } from "@/modules/reminders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loginContent } from "@/content/login";
@@ -45,6 +46,7 @@ export interface HojeDashboardViewModel {
   checklist: OnboardingChecklistResult;
   activeMemberCount: number;
   activeMedicationCount: number;
+  activeExamCount: number;
   greeting: {
     headline: string;
     contextLine: string;
@@ -136,9 +138,14 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
       roleLabels,
     });
 
+    const examSnapshot = await getHojeExamsSnapshot({
+      careRecipientId: ctx.careRecipientId,
+    });
+
     const checklist = computeOnboardingChecklist({
       activeMedicationCount: meds.activeMedicationCount,
       activeMemberCount,
+      activeExamCount: examSnapshot.examCount,
     });
 
     const mode = isFirstAccessMode(meds.activeMedicationCount)
@@ -182,7 +189,9 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
       timeline = [...meds.timeline, ...agendaSnapshot.timelineItems].sort(
         (a, b) => a.sortKey - b.sortKey,
       );
-      needsAttention = agendaSnapshot.needsItems;
+      needsAttention = [...agendaSnapshot.needsItems, ...examSnapshot.needsItems]
+        .sort((a, b) => a.sortKey - b.sortKey)
+        .slice(0, 3);
     }
 
     const apelido = shell.careRecipientDisplayName;
@@ -218,6 +227,7 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
         checklist,
         activeMemberCount,
         activeMedicationCount: meds.activeMedicationCount,
+        activeExamCount: examSnapshot.examCount,
         greeting,
         stats:
           mode === "hoje_maduro"
@@ -233,7 +243,10 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
         trialDays: shell.trial?.totalDays ?? resolveTrialTotalDays(shell.accountPlan),
       },
     };
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("[getHojeDashboard] load_failed", error);
+    }
     return {
       ok: false,
       reason: "load_failed",

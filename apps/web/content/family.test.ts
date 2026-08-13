@@ -107,6 +107,13 @@ describe("familyContent", () => {
     );
     expect(familyContent.consultas.taskModal.types).toHaveLength(4);
   });
+
+  it("expõe copy principal de exames e receitas", () => {
+    expect(familyContent.exames.table.addButton).toBe("+ Adicionar exame");
+    expect(familyContent.exames.autoRead.tag).toBe("Depois do MVP");
+    expect(familyContent.exames.hoje.needsTitle).toBe("Um exame sem categoria");
+    expect(familyContent.exames.sharePublic.expiredTitle).toContain("expirado");
+  });
 });
 
 describe("formatChecklistProgress", () => {

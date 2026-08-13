@@ -20,6 +20,7 @@ describe("computeOnboardingChecklist", () => {
     const result = computeOnboardingChecklist({
       activeMedicationCount: 1,
       activeMemberCount: 1,
+      activeExamCount: 0,
     });
     expect(result.tasks[0]?.completed).toBe(true);
     expect(result.completedCount).toBe(1);
@@ -30,15 +31,26 @@ describe("computeOnboardingChecklist", () => {
     const result = computeOnboardingChecklist({
       activeMedicationCount: 0,
       activeMemberCount: 2,
+      activeExamCount: 0,
     });
     expect(result.tasks[2]?.completed).toBe(true);
     expect(result.completedCount).toBe(1);
   });
 
-  it("nunca conclui tarefas 2 e 4 no MVP F4.2", () => {
+  it("marca tarefa 4 concluída com ao menos um exame", () => {
+    const result = computeOnboardingChecklist({
+      activeMedicationCount: 0,
+      activeMemberCount: 1,
+      activeExamCount: 1,
+    });
+    expect(result.tasks[3]?.completed).toBe(true);
+  });
+
+  it("nunca conclui tarefa 2 no MVP F4.2", () => {
     const result = computeOnboardingChecklist({
       activeMedicationCount: 5,
       activeMemberCount: 4,
+      activeExamCount: 0,
     });
     expect(result.tasks[1]?.completed).toBe(false);
     expect(result.tasks[3]?.completed).toBe(false);

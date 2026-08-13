@@ -18,6 +18,7 @@ interface HojeChecklistCardProps {
   canManageMedications: boolean;
   isPaused: boolean;
   medicationCount: number;
+  examCount?: number;
   activeMemberCount?: number;
   trailing?: ReactNode;
 }
@@ -35,6 +36,7 @@ function HojeChecklistCard({
   canManageMedications,
   isPaused,
   medicationCount,
+  examCount = 0,
   activeMemberCount = 1,
   trailing,
 }: HojeChecklistCardProps) {
@@ -118,7 +120,9 @@ function HojeChecklistCard({
                   ? String(medicationCount)
                   : area.id === "members"
                     ? String(activeMemberCount)
-                    : "";
+                    : area.id === "exams"
+                      ? String(examCount)
+                      : "";
               const label = completed
                 ? area.labelDone.replace("{detail}", detail)
                 : area.labelPending;

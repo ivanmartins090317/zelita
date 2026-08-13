@@ -72,6 +72,7 @@ export interface FamilyContent {
   hoje: FamilyHojeContent;
   remedios: FamilyRemediosContent;
   consultas: FamilyConsultasContent;
+  exames: FamilyExamesContent;
   participantes: FamilyParticipantesContent;
 }
 
@@ -395,6 +396,125 @@ export interface FamilyHojeContent {
   loadError: {
     title: string;
     description: string;
+  };
+}
+
+export interface FamilyExamesContent {
+  loadError: string;
+  searchPlaceholder: string;
+  filters: {
+    all: string;
+    blood: string;
+    image: string;
+    cardiology: string;
+    prescriptions: string;
+  };
+  table: {
+    examColumn: string;
+    dateColumn: string;
+    providerColumn: string;
+    categoryColumn: string;
+    visibilityColumn: string;
+    openButton: string;
+    addButton: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    notFoundTitle: string;
+    notFoundDescription: string;
+    selectPrompt: string;
+    hiddenFooter: string;
+  };
+  categories: {
+    uncategorized: string;
+    defineCategory: string;
+    blood: string;
+    image: string;
+    cardiology: string;
+    prescriptions: string;
+    other: string;
+  };
+  visibility: {
+    family: string;
+    familyPlus: string;
+    adminHint: string;
+  };
+  detail: {
+    download: string;
+    share: string;
+    delete: string;
+    edit: string;
+    previewFallback: string;
+    openNewTab: string;
+    fields: {
+      name: string;
+      examDate: string;
+      provider: string;
+      category: string;
+      notes: string;
+    };
+    addedByTemplate: string;
+    deleteConfirm: string;
+  };
+  autoRead: {
+    title: string;
+    tag: string;
+    body: string;
+    neverTitle: string;
+    neverBody: string;
+  };
+  uploadModal: {
+    title: string;
+    dropHint: string;
+    chooseFile: string;
+    fileHint: string;
+    uploading: string;
+    uploaded: string;
+    fields: {
+      name: string;
+      examDate: string;
+      provider: string;
+      category: string;
+      notes: string;
+      visibility: string;
+    };
+    categoryPlaceholder: string;
+    cancel: string;
+    save: string;
+    saving: string;
+    viewerHint: string;
+    pausedHint: string;
+  };
+  shareModal: {
+    title: string;
+    body: string;
+    securityNote: string;
+    durations: {
+      "1h": string;
+      "4h": string;
+      today: string;
+    };
+    copyButton: string;
+    copied: string;
+    cancel: string;
+    generate: string;
+    generating: string;
+  };
+  sharePublic: {
+    expiredTitle: string;
+    expiredBody: string;
+    download: string;
+  };
+  hoje: {
+    needsTitle: string;
+    needsSubtitleTemplate: string;
+  };
+  errors: {
+    uploadFailed: string;
+    saveFailed: string;
+    invalidFile: string;
+    quotaExceeded: string;
+    nameRequired: string;
+    dateRequired: string;
   };
 }
 
@@ -781,7 +901,7 @@ export const familyContent: FamilyContent = {
           title: "Exames e receitas",
           getStatus: "exams",
           ctaLabel: "Enviar",
-          href: familyRoutes.exames,
+          href: `${familyRoutes.exames}?modal=exame`,
         },
       ],
       whatsAppCardTitle: "Enquanto isso, {apelido}…",
@@ -843,7 +963,7 @@ export const familyContent: FamilyContent = {
         },
         {
           id: "exams",
-          labelDone: "Exames · guarde o primeiro",
+          labelDone: "Exames · {detail} guardados",
           labelPending: "Exames · envie quando tiver",
           href: familyRoutes.exames,
         },
@@ -1171,6 +1291,132 @@ export const familyContent: FamilyContent = {
         "Conta pausada: você pode ver a agenda, mas não alterar até reativar o plano.",
       generic:
         "Não foi possível concluir agora. Verifique a conexão e tente de novo.",
+    },
+  },
+  exames: {
+    loadError:
+      "Não foi possível carregar exames e receitas agora. Recarregue a página ou tente de novo em instantes.",
+    searchPlaceholder: "Buscar por nome, médico, laboratório ou data",
+    filters: {
+      all: "Todos",
+      blood: "Sangue",
+      image: "Imagem",
+      cardiology: "Cardiologia",
+      prescriptions: "Receitas",
+    },
+    table: {
+      examColumn: "Exame",
+      dateColumn: "Data",
+      providerColumn: "Médico / clínica",
+      categoryColumn: "Categoria",
+      visibilityColumn: "Quem vê",
+      openButton: "Abrir",
+      addButton: "+ Adicionar exame",
+      emptyTitle: "Nenhum exame guardado ainda",
+      emptyDescription:
+        "Envie PDFs ou fotos de exames e receitas para achar na hora da consulta.",
+      notFoundTitle: "Nenhum exame encontrado",
+      notFoundDescription: "Tente limpar a busca ou mudar o filtro de categoria.",
+      selectPrompt: "Selecione um exame na lista",
+      hiddenFooter:
+        "Os demais exames não foram liberados pela administradora da conta.",
+    },
+    categories: {
+      uncategorized: "Sem categoria",
+      defineCategory: "Definir categoria",
+      blood: "Sangue",
+      image: "Imagem",
+      cardiology: "Cardiologia",
+      prescriptions: "Receitas",
+      other: "Outros",
+    },
+    visibility: {
+      family: "Família",
+      familyPlus: "Família + {nome}",
+      adminHint: "Administradoras sempre têm acesso.",
+    },
+    detail: {
+      download: "Baixar",
+      share: "Compartilhar",
+      delete: "Excluir exame",
+      edit: "Editar",
+      previewFallback: "Pré-visualização do PDF",
+      openNewTab: "Abrir em nova aba",
+      fields: {
+        name: "Nome",
+        examDate: "Data do exame",
+        provider: "Médico / clínica",
+        category: "Categoria",
+        notes: "Observações",
+      },
+      addedByTemplate: "{nome} · {data} às {hora}",
+      deleteConfirm: "Excluir este exame? O arquivo será removido para sempre.",
+    },
+    autoRead: {
+      title: "Leitura automática",
+      tag: "Depois do MVP",
+      body: "Na próxima fase, a Zelita vai ler seus arquivos para extrair a data, o tipo de exame, sugerir categorias e organizar tudo automaticamente.",
+      neverTitle: "O que ela nunca vai fazer:",
+      neverBody:
+        "interpretar resultado, sugerir diagnóstico, indicar ou ajustar medicação. Isso é do médico, sempre. Qualquer resumo virá com esse aviso ao lado.",
+    },
+    uploadModal: {
+      title: "Adicionar exame",
+      dropHint: "Arraste um arquivo aqui ou",
+      chooseFile: "escolha do computador",
+      fileHint: "Foto pelo celular também funciona · até 25 MB",
+      uploading: "Enviando…",
+      uploaded: "Envio concluído",
+      fields: {
+        name: "Nome do exame",
+        examDate: "Data do exame",
+        provider: "Médico ou clínica",
+        category: "Categoria",
+        notes: "Observações",
+        visibility: "Quem pode ver",
+      },
+      categoryPlaceholder: "Escolha uma categoria",
+      cancel: "Cancelar",
+      save: "Salvar exame",
+      saving: "Salvando…",
+      viewerHint:
+        "Seu papel não permite enviar exames. Peça à administradora da conta.",
+      pausedHint:
+        "Conta pausada: você pode ver os exames, mas não enviar ou excluir até reativar.",
+    },
+    shareModal: {
+      title: "Compartilhamento temporário",
+      body: "Gere um link de leitura para compartilhar com quem está fora da conta — por exemplo, o médico na consulta.",
+      securityNote:
+        "O link não dá acesso ao painel. Expira automaticamente e deixa de funcionar se o exame for excluído.",
+      durations: {
+        "1h": "1 hora",
+        "4h": "4 horas",
+        today: "Até o fim do dia",
+      },
+      copyButton: "Copiar link",
+      copied: "Link copiado",
+      cancel: "Cancelar",
+      generate: "Gerar link",
+      generating: "Gerando…",
+    },
+    sharePublic: {
+      expiredTitle: "Link expirado ou inválido",
+      expiredBody: "Peça um novo link à pessoa que compartilhou o exame.",
+      download: "Baixar arquivo",
+    },
+    hoje: {
+      needsTitle: "Um exame sem categoria",
+      needsSubtitleTemplate: "{titulo} de {data} · diga do que é",
+    },
+    errors: {
+      uploadFailed: "Não foi possível enviar o arquivo. Tente de novo.",
+      invalidFile: "Use PDF ou foto (JPG, PNG, WebP).",
+      quotaExceeded:
+        "Espaço de armazenamento esgotado. Exclua arquivos antigos ou aguarde Meu plano.",
+      nameRequired: "Informe o nome do exame.",
+      dateRequired: "Informe a data do exame.",
+      saveFailed: "Não foi possível salvar o exame agora.",
     },
   },
   participantes: {

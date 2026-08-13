@@ -4,6 +4,7 @@ export const DEFAULT_CARE_TIMEZONE = "America/Sao_Paulo";
 export interface OnboardingChecklistInput {
   activeMedicationCount: number;
   activeMemberCount: number;
+  activeExamCount: number;
 }
 
 export interface OnboardingChecklistTask {
@@ -28,7 +29,7 @@ export function computeOnboardingChecklist(
     { id: 1, completed: input.activeMedicationCount >= 1 },
     { id: 2, completed: false },
     { id: 3, completed: input.activeMemberCount >= 2 },
-    { id: 4, completed: false },
+    { id: 4, completed: input.activeExamCount >= 1 },
   ];
 
   const completedCount = tasks.filter((task) => task.completed).length;

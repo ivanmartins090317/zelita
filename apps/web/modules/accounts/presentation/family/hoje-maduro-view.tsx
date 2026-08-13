@@ -89,6 +89,7 @@ function HojeMaduroView({ data }: HojeMaduroViewProps) {
             canManageMedications={data.canManageMedications}
             isPaused={data.isPaused}
             medicationCount={data.activeMedicationCount}
+            examCount={data.activeExamCount}
             activeMemberCount={data.activeMemberCount}
             trailing={
               <Button variant="secondary" size="xs" asChild>

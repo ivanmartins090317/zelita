@@ -13,6 +13,8 @@ Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e e
 
 ## Abertas pela F4 · Painel
 
+- [ ] **Homologação manual F4.6** — exames/receitas: upload, filtros, share, cuidadora autorizada, Hoje (`manual-report` FL-08 parcial)
+- [ ] **`pnpm db:push` remoto** — migration `007_exams_storage.sql`
 - [ ] **Homologação manual F4.1 + F4.2 + F4.3** — shell, Hoje maduro e Remédios/modal via skill `manual-report`; replanejar FL-02/03 conforme `docs/F4/plan.md`
 - [ ] **Editar horários (Remédios)** — botão visível “Em breve” na F4.3; pode gerar feedback de usuário até subfase futura
 - [ ] **Conferência visual `/familia` e subrotas** — tipografia F0 + shell novo; exige sessão Supabase

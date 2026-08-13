@@ -49,9 +49,13 @@ function FamilyTopbar({ shell }: FamilyTopbarProps) {
             </Button>
           ) : null}
 
-          <Button asChild variant="outline" size="sm">
-            <Link href="/familia/exames">{copy.addExamLabel}</Link>
-          </Button>
+          {shell.canManageMedications ? (
+            <Button asChild variant="outline" size="sm">
+              <Link href={`${familyRoutes.exames}?modal=exame`}>
+                {copy.addExamLabel}
+              </Link>
+            </Button>
+          ) : null}
 
           <span
             aria-hidden
