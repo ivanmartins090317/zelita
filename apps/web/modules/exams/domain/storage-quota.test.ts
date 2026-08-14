@@ -1,26 +1,31 @@
 import { describe, expect, it } from "vitest";
 
+import { getPlanDefinition, PLAN_SLUGS } from "@/modules/billing/domain/plans";
+
 import {
   EXAM_MAX_FILE_BYTES,
   formatBytesReadable,
   isAllowedExamMime,
   resolveStorageQuotaBytes,
-  STORAGE_QUOTA_BYTES,
   sumExamStorageBytes,
   wouldExceedQuota,
 } from "./storage-quota";
 
 describe("storage-quota", () => {
-  it("resolve cota por plano", () => {
-    expect(resolveStorageQuotaBytes("essential")).toBe(STORAGE_QUOTA_BYTES.essential);
-    expect(resolveStorageQuotaBytes("cuidado_plus")).toBe(
-      STORAGE_QUOTA_BYTES.cuidado_plus,
+  it("resolve cota via billing por plano efetivo", () => {
+    expect(resolveStorageQuotaBytes("essential")).toBe(
+      getPlanDefinition(PLAN_SLUGS.essential).storageQuotaBytes,
     );
-    expect(resolveStorageQuotaBytes("trial")).toBe(STORAGE_QUOTA_BYTES.cuidado_plus);
+    expect(resolveStorageQuotaBytes("cuidado_plus")).toBe(
+      getPlanDefinition(PLAN_SLUGS.cuidado_plus).storageQuotaBytes,
+    );
+    expect(resolveStorageQuotaBytes("typo")).toBe(
+      getPlanDefinition(PLAN_SLUGS.essential).storageQuotaBytes,
+    );
   });
 
   it("detecta estouro de cota", () => {
-    const limit = STORAGE_QUOTA_BYTES.essential;
+    const limit = resolveStorageQuotaBytes("essential");
     expect(wouldExceedQuota(limit - 1000, 500, "essential")).toBe(false);
     expect(wouldExceedQuota(limit - 100, 200, "essential")).toBe(true);
   });

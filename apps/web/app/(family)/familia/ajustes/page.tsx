@@ -1,29 +1,24 @@
-import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { familyContent } from "@/content/family";
-import { signOut } from "@/modules/accounts/application/auth-actions";
+import { getAjustesPage } from "@/modules/care-recipients/application/get-ajustes-page";
+import { AjustesPageView } from "@/modules/care-recipients/presentation/ajustes-page-view";
 
-export default function AjustesPage() {
-  const placeholder = familyContent.placeholders.ajustes;
+export default async function AjustesPage() {
+  const result = await getAjustesPage();
 
-  return (
-    <div className="mx-auto mt-4 max-w-lg space-y-4">
+  if (!result.ok) {
+    return (
       <EmptyState
-        icon={placeholder.icon}
-        title={placeholder.title}
-        description={placeholder.description}
-        className="bg-white"
-        action={
-          <form action={signOut}>
-            <Button type="submit" variant="outline" size="sm">
-              {familyContent.topbar.signOutLabel}
-            </Button>
-          </form>
+        icon="⚙"
+        title={
+          result.reason === "forbidden"
+            ? familyContent.ajustes.errors.accessDenied
+            : familyContent.ajustes.errors.loadTitle
         }
+        description={result.message}
       />
-      <p className="text-center text-secondary text-muted">
-        {familyContent.ajustes.signOutDescription}
-      </p>
-    </div>
-  );
+    );
+  }
+
+  return <AjustesPageView data={result.data} />;
 }

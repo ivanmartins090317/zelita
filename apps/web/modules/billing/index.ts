@@ -1,6 +1,16 @@
+export {
+  hasAdvancedLocation,
+  hasVoiceFeature,
+  resolveEffectivePlan,
+  resolveStorageQuotaBytes,
+} from "./domain/effective-plan";
+export { formatBytesReadable } from "./domain/usage-formatters";
+export { getPlanoPage } from "./application/get-plano-page";
+export type { PlanoPageViewModel } from "./application/get-plano-page";
+
 import { TRIAL_PLACEHOLDER_DAYS } from "@/modules/accounts/domain/roles";
 
-/** Placeholder de billing — sem gateway nesta fatia. */
+/** API pública estreita do módulo billing. */
 export const billingModule = {
   id: "billing",
   trialPlaceholderDays: TRIAL_PLACEHOLDER_DAYS,

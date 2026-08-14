@@ -158,7 +158,7 @@ function NotificationMatrixCard({
         <CardBody className="flex flex-col gap-2 border-t border-line-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-secondary text-muted">{copy.footerHint}</p>
           <Button variant="secondary" size="xs" asChild>
-            <Link href={familyRoutes.ajustes}>{copy.settingsLink}</Link>
+            <Link href={`${familyRoutes.ajustes}#tom-e-horarios`}>{copy.settingsLink}</Link>
           </Button>
         </CardBody>
       </Card>

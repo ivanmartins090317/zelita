@@ -21,6 +21,216 @@ export interface FamilyPlaceholderContent {
   description: string;
 }
 
+export interface FamilyPlanoContent {
+  supportMailto: string;
+  errors: {
+    loadTitle: string;
+    loadFailed: string;
+    accessDenied: string;
+    incomplete: string;
+  };
+  currentCard: {
+    title: string;
+    tags: {
+      active: string;
+      trial: string;
+      paused: string;
+      canceled: string;
+    };
+    trial: {
+      badgeTemplate: string;
+      bodyPrefix: string;
+      bodyBold: string;
+      bodySuffix: string;
+    };
+    billing: {
+      trialChargeTemplate: string;
+      trialChargeEmphasis: string;
+      postTrialActive: string;
+      pausedBody: string;
+      canceledBody: string;
+      unknownPlan: string;
+    };
+    elderNote: string;
+    actions: {
+      changePlan: string;
+      changeCard: string;
+      invoices: string;
+      reactivate: string;
+    };
+  };
+  usageCard: {
+    title: string;
+    whatsapp: {
+      label: string;
+      unlimitedSuffix: string;
+    };
+    voice: {
+      label: string;
+      monthTemplate: string;
+      hint: string;
+    };
+    storage: {
+      label: string;
+      overQuotaHint: string;
+      overQuotaTag: string;
+    };
+    members: {
+      label: string;
+      unlimitedSuffix: string;
+      limitedTemplate: string;
+    };
+  };
+  modals: {
+    closeLabel: string;
+    changePlan: {
+      title: string;
+      essentialTitle: string;
+      essentialBody: string;
+      cuidadoPlusTitle: string;
+      cuidadoPlusBody: string;
+      familiaNote: string;
+      ctaLabel: string;
+    };
+    changeCard: {
+      title: string;
+      body: string;
+    };
+    invoices: {
+      title: string;
+      emptyTitle: string;
+      body: string;
+    };
+  };
+}
+
+export interface FamilyAjustesContent {
+  signOutDescription: string;
+  readOnlyNote: string;
+  pausedHint: string;
+  errors: {
+    loadTitle: string;
+    loadFailed: string;
+    accessDenied: string;
+    incomplete: string;
+    forbidden: string;
+    accountPaused: string;
+    invalidPayload: string;
+    saveFailed: string;
+  };
+  channels: {
+    cardTitle: string;
+    cardIcon: string;
+    whatsappTitle: string;
+    whatsappSubtitle: string;
+    voiceTitle: string;
+    voiceSubtitle: string;
+    shortcutTitle: string;
+    shortcutSubtitle: string;
+    videoTitle: string;
+    howItWorks: string;
+    saveButton: string;
+    saveSuccess: string;
+    optInPendingNote: string;
+    tags: {
+      active: string;
+      pending: string;
+      inactive: string;
+      notLinked: string;
+      unavailable: string;
+    };
+    options: Array<{
+      slug: string;
+      title: string;
+      description: string;
+    }>;
+  };
+  tone: {
+    cardTitle: string;
+    cardIcon: string;
+    toneLabel: string;
+    dndBeforeLabel: string;
+    dndAfterLabel: string;
+    previewTitleTemplate: string;
+    previewEmptyHint: string;
+    toneNote: string;
+    saveButton: string;
+    saveSuccess: string;
+    tones: Array<{ slug: string; label: string }>;
+  };
+  privacy: {
+    cardTitle: string;
+    cardIcon: string;
+    messagesTitle: string;
+    messagesSubtitleActive: string;
+    messagesSubtitlePending: string;
+    geoTitle: string;
+    geoSubtitleActive: string;
+    geoSubtitlePending: string;
+    geoSubtitleRevoked: string;
+    healthTitle: string;
+    healthSubtitle: string;
+    lgpdTitle: string;
+    lgpdSubtitle: string;
+    lgpdButton: string;
+    loginTitle: string;
+    loginSubtitle: string;
+    devicesTitle: string;
+    devicesSubtitle: string;
+    devicesManageButton: string;
+    accessLogTitle: string;
+    accessLogButton: string;
+    tags: {
+      current: string;
+      pending: string;
+      revoked: string;
+      active: string;
+    };
+  };
+  recipient: {
+    cardTitleTemplate: string;
+    editButton: string;
+    saveSuccess: string;
+    fields: {
+      fullName: string;
+      displayName: string;
+      birthDate: string;
+      whatsapp: string;
+      address: string;
+    };
+    modal: {
+      title: string;
+      fullNameLabel: string;
+      displayNameLabel: string;
+      birthDateLabel: string;
+      whatsappLabel: string;
+      addressLabel: string;
+      saveButton: string;
+      cancelButton: string;
+      validationSummary: string;
+    };
+  };
+  lgpdModal: {
+    title: string;
+    typeLabel: string;
+    exportOption: string;
+    deleteOption: string;
+    deadlineNote: string;
+    confirmLabel: string;
+    submitButton: string;
+    cancelButton: string;
+    successMessage: string;
+  };
+  accessLogModal: {
+    title: string;
+    body: string;
+    closeButton: string;
+  };
+  signOut: {
+    button: string;
+  };
+}
+
 export interface FamilyAvisosContent {
   pausedHint: string;
   feed: {
@@ -142,9 +352,8 @@ export interface FamilyContent {
   guia: {
     tourNote: string;
   };
-  ajustes: {
-    signOutDescription: string;
-  };
+  ajustes: FamilyAjustesContent;
+  plano: FamilyPlanoContent;
   planLabels: Record<string, string>;
   mobileNav: {
     openLabel: string;
@@ -1194,6 +1403,261 @@ export const familyContent: FamilyContent = {
   },
   ajustes: {
     signOutDescription: "Encerra sua sessão neste aparelho.",
+    readOnlyNote:
+      "Somente administradores alteram estas configurações.",
+    pausedHint:
+      "Conta pausada: você pode ver as configurações, mas não alterá-las até reativar o plano.",
+    errors: {
+      loadTitle: "Não foi possível abrir Ajustes",
+      loadFailed:
+        "Algo deu errado ao carregar esta área. Tente recarregar a página.",
+      accessDenied:
+        "Seu papel não permite ver Ajustes. Peça acesso ao administrador da conta.",
+      incomplete:
+        "Complete o cadastro da pessoa cuidada para ver os ajustes.",
+      forbidden: "Você não pode alterar estas configurações.",
+      accountPaused:
+        "Conta pausada: alterações ficam bloqueadas até reativar o plano.",
+      invalidPayload: "Revise os campos e tente de novo.",
+      saveFailed:
+        "Não foi possível salvar agora. Tente de novo em instantes.",
+    },
+    channels: {
+      cardTitle: "Como falamos com ele",
+      cardIcon: "💬",
+      whatsappTitle: "WhatsApp",
+      whatsappSubtitle: "Canal principal · texto, áudio e links",
+      voiceTitle: "Ligação de voz",
+      voiceSubtitle: "Reforço quando não há leitura em 20 min",
+      shortcutTitle: "Atalho no celular dele",
+      shortcutSubtitle: "Ícone na tela inicial — opcional",
+      videoTitle: "Videochamada",
+      howItWorks: "Como funciona",
+      saveButton: "Salvar canal",
+      saveSuccess: "Canal atualizado.",
+      optInPendingNote:
+        "Lembretes recorrentes só começam depois que ele aceitar no WhatsApp.",
+      tags: {
+        active: "Ativo",
+        pending: "Pendente",
+        inactive: "Inativo",
+        notLinked: "Não vinculado",
+        unavailable: "Não disponível",
+      },
+      options: [
+        {
+          slug: "whatsapp",
+          title: "Só WhatsApp",
+          description:
+            "Mensagem escrita no horário do remédio, com opção de áudio gravado na voz da família.",
+        },
+        {
+          slug: "whatsapp_voice",
+          title: "WhatsApp e, se não ler, ligação",
+          description:
+            "Para quem tem pouca familiaridade com celular ou toma remédio crítico: sem leitura em 20 minutos, a Zelita liga.",
+        },
+        {
+          slug: "voice_only",
+          title: "Só ligação",
+          description: "Para quem não usa WhatsApp.",
+        },
+      ],
+    },
+    tone: {
+      cardTitle: "Tom e horários",
+      cardIcon: "🕐",
+      toneLabel: "Como a Zelita fala com ele",
+      dndBeforeLabel: "Não incomodar antes de",
+      dndAfterLabel: "Não incomodar depois de",
+      previewTitleTemplate: "Prévia da mensagem das {hora}",
+      previewEmptyHint:
+        "Cadastre um remédio para ver exemplo com nome e horário.",
+      toneNote:
+        "A Zelita nunca usa tom de cobrança, ameaça ou vigilância — nada de “você ainda não tomou” ou “estamos monitorando você”.",
+      saveButton: "Salvar tom e horários",
+      saveSuccess: "Tom e horários atualizados.",
+      tones: [
+        { slug: "carinhoso", label: "Carinhoso" },
+        { slug: "direto", label: "Direto" },
+        { slug: "formal", label: "Formal" },
+      ],
+    },
+    privacy: {
+      cardTitle: "Privacidade e autorizações",
+      cardIcon: "🔒",
+      messagesTitle: "Autorização de mensagens",
+      messagesSubtitleActive:
+        "Aceita por {apelido} em {data} no WhatsApp",
+      messagesSubtitlePending:
+        "Antes do primeiro lembrete recorrente, a Zelita se apresenta e pede autorização dele no canal.",
+      geoTitle: "Autorização de localização",
+      geoSubtitleActive:
+        "Aceita em {data} · revogável a qualquer momento por ele",
+      geoSubtitlePending:
+        "Ainda não autorizado — disponível no app dele quando você instalar.",
+      geoSubtitleRevoked:
+        "Revogada por ele — pode autorizar de novo no app quando quiser.",
+      healthTitle: "Dados de saúde",
+      healthSubtitle:
+        "Exames ficam criptografados e só aparecem para quem você autorizar na conta.",
+      lgpdTitle: "Exportar ou excluir todos os dados",
+      lgpdSubtitle: "Direitos previstos na LGPD",
+      lgpdButton: "Solicitar",
+      loginTitle: "Como você entra",
+      loginSubtitle: "Código por e-mail neste aparelho",
+      devicesTitle: "Aparelhos com acesso",
+      devicesSubtitle: "Nenhum aparelho vinculado ainda",
+      devicesManageButton: "Gerenciar",
+      accessLogTitle: "Últimos acessos à conta",
+      accessLogButton: "Ver",
+      tags: {
+        current: "Vigente",
+        pending: "Pendente",
+        revoked: "Revogada",
+        active: "Ativa",
+      },
+    },
+    recipient: {
+      cardTitleTemplate: "Dados do {apelido}",
+      editButton: "Editar",
+      saveSuccess: "Dados atualizados.",
+      fields: {
+        fullName: "Nome completo",
+        displayName: "Como chamamos",
+        birthDate: "Nascimento",
+        whatsapp: "WhatsApp",
+        address: "Endereço",
+      },
+      modal: {
+        title: "Editar dados",
+        fullNameLabel: "Nome completo",
+        displayNameLabel: "Como chamamos",
+        birthDateLabel: "Data de nascimento",
+        whatsappLabel: "WhatsApp",
+        addressLabel: "Endereço",
+        saveButton: "Salvar",
+        cancelButton: "Cancelar",
+        validationSummary: "Revise os campos destacados.",
+      },
+    },
+    lgpdModal: {
+      title: "Solicitar dados (LGPD)",
+      typeLabel: "O que você precisa?",
+      exportOption: "Exportar cópia dos meus dados",
+      deleteOption: "Excluir todos os dados da conta",
+      deadlineNote:
+        "Respondemos em até 15 dias úteis. Não há download imediato nem exclusão automática nesta etapa.",
+      confirmLabel:
+        "Entendo que a equipe Zelita vai analisar manualmente este pedido.",
+      submitButton: "Confirmar solicitação",
+      cancelButton: "Cancelar",
+      successMessage: "Recebemos sua solicitação.",
+    },
+    accessLogModal: {
+      title: "Últimos acessos",
+      body: "Registro completo em breve. Por enquanto, use Sair para encerrar a sessão neste aparelho.",
+      closeButton: "Fechar",
+    },
+    signOut: {
+      button: "Sair",
+    },
+  },
+  plano: {
+    supportMailto: "mailto:suporte@zelita.care?subject=Meu%20plano%20Zelita",
+    errors: {
+      loadTitle: "Não foi possível abrir Meu plano",
+      loadFailed:
+        "Algo deu errado ao carregar esta área. Tente recarregar a página.",
+      accessDenied:
+        "Seu papel não permite ver Meu plano. Só quem administra a conta acessa cobrança e assinatura.",
+      incomplete:
+        "Complete o cadastro da pessoa cuidada para ver o plano.",
+    },
+    currentCard: {
+      title: "Seu plano",
+      tags: {
+        active: "Ativo",
+        trial: "Período grátis",
+        paused: "Pausado",
+        canceled: "Cancelado",
+      },
+      trial: {
+        badgeTemplate: "Dia {current} de {total}",
+        bodyPrefix: "Você ainda está no ",
+        bodyBold: "período grátis",
+        bodySuffix:
+          ". Faltam {days} dias e nenhuma cobrança foi feita.",
+      },
+      billing: {
+        trialChargeTemplate:
+          "Primeira cobrança em {date}, se você confirmar. Avisamos em {warningDate} —",
+        trialChargeEmphasis:
+          "sem confirmação, a conta pausa e não cobramos nada.",
+        postTrialActive:
+          "Cobrança recorrente será feita pelo provedor seguro quando você confirmar a assinatura — integração em breve.",
+        pausedBody:
+          "Seus dados estão preservados, mas lembretes e algumas ações ficam pausados. Reative quando quiser — sem cobrança automática retroativa.",
+        canceledBody:
+          "O acesso ao painel continua disponível para consulta. Fale com o suporte para reativar — sem cobrança automática.",
+        unknownPlan:
+          "Não reconhecemos o plano desta conta. Entre em contato com o suporte para confirmar.",
+      },
+      elderNote:
+        "Quem paga é você. O {apelido} nunca vê cobrança, anúncio ou pedido de cartão em nenhuma mensagem — se ele receber algo assim, não é a Zelita.",
+      actions: {
+        changePlan: "Mudar de plano",
+        changeCard: "Trocar cartão",
+        invoices: "Notas fiscais",
+        reactivate: "Falar com suporte",
+      },
+    },
+    usageCard: {
+      title: "Uso este mês",
+      whatsapp: {
+        label: "Mensagens de WhatsApp",
+        unlimitedSuffix: "ilimitado no plano",
+      },
+      voice: {
+        label: "Ligações de voz",
+        monthTemplate: "{count} realizadas este mês",
+        hint: "Reforço quando não há leitura em 20 min",
+      },
+      storage: {
+        label: "Armazenamento de exames",
+        overQuotaHint: "espaço esgotado",
+        overQuotaTag: "Atenção",
+      },
+      members: {
+        label: "Pessoas na conta",
+        unlimitedSuffix: "ilimitado no plano",
+        limitedTemplate: "{limit} incluídas",
+      },
+    },
+    modals: {
+      closeLabel: "Fechar",
+      changePlan: {
+        title: "Mudar de plano",
+        essentialTitle: "Essencial · R$ 39/mês",
+        essentialBody:
+          "WhatsApp, remédios, SOS, até 3 participantes com login, exames com 2 GB. Sem voz e sem localização avançada.",
+        cuidadoPlusTitle: "Cuidado+ · R$ 69/mês",
+        cuidadoPlusBody:
+          "Tudo do Essencial + ligação de reforço, localização avançada, participantes ilimitados e 20 GB de exames.",
+        familiaNote:
+          "Plano Família (R$ 119/mês) — em breve, para quem cuida de mais de uma pessoa.",
+        ctaLabel: "Em breve",
+      },
+      changeCard: {
+        title: "Trocar cartão",
+        body: "Disponível quando você confirmar a assinatura no provedor seguro — ainda sem cartão nesta etapa.",
+      },
+      invoices: {
+        title: "Notas fiscais",
+        emptyTitle: "Nenhuma nota fiscal ainda",
+        body: "Documentos aparecerão aqui depois que a integração de pagamento estiver ativa.",
+      },
+    },
   },
   planLabels: {
     essential: "Essential",

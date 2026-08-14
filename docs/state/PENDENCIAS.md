@@ -13,6 +13,9 @@ Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e e
 
 ## Abertas pela F4 · Painel
 
+- [ ] **Homologação manual F4.11** — meu plano: 2 cards, trial Essencial/Cuidado+, uso real, stubs pagamento, cuidadora negada, link trial bar/paused banner, regressão cota exames (`manual-report` FL-11)
+- [ ] **Homologação manual F4.10** — ajustes: 4 cards, tom/DND, canais, LGPD modal, cuidadora read-only, âncora Avisos, sair (`manual-report` FL-10 parcial)
+- [x] **`pnpm db:push` remoto** — migration `012_data_subject_requests.sql` (2026-08-14)
 - [ ] **Homologação manual F4.9** — avisos: feed, filtros, matriz admin, stat/badge Hoje (`manual-report` FL-09 parcial)
 - [x] **`pnpm db:push` remoto** — migration `011_notifications.sql` (2026-08-13)
 - [ ] **Homologação manual F4.8** — localização: consentimento, lugares CRUD, link share, visualizadora negada, deep link SOS (`manual-report` FL-08 parcial)

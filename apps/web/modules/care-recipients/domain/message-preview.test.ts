@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildReminderPreview,
+  mapDndFromPersistence,
   mapDndToPersistence,
   validateDndWindow,
 } from "./message-preview";
@@ -83,5 +84,28 @@ describe("mapDndToPersistence", () => {
         dontBotherAfter: "22:00",
       }),
     ).toEqual({ dndStart: "22:00", dndEnd: "07:00" });
+  });
+});
+
+describe("mapDndFromPersistence", () => {
+  it("restaura rótulos da UI a partir do banco", () => {
+    expect(
+      mapDndFromPersistence({
+        dndStart: "22:00:00",
+        dndEnd: "07:00:00",
+      }),
+    ).toEqual({
+      dontBotherBefore: "07:00",
+      dontBotherAfter: "22:00",
+    });
+  });
+
+  it("usa defaults quando valores ausentes", () => {
+    expect(
+      mapDndFromPersistence({ dndStart: null, dndEnd: null }),
+    ).toEqual({
+      dontBotherBefore: "07:00",
+      dontBotherAfter: "22:00",
+    });
   });
 });

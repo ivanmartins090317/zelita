@@ -14,6 +14,7 @@ import {
 import { getHojeMedications } from "./application/get-hoje-medications";
 import { getRemediosPage } from "./application/get-remedios-page";
 import { getMedicationSchedulesForAgenda } from "./application/get-medication-schedules-for-agenda";
+import { fetchMedicationPreviewSamples } from "./infrastructure/medication-preview-read";
 
 export const medicationsModule = {
   id: "medications",
@@ -31,4 +32,5 @@ export {
   getHojeMedications,
   getRemediosPage,
   getMedicationSchedulesForAgenda,
+  fetchMedicationPreviewSamples,
 };

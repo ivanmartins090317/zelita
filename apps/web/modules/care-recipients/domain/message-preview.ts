@@ -70,3 +70,21 @@ export function mapDndToPersistence(input: {
     dndEnd: input.dontBotherBefore,
   };
 }
+
+function normalizeStoredTime(value: string | null): string | null {
+  if (!value) return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  return trimmed.slice(0, 5);
+}
+
+/** Converte colunas dnd_start/dnd_end para rótulos da UI. */
+export function mapDndFromPersistence(input: {
+  dndStart: string | null;
+  dndEnd: string | null;
+}): { dontBotherBefore: string; dontBotherAfter: string } {
+  return {
+    dontBotherBefore: normalizeStoredTime(input.dndEnd) ?? "07:00",
+    dontBotherAfter: normalizeStoredTime(input.dndStart) ?? "22:00",
+  };
+}

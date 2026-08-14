@@ -141,6 +141,29 @@ describe("familyContent", () => {
     expect(familyContent.exames.hoje.needsTitle).toBe("Um exame sem categoria");
     expect(familyContent.exames.sharePublic.expiredTitle).toContain("expirado");
   });
+
+  it("expõe copy de Ajustes F4.10", () => {
+    expect(familyContent.ajustes.channels.cardTitle).toBe("Como falamos com ele");
+    expect(familyContent.ajustes.tone.cardTitle).toBe("Tom e horários");
+    expect(familyContent.ajustes.privacy.cardTitle).toBe(
+      "Privacidade e autorizações",
+    );
+    expect(familyContent.ajustes.lgpdModal.successMessage).toContain(
+      "Recebemos",
+    );
+  });
+
+  it("expõe copy de Meu plano F4.11", () => {
+    expect(familyContent.plano.currentCard.title).toBe("Seu plano");
+    expect(familyContent.plano.usageCard.title).toBe("Uso este mês");
+    expect(familyContent.plano.currentCard.actions.changePlan).toBe(
+      "Mudar de plano",
+    );
+    expect(familyContent.plano.modals.changePlan.ctaLabel).toBe("Em breve");
+    expect(familyContent.plano.errors.accessDenied).toContain(
+      "administra a conta",
+    );
+  });
 });
 
 describe("formatChecklistProgress", () => {
