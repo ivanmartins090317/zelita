@@ -10,7 +10,9 @@ function LandingNav() {
 
   return (
     <header className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-4 px-6 py-5 sm:px-10">
-      <LandingMark size="sm" />
+      <Link href={landingRoutes.home} aria-label="Zelita — página inicial">
+        <LandingMark size="sm" />
+      </Link>
       <div className="ml-auto flex flex-wrap items-center gap-2 sm:gap-2.5">
         <Button asChild variant="secondary" size="sm">
           <Link href={landingRoutes.login}>{nav.loginLabel}</Link>

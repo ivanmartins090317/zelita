@@ -2,74 +2,98 @@
 
 Lista viva do que falta entregar ou homologar. Itens concluídos saem daqui (e entram em `docs/implementation/` quando forem entregas).
 
-## Agora
+**Contexto (2026-09-11):** o app já está em [zelita-web.vercel.app](https://zelita-web.vercel.app/). OTP + Resend (`zelita@mail.modernxlab.com.br`) funcionam. O buraco não é “subir o app” — é fechar o ciclo de valor e deixar o cadastro público seguro.
 
-- [x] Migrations fatia 1 aplicadas no remoto (`001` + `002`)
-- [x] Migration `003_bootstrap_family_account` aplicada no remoto (BG-01 onboarding/RLS)
-- [x] Migration `004_safe_places_coords_optional` aplicada (Casa sem lat/lng no onboarding)
-- [ ] Preencher WhatsApp (`WHATSAPP_*`) quando for sair do dry-run
-- [ ] Homologar FL-01…FL-04 com chaves Supabase + Inngest
-- [ ] Fatia 2: PWA + confirmar Casa (F2-05)
+**Plano completo (research + ordem + checklist):** [`docs/plans/2026-09-11-producao-real.md`](../plans/2026-09-11-producao-real.md)
 
-## Abertas pela F4 · Painel
+---
 
-- [ ] **Homologação manual F4.11** — meu plano: 2 cards, trial Essencial/Cuidado+, uso real, stubs pagamento, cuidadora negada, link trial bar/paused banner, regressão cota exames (`manual-report` FL-11)
-- [ ] **Homologação manual F4.10** — ajustes: 4 cards, tom/DND, canais, LGPD modal, cuidadora read-only, âncora Avisos, sair (`manual-report` FL-10 parcial)
-- [x] **`pnpm db:push` remoto** — migration `012_data_subject_requests.sql` (2026-08-14)
-- [ ] **Homologação manual F4.9** — avisos: feed, filtros, matriz admin, stat/badge Hoje (`manual-report` FL-09 parcial)
-- [x] **`pnpm db:push` remoto** — migration `011_notifications.sql` (2026-08-13)
-- [ ] **Homologação manual F4.8** — localização: consentimento, lugares CRUD, link share, visualizadora negada, deep link SOS (`manual-report` FL-08 parcial)
-- [x] **`pnpm db:push` remoto** — migration `010_location.sql` (2026-08-13)
-- [ ] **Posição real / seed SQL** — homologação parcial até F5 ou seed documentado
-- [ ] **Timeline Hoje — eventos de zona** — N/A nesta subfase (agregador sem extensão)
-- [ ] **Precisa de você — Casa pendente 48h** — N/A nesta subfase (cenário 38 opcional)
-- [ ] **`pnpm db:push` remoto** — migration `009_sos.sql`
-- [ ] **Homologação manual F4.6** — exames/receitas: upload, filtros, share, cuidadora autorizada, Hoje (`manual-report` FL-08 parcial)
-- [ ] **`pnpm db:push` remoto** — migration `007_exams_storage.sql`
-- [ ] **Homologação manual F4.1 + F4.2 + F4.3** — shell, Hoje maduro e Remédios/modal via skill `manual-report`; replanejar FL-02/03 conforme `docs/F4/plan.md`
-- [ ] **Editar horários (Remédios)** — botão visível “Em breve” na F4.3; pode gerar feedback de usuário até subfase futura
-- [ ] **Conferência visual `/familia` e subrotas** — tipografia F0 + shell novo; exige sessão Supabase
-- [ ] **Review humano paths críticos F4.1** — layout autenticado, `selectAccountAction`, `getShellContext`
+## Produção real — três gates
 
-## Abertas pela F0 · Fundação de design
+### Gate 0 — Já no ar (não é pendência)
 
-- [ ] **Headers de segurança** (`SECURITY.md` A05) no `next.config.ts` — antes do deploy público da landing
-- [x] **Marca d'água da landing em Inter** — resolvido na F1 com `font-head` no wordmark
-- [ ] **Conferência visual de `/onboarding`** com a tipografia e os botões novos — exige sessão Supabase
-- [ ] **Peças sem consumidor** — reavaliar após F1; `ListRow` ainda sem uso na landing (reservado para arte do hero via composição manual)
-- [ ] **Medir LCP** com as duas famílias tipográficas na landing publicada (build/deploy)
-- [ ] **Confirmar o adiamento de "Texto grande"** para a F5 (a escala já está ancorada em `--fs-body` / `--fs-body-elder`)
+- Deploy Vercel + landing
+- Auth OTP + Resend com remetente próprio
+- Painel da família F4.1–F4.11 (Done técnico)
+- Cadastro 8 passos + trial sem cartão (stubs de pagamento)
+- Código de lembrete/opt-in Inngest + adapter WA (dry-run sem token)
 
-## Abertas pela F1 · Site
+### Gate 1 — Abrir cadastro com segurança (antes de gente de fora)
 
-- [ ] **Headers A05** — pendência herdada; landing pública sem headers de segurança até deploy
-- [ ] **Copy "Resumo semanal da família"** no plano Família — feature fora do MVP; copy do protótipo mantida por decisão de produto
-- [ ] **Rodapé sem Privacidade/Termos** — exposição LGPD consciente enquanto CTAs captam cadastro; páginas legais fora do MVP
-- [ ] **`/cadastro` vazio até F3** — ~~hoje só redireciona para `/entrar`~~ entregue na F3 (wizard 8 passos)
-- [ ] **LCP das fontes** — medir após build de produção / deploy Vercel
+Sem isto, a URL pública captura dados de saúde sem o mínimo de higiene.
 
-## Abertas pela F2 · Entrar
+- [x] **Headers A05** no `next.config.ts` (`CSP`, `nosniff`, `Referrer-Policy`, `HSTS`, `X-Frame-Options: DENY`) — `docs/SECURITY.md` (2026-09-20)
+- [x] **Confirmar `db:push` remoto** das migrations `007_exams_storage` e `009_sos` — tabelas `exams` e `sos_alerts` no remoto (2026-09-20)
+- [x] **Homologar no Vercel** FL-01…FL-03: Entrar OTP → cadastro 8 passos → Remédios/Hoje (2026-09-20; OTP chega, mas só no spam)
+- [x] **Smoke aceite de convite (FL-07 parcial):** Copiar link → colar em outra aba funciona (2026-09-20)
+- [x] **Privacidade / Termos** no rodapé — `/privacidade` e `/termos` (2026-09-20; no ar após deploy)
+- [x] **Sentry DSN de produção** preenchido na Vercel + `.env` (2026-09-20) — redeploy necessário para `NEXT_PUBLIC_*`
 
-- [ ] **Homologação manual F2** — fluxo Entrar (5 passos) via skill `manual-report`; FL-01 parcialmente coberto
+Convite fechado (2–3 contas conhecidas) pode começar **em paralelo** ao Gate 1, sem anunciar a landing.
 
-## Abertas pela F3 · Cadastro
+### Gate 2 — Ciclo de valor do MVP (lembrete + idoso) — bloqueia “produção real”
 
-- [ ] **Homologação manual F3** — wizard 8 passos (FL-02) via skill `manual-report`; mobile + desktop
-- [ ] **Review humano paths críticos F3** — auth (`verifySignupOtp`), bootstrap, `complete-signup`
-- [ ] **Etiquetas no seletor de conta** — “1 aviso”, “Primeiro acesso”, etc. (fase posterior)
-- [ ] **Passkey / biometria** — passo do protótipo adiado
-- [ ] **Canal real de suporte** — WhatsApp placeholder na página de ajuda
-- [ ] **Rota `/auth/callback` legada** — link mágico removido da UI; callback mantido para links antigos
+Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 
-## Homologação manual (skill `manual-report`)
+#### 2.1 Canal e jobs (ops + código)
 
-Adiado explicitamente no Done da fatia 1 (domínio/Vitest verde; UI smoke manual depois das chaves):
+- [ ] **Inngest em produção:** `INNGEST_EVENT_KEY` + `INNGEST_SIGNING_KEY` na Vercel + sync do app em `https://zelita-web.vercel.app/api/webhooks/inngest`
+- [ ] **Agenda recorrente:** hoje `scheduleMedicationReminders` dispara só o **dia seguinte** e ancora hora em **UTC** (não `America/Sao_Paulo`). Falta cron/série diária + fuso
+- [ ] **WhatsApp fora do dry-run:** `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN` na Vercel
+- [ ] **Templates Meta aprovados** (opt-in + lembrete) — o adapter atual manda `type: text` livre; a Cloud API **rejeita** mensagem iniciada pelo negócio fora da janela de 24 h
+- [ ] **Webhook WA** em `https://zelita-web.vercel.app/api/webhooks/whatsapp` + **validar assinatura** (`SECURITY.md`: hoje o POST não checa signature)
+- [ ] **Opt-in ponta a ponta:** pedido → idoso responde SIM → `wa_opt_in_at` → lembretes só depois
+- [ ] **Aviso de cartela à família** (5 dias / véspera / último dia) — cálculo existe no painel; **não há job** de envio
+- [ ] **Pausa de trial D30** — UI mostra trial; **não há job** que pause a conta no fim (PRD: sem cobrança automática)
 
-- [x] **F1 · Landing** — TC-F1-01…TC-F1-06 aprovados (ver `docs/relatorio-testes-manuais.html`)
-- [ ] FL-01 Auth OTP
-- [ ] FL-02 Onboarding + pessoa cuidada
-- [ ] FL-03 Remédios e cartela
-- [ ] FL-04 Lembretes (job + WA sandbox)
-- [ ] FL-05 PWA idoso
-- [ ] FL-06 SOS
-- [ ] FL-07 Segurança / RLS (smoke)
+#### 2.2 Lado do idoso (produto)
+
+- [ ] **F5 — PWA do idoso** (`/idoso` ainda é placeholder): início, horários, SOS 2 etapas + disclaimer SAMU, sem senha. Texto ≥17px, alvos ≥56px, SOS >100px
+- [ ] **F6 — Vínculo de aparelho:** token curto, uso único, só no WA cadastrado, preso ao 1º device, revogável em Ajustes
+- [ ] **SOS real:** insert pelo device → notifica papéis da ordem (ignora DND) → painel Pedidos de ajuda
+- [ ] **Confirmar Casa (GPS)** — alerta de zona só com coords; posição real só vem do PWA
+
+### Gate 3 — Pode esperar no piloto (não bloqueia produção real)
+
+- [ ] **Envio automático de e-mail de convite** — hoje só **Copiar link** (aceite colando o link em outra aba ok, 2026-09-20). Passo 7 do cadastro ainda não persiste convite. Spec nova, path `accounts` (`tight`)
+- F4.12 — Como usar + tour (`/familia/guia` é empty state)
+- Gateway de pagamento / NF / trocar cartão (stubs ok; trial sem cartão)
+- Voz Cuidado+ (P2)
+- Domínio custom (`zelita.com.br`)
+- Editar horários da cartela (“Em breve” na F4.3)
+- Passkey / biometria
+- Texto grande (adiado F5)
+- Canal de suporte WA (placeholder na ajuda)
+- LCP das fontes / conferência visual extra
+- Copy “Resumo semanal” no plano Família (fora do MVP)
+
+---
+
+## Homologação manual restante (skill `manual-report`)
+
+Fazer **no ambiente Vercel**, não só local.
+
+- [x] F1 · Landing — TC-F1-01…TC-F1-06
+- [x] FL-01 Auth OTP *(2026-09-20 no Vercel — código chega; só no spam)*
+- [x] FL-02 Onboarding + pessoa cuidada *(2026-09-20 — 8 passos ok; convite do passo 7 não persiste)*
+- [x] FL-03 Remédios e cartela *(2026-09-20)*
+- [ ] FL-04 Lembretes (job + WA) *(Gate 2)*
+- [ ] FL-05 PWA idoso *(Gate 2 — F5)*
+- [ ] FL-06 SOS *(Gate 2 — F5/F6)*
+- [x] FL-07 Segurança / RLS smoke *(Gate 1 — aceite via **Copiar link** ok, 2026-09-20; e-mail automático ficou no Gate 3)*
+- [x] FL-08 Exames smoke *(2026-09-20 upload ok; posição real Gate 2)*
+- [ ] FL-09 Avisos
+- [ ] FL-10 Ajustes
+- [ ] FL-11 Meu plano
+
+---
+
+## Ordem sugerida
+
+```text
+1. Gate 1 (headers + db 007/009 + homologar família no Vercel + legal mínimo)
+2. Gate 2.1 (Inngest sync + templates WA + webhook assinado + recorrência/fuso)
+3. Spec + F5 (PWA) → Spec + F6 (vínculo)  [paths críticos, autonomia tight]
+4. Piloto família + idoso (1 conta controlada)
+5. Gate 3 só depois (tour, billing real, domínio, voz)
+```

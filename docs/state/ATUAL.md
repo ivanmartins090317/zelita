@@ -2,19 +2,24 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | **F4.11** — Meu plano |
-| Spec | `specs/2026-08-14-f4-11-meu-plano.md` (**approved**) |
+| Etapa | **Gate 1 (P0)** — Produção real |
+| Spec | Sem Spec nova (headers + legal mínimo + homologação) |
 | Autonomia | `medium` |
-| Status | Done técnico — aguardando homologação manual (FL-11) |
+| Status | Homologação família no Vercel ok via **Copiar link**; e-mail automático de convite ficou pendente (Gate 3) |
 
-## Entregue
+## Entregue (Gate 1 parcial)
 
-- Área `/familia/plano` com cards Seu plano + Uso este mês
-- Módulo `billing`: plano efetivo, limites, trial copy, agregação de uso
-- Stubs Mudar de plano / Trocar cartão / Notas fiscais
-- Exames consome cota via API pública de `billing`
-- Authz: só administradora
+- Sentry DSN + migrations `007`/`009` + headers A05 + `/privacidade` e `/termos`
+- Homologação Vercel 2026-09-20: FL-01 (OTP no spam), FL-02 (8 passos), FL-03 (remédios), FL-08 smoke (exames)
+
+## Achados da homologação
+
+- OTP chega, mas só na pasta de spam (DNS/reputação Resend, não bug de código)
+- Aceite de convite: **Copiar link** → colar em outra aba **funcionou** (2026-09-20)
+- Envio automático de e-mail de convite **não existe** — pendente no Gate 3 (`PENDENCIAS.md`)
 
 ## Próximo
 
-- Homologação manual via `manual-report` (FL-11)
+- Commit/deploy se headers + legal ainda não subiram
+- (Opcional, ops) SPF/DKIM/DMARC em `mail.modernxlab.com.br` para o OTP sair do spam
+- Gate 2.1 quando o Gate 1 estiver no ar

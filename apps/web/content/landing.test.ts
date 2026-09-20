@@ -17,11 +17,17 @@ describe("landingContent", () => {
     );
   });
 
-  it("mantém CTAs e âncora travados", () => {
+  it("mantém CTAs, âncora e documentos legais travados", () => {
     expect(landingRoutes.signup).toBe("/cadastro");
     expect(landingRoutes.login).toBe("/entrar");
     expect(landingRoutes.howItWorksAnchor).toBe("#como-funciona");
     expect(landingContent.howItWorks.anchorId).toBe("como-funciona");
+    expect(landingRoutes.privacy).toBe("/privacidade");
+    expect(landingRoutes.terms).toBe("/termos");
+    expect(landingContent.footer.legalLinks.map((link) => link.href)).toEqual([
+      "/privacidade",
+      "/termos",
+    ]);
   });
 
   it("mantém os três planos com preços do protótipo", () => {

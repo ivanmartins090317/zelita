@@ -1,3 +1,5 @@
+import { legalRoutes } from "./legal";
+
 export interface LandingNavContent {
   loginLabel: string;
   signupLabel: string;
@@ -166,10 +168,17 @@ export interface LandingProgressiveOnboardingContent {
   };
 }
 
+export interface LandingFooterLink {
+  href: string;
+  label: string;
+}
+
 export interface LandingFooterContent {
   tagline: string;
   subtitle: string;
   disclaimer: string;
+  legalNavLabel: string;
+  legalLinks: LandingFooterLink[];
 }
 
 export interface LandingContent {
@@ -188,9 +197,12 @@ export interface LandingContent {
 }
 
 export const landingRoutes = {
+  home: "/",
   signup: "/cadastro",
   login: "/entrar",
   howItWorksAnchor: "#como-funciona",
+  privacy: legalRoutes.privacy,
+  terms: legalRoutes.terms,
 } as const;
 
 export const landingContent: LandingContent = {
@@ -522,6 +534,11 @@ export const landingContent: LandingContent = {
       "Central de cuidado familiar · remédios, exames, emergência e localização em um lugar só",
     disclaimer:
       "A Zelita não substitui atendimento médico nem serviços públicos de emergência. Em caso de urgência ligue para o SAMU 192 ou os Bombeiros 193.",
+    legalNavLabel: "Documentos legais",
+    legalLinks: [
+      { href: landingRoutes.privacy, label: "Privacidade" },
+      { href: landingRoutes.terms, label: "Termos de uso" },
+    ],
   },
 };
 

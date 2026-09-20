@@ -1,8 +1,19 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
+import { buildSecurityHeaders } from "./lib/security-headers";
+
 const nextConfig: NextConfig = {
-  /* Scaffold: opções de produto entram nas Specs seguintes. Redeploy trigger. */
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: buildSecurityHeaders({
+          isDev: process.env.NODE_ENV === "development",
+        }),
+      },
+    ];
+  },
 };
 
 export default withSentryConfig(nextConfig, {
