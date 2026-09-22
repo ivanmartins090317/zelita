@@ -37,14 +37,15 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 
 #### 2.1 Canal e jobs (ops + código)
 
-- [ ] **Inngest em produção:** `INNGEST_EVENT_KEY` + `INNGEST_SIGNING_KEY` na Vercel + sync do app em `https://zelita-web.vercel.app/api/webhooks/inngest`
-- [ ] **Agenda recorrente:** hoje `scheduleMedicationReminders` dispara só o **dia seguinte** e ancora hora em **UTC** (não `America/Sao_Paulo`). Falta cron/série diária + fuso
-- [ ] **WhatsApp fora do dry-run:** `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN` na Vercel
-- [ ] **Templates Meta aprovados** (opt-in + lembrete) — o adapter atual manda `type: text` livre; a Cloud API **rejeita** mensagem iniciada pelo negócio fora da janela de 24 h
-- [ ] **Webhook WA** em `https://zelita-web.vercel.app/api/webhooks/whatsapp` + **validar assinatura** (`SECURITY.md`: hoje o POST não checa signature)
-- [ ] **Opt-in ponta a ponta:** pedido → idoso responde SIM → `wa_opt_in_at` → lembretes só depois
-- [ ] **Aviso de cartela à família** (5 dias / véspera / último dia) — cálculo existe no painel; **não há job** de envio
-- [ ] **Pausa de trial D30** — UI mostra trial; **não há job** que pause a conta no fim (PRD: sem cobrança automática)
+- [x] **Agenda recorrente + fuso** — cron 00:10 `America/Sao_Paulo` + restante de hoje ao salvar (código 2026-09-21)
+- [x] **Adapter WhatsApp em template** — `zelita_opt_in` / `zelita_med_reminder` (código 2026-09-21)
+- [x] **Webhook WA assinado** — HMAC `X-Hub-Signature-256`; fail closed sem `WHATSAPP_APP_SECRET` (código 2026-09-21)
+- [x] **Job de cartela** — 5 dias / véspera / último dia + e-mail (código 2026-09-21)
+- [x] **Pausa de trial D30** — aviso D-5 + `paused` sem cobrança (código 2026-09-21)
+- [ ] **Inngest em produção:** keys locais existem; falta sync na Vercel em `https://zelita-web.vercel.app/api/webhooks/inngest`
+- [ ] **WhatsApp na Vercel:** token/phone/verify locais (sandbox); falta `WHATSAPP_APP_SECRET` + mesmas keys em Production
+- [ ] **Templates Meta Approved** — nomes `zelita_opt_in` e `zelita_med_reminder`
+- [ ] **Opt-in + lembrete ponta a ponta** — homologar FL-04 (TC-FL04-01…08) no Vercel
 
 #### 2.2 Lado do idoso (produto)
 
@@ -77,7 +78,7 @@ Fazer **no ambiente Vercel**, não só local.
 - [x] FL-01 Auth OTP *(2026-09-20 no Vercel — código chega; só no spam)*
 - [x] FL-02 Onboarding + pessoa cuidada *(2026-09-20 — 8 passos ok; convite do passo 7 não persiste)*
 - [x] FL-03 Remédios e cartela *(2026-09-20)*
-- [ ] FL-04 Lembretes (job + WA) *(Gate 2)*
+- [ ] FL-04 Lembretes (job + WA) *(Gate 2.1 — código pronto; TCs no relatório; execução no Vercel)*
 - [ ] FL-05 PWA idoso *(Gate 2 — F5)*
 - [ ] FL-06 SOS *(Gate 2 — F5/F6)*
 - [x] FL-07 Segurança / RLS smoke *(Gate 1 — aceite via **Copiar link** ok, 2026-09-20; e-mail automático ficou no Gate 3)*

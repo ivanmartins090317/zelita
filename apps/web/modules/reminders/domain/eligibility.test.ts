@@ -7,18 +7,30 @@ import {
   REMINDER_DECISIONS,
   reminderSentCopy,
 } from "./eligibility";
+import { CARE_TIMEZONE } from "./zoned-time";
 
 describe("isInsideDnd", () => {
-  it("detecta janela no mesmo dia", () => {
-    const at = new Date("2026-08-12T10:00:00.000Z");
-    expect(isInsideDnd(at, { start: "09:00", end: "11:00" })).toBe(true);
-    expect(isInsideDnd(at, { start: "11:00", end: "12:00" })).toBe(false);
+  it("detecta janela no mesmo dia em Brasília", () => {
+    const at = new Date("2026-08-12T13:00:00.000-03:00");
+    expect(isInsideDnd(at, { start: "12:00", end: "14:00" })).toBe(true);
+    expect(isInsideDnd(at, { start: "14:00", end: "15:00" })).toBe(false);
+  });
+
+  it("não usa UTC cru (08:00 BRT ≠ 08:00 UTC)", () => {
+    const eightUtc = new Date("2026-08-12T08:00:00.000Z");
+    expect(
+      isInsideDnd(eightUtc, { start: "08:00", end: "09:00" }, CARE_TIMEZONE),
+    ).toBe(false);
+    const eightBrt = new Date("2026-08-12T08:00:00.000-03:00");
+    expect(
+      isInsideDnd(eightBrt, { start: "08:00", end: "09:00" }, CARE_TIMEZONE),
+    ).toBe(true);
   });
 
   it("detecta janela que atravessa meia-noite", () => {
-    const night = new Date("2026-08-12T23:30:00.000Z");
-    const morning = new Date("2026-08-12T06:00:00.000Z");
-    const noon = new Date("2026-08-12T12:00:00.000Z");
+    const night = new Date("2026-08-12T23:30:00.000-03:00");
+    const morning = new Date("2026-08-13T06:00:00.000-03:00");
+    const noon = new Date("2026-08-13T12:00:00.000-03:00");
     const dnd = { start: "22:00", end: "07:00" };
     expect(isInsideDnd(night, dnd)).toBe(true);
     expect(isInsideDnd(morning, dnd)).toBe(true);
@@ -30,7 +42,7 @@ describe("decideReminderSend", () => {
   const base = {
     hasWhatsAppOptIn: true,
     accountPaused: false,
-    scheduledAt: new Date("2026-08-12T15:00:00.000Z"),
+    scheduledAt: new Date("2026-08-12T15:00:00.000-03:00"),
     dnd: { start: "22:00", end: "07:00" },
   };
 
@@ -45,16 +57,16 @@ describe("decideReminderSend", () => {
   });
 
   it("pula conta pausada", () => {
-    expect(decideReminderSend({ ...base, accountPaused: true })).toBe(
-      REMINDER_DECISIONS.skip_account_paused,
-    );
+    expect(
+      decideReminderSend({ ...base, accountPaused: true }),
+    ).toBe(REMINDER_DECISIONS.skip_account_paused);
   });
 
-  it("adia dentro do DND", () => {
+  it("adia dentro do DND em Brasília", () => {
     expect(
       decideReminderSend({
         ...base,
-        scheduledAt: new Date("2026-08-12T23:00:00.000Z"),
+        scheduledAt: new Date("2026-08-12T23:00:00.000-03:00"),
       }),
     ).toBe(REMINDER_DECISIONS.defer_dnd);
   });

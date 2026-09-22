@@ -1,11 +1,39 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
 
 import { createSupabaseServiceClient } from "@/lib/supabase/server";
+import { processWhatsAppOptIn } from "@/modules/reminders/application/process-whatsapp-opt-in";
+import { isValidWhatsAppSignature } from "@/modules/reminders/infrastructure/whatsapp-signature";
 
-/**
- * Webhook WhatsApp — verificação de challenge + registro de opt-in (SIM).
- * Sem verify token: responde 503 com correção (não quebra o painel).
- */
+const inboundSchema = z.object({
+  entry: z
+    .array(
+      z.object({
+        changes: z
+          .array(
+            z.object({
+              value: z
+                .object({
+                  messages: z
+                    .array(
+                      z.object({
+                        from: z.string().optional(),
+                        text: z
+                          .object({ body: z.string().optional() })
+                          .optional(),
+                      }),
+                    )
+                    .optional(),
+                })
+                .optional(),
+            }),
+          )
+          .optional(),
+      }),
+    )
+    .optional(),
+});
+
 export async function GET(request: NextRequest) {
   const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
   const mode = request.nextUrl.searchParams.get("hub.mode");
@@ -33,48 +61,53 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const appSecret = process.env.WHATSAPP_APP_SECRET;
+  if (!appSecret) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message:
+          "WHATSAPP_APP_SECRET ausente. Sem assinatura o webhook não grava opt-in.",
+      },
+      { status: 503 },
+    );
+  }
+
+  const rawBody = await request.text();
+  const signature = request.headers.get("x-hub-signature-256");
+  if (!isValidWhatsAppSignature(rawBody, signature, appSecret)) {
+    return NextResponse.json(
+      { ok: false, message: "Assinatura WhatsApp inválida." },
+      { status: 403 },
+    );
+  }
+
+  let parsedJson: unknown;
   try {
-    const body = (await request.json()) as {
-      entry?: Array<{
-        changes?: Array<{
-          value?: {
-            messages?: Array<{ from?: string; text?: { body?: string } }>;
-          };
-        }>;
-      }>;
-    };
+    parsedJson = rawBody.length > 0 ? JSON.parse(rawBody) : {};
+  } catch {
+    return NextResponse.json(
+      { ok: false, message: "JSON do webhook inválido." },
+      { status: 400 },
+    );
+  }
 
-    const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
-    const text = message?.text?.body?.trim().toUpperCase();
-    const from = message?.from;
+  const parsed = inboundSchema.safeParse(parsedJson);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { ok: false, message: "Payload WhatsApp fora do formato esperado." },
+      { status: 400 },
+    );
+  }
 
-    if (text === "SIM" && from) {
-      const supabase = createSupabaseServiceClient();
-      const digits = from.replace(/\D/g, "");
-      const { data: recipients } = await supabase
-        .from("care_recipients")
-        .select("id, whatsapp")
-        .is("wa_opt_in_at", null);
+  const message = parsed.data.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-      const match = recipients?.find((r) =>
-        (r.whatsapp ?? "").replace(/\D/g, "").endsWith(digits.slice(-8)),
-      );
-
-      if (match) {
-        await supabase
-          .from("care_recipients")
-          .update({ wa_opt_in_at: new Date().toISOString() })
-          .eq("id", match.id);
-
-        await supabase.from("medication_events").insert({
-          care_recipient_id: match.id,
-          type: "wa_opt_in_accepted",
-          channel: "whatsapp",
-          payload: { from },
-        });
-      }
-    }
-
+  try {
+    const supabase = createSupabaseServiceClient();
+    await processWhatsAppOptIn(supabase, {
+      text: message?.text?.body,
+      from: message?.from,
+    });
     return NextResponse.json({ ok: true });
   } catch (error) {
     return NextResponse.json(

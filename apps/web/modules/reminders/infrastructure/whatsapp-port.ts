@@ -1,7 +1,12 @@
-export interface WhatsAppMessage {
+export const WHATSAPP_TEMPLATE_NAMES = {
+  optIn: "zelita_opt_in",
+  reminder: "zelita_med_reminder",
+} as const;
+
+export interface WhatsAppTemplateMessage {
   toE164ish: string;
-  body: string;
   kind: "opt_in_request" | "reminder";
+  bodyVariables: string[];
 }
 
 export interface WhatsAppSendResult {
@@ -12,7 +17,7 @@ export interface WhatsAppSendResult {
 }
 
 export interface WhatsAppPort {
-  sendText(message: WhatsAppMessage): Promise<WhatsAppSendResult>;
+  sendTemplate(message: WhatsAppTemplateMessage): Promise<WhatsAppSendResult>;
 }
 
 export function isWhatsAppConfigured(): boolean {
@@ -21,10 +26,23 @@ export function isWhatsAppConfigured(): boolean {
   );
 }
 
-/** Adapter Meta Cloud API — sem token = modo seco (Spec cenário 16). */
+export function resolveTemplateName(
+  kind: WhatsAppTemplateMessage["kind"],
+): string {
+  if (kind === "opt_in_request") {
+    return (
+      process.env.WHATSAPP_TEMPLATE_OPT_IN ?? WHATSAPP_TEMPLATE_NAMES.optIn
+    );
+  }
+  return (
+    process.env.WHATSAPP_TEMPLATE_REMINDER ?? WHATSAPP_TEMPLATE_NAMES.reminder
+  );
+}
+
+/** Adapter Meta Cloud API — sem token = modo seco. Produção usa template, não texto livre. */
 export function createWhatsAppPort(): WhatsAppPort {
   return {
-    async sendText(message) {
+    async sendTemplate(message) {
       if (!isWhatsAppConfigured()) {
         return {
           ok: true,
@@ -36,6 +54,7 @@ export function createWhatsAppPort(): WhatsAppPort {
       const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID!;
       const token = process.env.WHATSAPP_ACCESS_TOKEN!;
       const to = message.toE164ish.replace(/\D/g, "");
+      const templateName = resolveTemplateName(message.kind);
 
       const response = await fetch(
         `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
@@ -48,8 +67,20 @@ export function createWhatsAppPort(): WhatsAppPort {
           body: JSON.stringify({
             messaging_product: "whatsapp",
             to,
-            type: "text",
-            text: { body: message.body },
+            type: "template",
+            template: {
+              name: templateName,
+              language: { code: "pt_BR" },
+              components: [
+                {
+                  type: "body",
+                  parameters: message.bodyVariables.map((text) => ({
+                    type: "text",
+                    text,
+                  })),
+                },
+              ],
+            },
           }),
         },
       );
@@ -59,7 +90,7 @@ export function createWhatsAppPort(): WhatsAppPort {
         return {
           ok: false,
           dryRun: false,
-          message: `Falha WhatsApp (${response.status}): ${detail}. Verifique token/sandbox.`,
+          message: `Falha WhatsApp (${response.status}): ${detail}. Verifique token, sandbox e templates Approved.`,
         };
       }
 
@@ -70,7 +101,7 @@ export function createWhatsAppPort(): WhatsAppPort {
         ok: true,
         dryRun: false,
         providerMessageId: json.messages?.[0]?.id,
-        message: "Mensagem WhatsApp aceita pelo provedor.",
+        message: "Template WhatsApp aceito pelo provedor.",
       };
     },
   };

@@ -280,7 +280,8 @@ A URL pública (`…/api/webhooks/inngest`) precisa estar registrada na Inngest 
 | App | `NEXT_PUBLIC_APP_URL` |
 | Supabase | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, (`SUPABASE_DB_PASSWORD` só para migrations) |
 | Inngest | `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY` |
-| WhatsApp | `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN` |
+| WhatsApp | `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`, `WHATSAPP_TEMPLATE_OPT_IN`, `WHATSAPP_TEMPLATE_REMINDER` |
+| Resend (avisos família) | `RESEND_API_KEY`, `RESEND_FROM` |
 | Sentry | `NEXT_PUBLIC_SENTRY_DSN` |
 
 Secrets **nunca** no `.env.example` versionado com valores reais.

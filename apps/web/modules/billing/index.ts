@@ -1,4 +1,9 @@
 export {
+  shouldPauseUnpaidTrial,
+  shouldSendTrialEndingWarning,
+  TRIAL_WARNING_DAYS,
+} from "./domain/trial-jobs";
+export {
   hasAdvancedLocation,
   hasVoiceFeature,
   resolveEffectivePlan,

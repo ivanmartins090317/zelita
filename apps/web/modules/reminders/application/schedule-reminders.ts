@@ -1,4 +1,5 @@
 import { inngest, isInngestConfigured } from "@/lib/inngest/client";
+import { remainingSlotsToday } from "@/modules/reminders/domain/zoned-time";
 
 export interface ScheduleRemindersInput {
   medicationId: string;
@@ -6,18 +7,39 @@ export interface ScheduleRemindersInput {
   careRecipientId: string;
   times: string[];
   medicationLabel: string;
+  now?: Date;
 }
 
 /**
- * Agenda lembretes. Sem Inngest configurado: registra evento local de schedule dry-run.
+ * Pede opt-in e agenda o restante de hoje em Brasília.
+ * A série dos próximos dias vem do cron diário.
  */
 export async function scheduleMedicationReminders(
   input: ScheduleRemindersInput,
 ): Promise<{ ok: boolean; message: string }> {
-  await inngest.send({
+  const now = input.now ?? new Date();
+  const optInError = await sendQuiet({
     name: "wa/opt_in.request",
     data: { careRecipientId: input.careRecipientId },
-  }).catch(() => undefined);
+  });
+
+  const remaining = remainingSlotsToday(input.times, now);
+  const slotErrors: string[] = [];
+
+  for (const slot of remaining) {
+    const error = await sendQuiet({
+      name: "med/reminder.send",
+      data: {
+        careRecipientId: input.careRecipientId,
+        packId: input.packId,
+        medicationId: input.medicationId,
+        medicationLabel: input.medicationLabel,
+        scheduledAt: slot.scheduledAt.toISOString(),
+      },
+      ts: slot.scheduledAt.getTime(),
+    });
+    if (error) slotErrors.push(error);
+  }
 
   if (!isInngestConfigured()) {
     return {
@@ -27,28 +49,33 @@ export async function scheduleMedicationReminders(
     };
   }
 
-  const tomorrow = new Date();
-  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-
-  for (const time of input.times) {
-    const [hours, minutes] = time.split(":").map(Number);
-    const scheduledAt = new Date(tomorrow);
-    scheduledAt.setUTCHours(hours, minutes, 0, 0);
-
-    await inngest.send({
-      name: "med/reminder.send",
-      data: {
-        careRecipientId: input.careRecipientId,
-        packId: input.packId,
-        medicationId: input.medicationId,
-        medicationLabel: input.medicationLabel,
-        scheduledAt: scheduledAt.toISOString(),
-      },
-    });
+  if (optInError || slotErrors.length > 0) {
+    return {
+      ok: true,
+      message: `Horários salvos. Falha ao agendar no Inngest (${optInError ?? slotErrors[0]}). O painel segue; confira a chave e o sync.`,
+    };
   }
 
   return {
     ok: true,
-    message: "Lembretes agendados no Inngest (ainda exigem opt-in para enviar).",
+    message:
+      remaining.length > 0
+        ? "Lembretes de hoje agendados (ainda exigem opt-in). A série diária segue no fuso de Brasília."
+        : "Horários salvos. Os lembretes de amanhã em diante saem no horário de Brasília, após o opt-in.",
   };
+}
+
+async function sendQuiet(event: {
+  name: string;
+  data: Record<string, string>;
+  ts?: number;
+}): Promise<string | null> {
+  try {
+    await inngest.send(event);
+    return null;
+  } catch (error) {
+    return error instanceof Error
+      ? error.message
+      : "Falha ao enviar evento Inngest.";
+  }
 }

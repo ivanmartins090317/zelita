@@ -3,6 +3,11 @@
  * Evento reminder_sent nunca implica tomada.
  */
 
+import {
+  CARE_TIMEZONE,
+  minutesSinceMidnightInZone,
+} from "./zoned-time";
+
 export const REMINDER_DECISIONS = {
   send: "send",
   skip_no_opt_in: "skip_no_opt_in",
@@ -24,6 +29,7 @@ export interface ReminderEligibilityInput {
   accountPaused: boolean;
   scheduledAt: Date;
   dnd: DndWindow;
+  timeZone?: string;
 }
 
 function parseHm(value: string): { hours: number; minutes: number } {
@@ -43,21 +49,21 @@ function parseHm(value: string): { hours: number; minutes: number } {
   return { hours: h, minutes: m };
 }
 
-function minutesSinceMidnight(date: Date): number {
-  return date.getUTCHours() * 60 + date.getUTCMinutes();
-}
-
 /**
  * Janela "não incomodar": se start < end, intervalo normal (ex. 22→07 atravessa meia-noite).
- * Dentro da janela = não enviar agora.
+ * Compara HH:MM no fuso de cuidado, não em UTC.
  */
-export function isInsideDnd(at: Date, dnd: DndWindow): boolean {
+export function isInsideDnd(
+  at: Date,
+  dnd: DndWindow,
+  timeZone: string = CARE_TIMEZONE,
+): boolean {
   if (!dnd.start || !dnd.end) return false;
   const start = parseHm(dnd.start);
   const end = parseHm(dnd.end);
   const startMin = start.hours * 60 + start.minutes;
   const endMin = end.hours * 60 + end.minutes;
-  const nowMin = minutesSinceMidnight(at);
+  const nowMin = minutesSinceMidnightInZone(at, timeZone);
 
   if (startMin === endMin) return false;
 
@@ -73,7 +79,7 @@ export function decideReminderSend(
 ): ReminderDecision {
   if (input.accountPaused) return REMINDER_DECISIONS.skip_account_paused;
   if (!input.hasWhatsAppOptIn) return REMINDER_DECISIONS.skip_no_opt_in;
-  if (isInsideDnd(input.scheduledAt, input.dnd)) {
+  if (isInsideDnd(input.scheduledAt, input.dnd, input.timeZone ?? CARE_TIMEZONE)) {
     return REMINDER_DECISIONS.defer_dnd;
   }
   return REMINDER_DECISIONS.send;

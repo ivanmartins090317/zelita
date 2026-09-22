@@ -2,24 +2,33 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | **Gate 1 (P0)** — Produção real |
-| Spec | Sem Spec nova (headers + legal mínimo + homologação) |
-| Autonomia | `medium` |
-| Status | Homologação família no Vercel ok via **Copiar link**; e-mail automático de convite ficou pendente (Gate 3) |
+| Etapa | **Gate 2.1** — código Done; FL-04 no Vercel |
+| Spec | [`specs/2026-09-21-gate-2-1-inngest-whatsapp.md`](../../specs/2026-09-21-gate-2-1-inngest-whatsapp.md) |
+| Implementation | [`docs/implementation/2026-09-21-gate-2-1-inngest-whatsapp.md`](../implementation/2026-09-21-gate-2-1-inngest-whatsapp.md) |
+| Autonomia | `tight` |
+| Status | Gate 2.1 commitado. Falta `WHATSAPP_APP_SECRET` na Vercel + sync Inngest + FL-04 |
 
-## Entregue (Gate 1 parcial)
+## Entregue (código Gate 2.1)
 
-- Sentry DSN + migrations `007`/`009` + headers A05 + `/privacidade` e `/termos`
-- Homologação Vercel 2026-09-20: FL-01 (OTP no spam), FL-02 (8 passos), FL-03 (remédios), FL-08 smoke (exames)
+- Recorrência diária em `America/Sao_Paulo` + restante de hoje ao salvar cartela
+- Templates WhatsApp (não texto livre) + webhook HMAC
+- Jobs de cartela (5 dias / véspera / último dia) e trial (aviso D-5 + pausa D30)
+- `pnpm typecheck` / `lint` / `test` (382) ok
 
-## Achados da homologação
+## Ops (21/09, sem valores)
 
-- OTP chega, mas só na pasta de spam (DNS/reputação Resend, não bug de código)
-- Aceite de convite: **Copiar link** → colar em outra aba **funcionou** (2026-09-20)
-- Envio automático de e-mail de convite **não existe** — pendente no Gate 3 (`PENDENCIAS.md`)
+- Conta: **Test WhatsApp Business Account** · número sandbox `+1555…79440` Conectado
+- `INNGEST_*` e `WHATSAPP_ACCESS_TOKEN` / `PHONE_NUMBER_ID` / `VERIFY_TOKEN`: preenchidas (sandbox local)
+- Templates **Approved** (22/09), Utilidade, `pt_BR`:
+  - `zelita_opt_in` — `{{1}}` nome
+  - `zelita_med_reminder` — `{{1}}` nome + `{{2}}` medicamento
+- Webhook Meta: callback `https://zelita-web.vercel.app/api/webhooks/whatsapp` — GET challenge devolve `123` (22/09)
+- Falta: deploy na Vercel (após push) · `WHATSAPP_APP_SECRET` · sync Inngest · FL-04
 
-## Próximo
+## Próximo (nesta ordem)
 
-- Commit/deploy se headers + legal ainda não subiram
-- (Opcional, ops) SPF/DKIM/DMARC em `mail.modernxlab.com.br` para o OTP sair do spam
-- Gate 2.1 quando o Gate 1 estiver no ar
+1. Push + deploy do Gate 2.1 (HMAC, templates, jobs)
+2. Vercel Production: `WHATSAPP_APP_SECRET` + redeploy
+3. Inngest Cloud → sync `https://zelita-web.vercel.app/api/webhooks/inngest` (6 functions)
+4. Homologar TC-FL04-01…08 em `docs/relatorio-testes-manuais.html` (hoje 0/8 Pendente)
+5. Gate 2.2 — Spec F5 (PWA) → F6 (vínculo)
