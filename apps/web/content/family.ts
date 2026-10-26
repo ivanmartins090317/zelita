@@ -338,13 +338,27 @@ export interface FamilyContent {
     bodyBold: string;
     bodySuffix: string;
     ctaLabel: string;
+    endingTitle: string;
+    endingOverdueTitle: string;
+    endingIntro: string;
+    endingStops: string[];
+    endingContinues: string;
+    endingCtaLabel: string;
+    endingAskAdmin: string;
   };
   pausedBanner: {
     pausedTitle: string;
+    pausedWhen: string;
+    pausedWhenUnknown: string;
     pausedBody: string;
+    stopsTitle: string;
+    stops: string[];
+    continues: string;
     canceledTitle: string;
     canceledBody: string;
     ctaLabel: string;
+    askAdmin: string;
+    badgeLabel: string;
   };
   nav: FamilyNavSectionContent[];
   areas: Record<string, FamilyAreaCopy>;
@@ -482,6 +496,7 @@ export interface FamilyRemediosContent {
     noSchedule: string;
     warnDays: string;
     okDays: string;
+    ended: string;
     noReminder: string;
   };
   empty: {
@@ -501,6 +516,9 @@ export interface FamilyRemediosContent {
       durationHint: string;
       remainingLabel: string;
       remainingHint: string;
+      endedLabel: string;
+      endedValue: string;
+      endedHint: string;
     };
     startedLabel: string;
     endsLabel: string;
@@ -510,9 +528,16 @@ export interface FamilyRemediosContent {
     actions: {
       registerPurchase: string;
       editSchedule: string;
-      editScheduleSoon: string;
       pause: string;
       pauseConfirm: string;
+      delete: string;
+      deleteTitle: string;
+      deleteLead: string;
+      deleteHistory: string;
+      deleteDisclaimer: string;
+      deleteKeep: string;
+      deleteConfirm: string;
+      deletePending: string;
     };
     pauseSuccess: string;
   };
@@ -561,6 +586,9 @@ export interface FamilyRemediosContent {
     previewBuyUntil: string;
     previewInvalid: string;
     timesMismatch: string;
+    customTimeLabel: string;
+    customTimeAdd: string;
+    customTimeInvalid: string;
     cancel: string;
     save: string;
     saving: string;
@@ -568,6 +596,13 @@ export interface FamilyRemediosContent {
     genericError: string;
     pausedHint: string;
     viewerHint: string;
+  };
+  scheduleModal: {
+    title: string;
+    lead: string;
+    cancel: string;
+    save: string;
+    saving: string;
   };
   pausedActionHint: string;
 }
@@ -622,6 +657,7 @@ export interface FamilyHojeContent {
       refillLabel: string;
       refillEmpty: string;
       refillHint: string;
+      refillEndedHint: string;
       locationLabel: string;
       locationValue: string;
       locationHint: string;
@@ -670,6 +706,7 @@ export interface FamilyHojeContent {
     confirmed: string;
     upcoming: string;
     refillTitle: string;
+    refillEndedTitle: string;
     refillSubtitle: string;
     refillLink: string;
   };
@@ -1192,15 +1229,38 @@ export const familyContent: FamilyContent = {
     bodySuffix:
       ". Nenhum cartão foi pedido e nada será cobrado — avisamos 5 dias antes de acabar.",
     ctaLabel: "Ver meu plano",
+    endingTitle: "Em {date} a conta pausa. Nada é cobrado sozinho.",
+    endingOverdueTitle:
+      "O período grátis acabou em {date}. Nada é cobrado sozinho.",
+    endingIntro: "Quando a conta pausar, param:",
+    endingStops: [
+      "Lembretes no WhatsApp",
+      "Cartelas novas, consultas, exames, convites e ajustes",
+    ],
+    endingContinues:
+      "Continua: ver o histórico. Os dados ficam guardados.",
+    endingCtaLabel: "Ver planos",
+    endingAskAdmin: "Peça a quem administra a conta para renovar.",
   },
   pausedBanner: {
     pausedTitle: "Conta pausada",
+    pausedWhen: "A conta pausou em {date}.",
+    pausedWhenUnknown: "A conta está pausada.",
     pausedBody:
       "Seus dados estão preservados, mas algumas ações ficam limitadas até reativar o plano.",
+    stopsTitle: "O que parou:",
+    stops: [
+      "Lembretes no WhatsApp",
+      "Cartelas novas, consultas, exames, convites e ajustes",
+    ],
+    continues:
+      "O que continua: ver o histórico. Os dados ficam guardados.",
     canceledTitle: "Conta cancelada",
     canceledBody:
       "O acesso ao painel continua disponível para consulta. Veja Meu plano ou fale com o suporte para reativar.",
-    ctaLabel: "Ver meu plano",
+    ctaLabel: "Ver planos",
+    askAdmin: "Peça a quem administra a conta para reativar.",
+    badgeLabel: "Pausado",
   },
   nav: [
     {
@@ -1741,6 +1801,7 @@ export const familyContent: FamilyContent = {
         refillLabel: "Remédio acabando",
         refillEmpty: "0",
         refillHint: "{nome} acaba em {dias} dias",
+        refillEndedHint: "A caixa de {nome} acabou",
         locationLabel: "Onde ele está",
         locationValue: "Em breve",
         locationHint: "Disponível após autorização",
@@ -1848,6 +1909,7 @@ export const familyContent: FamilyContent = {
       confirmed: "tomada confirmada manualmente",
       upcoming: "{medicamento} — lembrete será enviado",
       refillTitle: "A {medicamento} deve acabar em {dias} dias",
+      refillEndedTitle: "A caixa de {medicamento} acabou",
       refillSubtitle: "Compre outra caixa até {data}",
       refillLink: "anotar a nova caixa",
     },
@@ -1888,6 +1950,7 @@ export const familyContent: FamilyContent = {
       noSchedule: "Sem horário fixo",
       warnDays: "Faltam {dias} dias",
       okDays: "{dias} dias restantes",
+      ended: "A caixa acabou",
       noReminder: "Sem lembrete",
     },
     empty: {
@@ -1908,6 +1971,9 @@ export const familyContent: FamilyContent = {
         durationHint: "dias",
         remainingLabel: "Ainda dá para",
         remainingHint: "dias",
+        endedLabel: "Pela conta",
+        endedValue: "Acabou",
+        endedHint: "já passou da data prevista",
       },
       startedLabel: "Começou em {data}",
       endsLabel: "Deve acabar em {data}",
@@ -1918,10 +1984,20 @@ export const familyContent: FamilyContent = {
       actions: {
         registerPurchase: "Cadastrar nova compra",
         editSchedule: "Editar horários",
-        editScheduleSoon: "Em breve",
         pause: "Pausar lembretes",
         pauseConfirm:
           "Pausar lembretes desta cartela? Isso não significa que ele parou de tomar o remédio.",
+        delete: "Apagar remédio",
+        deleteTitle: "Apagar este remédio?",
+        deleteLead:
+          "Se apagar, {nome} sai da lista e os lembretes param.",
+        deleteHistory:
+          "O histórico também some: quando a caixa começou, quando acabou e os avisos que a Zelita já mandou. Isso não dá para desfazer.",
+        deleteDisclaimer:
+          "Apagar aqui não quer dizer que ele parou de tomar. Só tira o registro da família.",
+        deleteKeep: "Manter o remédio",
+        deleteConfirm: "Apagar mesmo assim",
+        deletePending: "Apagando…",
       },
       pauseSuccess: "Cartela pausada. Lembretes desta cartela param.",
     },
@@ -1978,6 +2054,9 @@ export const familyContent: FamilyContent = {
         "Ajuste quantidade e doses para ver quando a cartela termina.",
       timesMismatch:
         "Selecione exatamente {count} horário(s), um por dose do dia.",
+      customTimeLabel: "Ou outro horário",
+      customTimeAdd: "Adicionar",
+      customTimeInvalid: "Escolha um horário válido, como 09:30.",
       cancel: "Cancelar",
       save: "Salvar cartela",
       saving: "Salvando…",
@@ -1988,6 +2067,13 @@ export const familyContent: FamilyContent = {
         "Conta pausada: você pode ver os remédios, mas não cadastrar ou pausar cartelas até reativar o plano.",
       viewerHint:
         "Seu papel não permite cadastrar cartelas. Peça ao admin da conta.",
+    },
+    scheduleModal: {
+      title: "Editar horários",
+      lead: "Escolha um horário para cada dose do dia. A duração da caixa não muda.",
+      cancel: "Cancelar",
+      save: "Salvar horários",
+      saving: "Salvando…",
     },
     pausedActionHint:
       "Conta pausada — ações de cadastro e pausa ficam indisponíveis.",

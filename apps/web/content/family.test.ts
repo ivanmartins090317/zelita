@@ -104,9 +104,10 @@ describe("familyContent", () => {
     expect(familyContent.remedios.listCard.title).toBe("Remédios que ele toma");
     expect(familyContent.remedios.modal.previewTitle).toContain("conta");
     expect(familyContent.remedios.howWeWrite.neverItems[0]).toContain("tomou");
-    expect(familyContent.remedios.detail.actions.editScheduleSoon).toBe(
-      "Em breve",
+    expect(familyContent.remedios.detail.actions.editSchedule).toBe(
+      "Editar horários",
     );
+    expect(familyContent.remedios.scheduleModal.lead).toContain("dose");
   });
 
   it("expõe copy de Quem participa F4.4", () => {
