@@ -11,6 +11,10 @@ import {
 } from "@/modules/medications/domain/pack-end";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { scheduleMedicationReminders } from "@/modules/reminders/application/schedule-reminders";
+import {
+  INVALID_SCHEDULE_TIMES_MESSAGE,
+  parseScheduleTimes,
+} from "@/modules/medications/application/schedule-times";
 
 const createSchema = z.object({
   careRecipientId: z.string().uuid(),
@@ -57,6 +61,33 @@ export async function previewPackEnd(
   }
 }
 
+async function readMedicationAdmin(): Promise<
+  | { ok: true; ctx: Awaited<ReturnType<typeof requireAdminForMedications>> }
+  | { ok: false; message: string }
+> {
+  try {
+    return { ok: true, ctx: await requireAdminForMedications() };
+  } catch (error) {
+    if (isNextRedirect(error)) throw error;
+    return {
+      ok: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Não foi possível alterar a cartela. Recarregue a página e tente de novo.",
+    };
+  }
+}
+
+function isNextRedirect(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    String((error as { digest?: unknown }).digest).startsWith("NEXT_REDIRECT")
+  );
+}
+
 export async function createMedicationWithPack(
   _prev: MedicationActionResult,
   formData: FormData,
@@ -77,7 +108,9 @@ export async function createMedicationWithPack(
     return { ok: false, message: parsed.error.issues[0]?.message };
   }
 
-  const ctx = await requireAdminForMedications();
+  const admin = await readMedicationAdmin();
+  if (!admin.ok) return admin;
+  const ctx = admin.ctx;
   if (ctx.careRecipientId !== parsed.data.careRecipientId) {
     return {
       ok: false,
@@ -85,15 +118,11 @@ export async function createMedicationWithPack(
     };
   }
 
-  const times = parsed.data.times
-    .split(",")
-    .map((t) => t.trim())
-    .filter(Boolean);
-  if (times.length === 0 || times.length !== parsed.data.dosesPerDay) {
+  const times = parseScheduleTimes(parsed.data.times, parsed.data.dosesPerDay);
+  if (!times) {
     return {
       ok: false,
-      message:
-        "Informe os horários separados por vírgula, um por dose do dia (ex.: 08:00,20:00).",
+      message: INVALID_SCHEDULE_TIMES_MESSAGE,
     };
   }
 
@@ -209,7 +238,9 @@ export async function registerReplacementPack(
     return { ok: false, message: parsed.error.issues[0]?.message };
   }
 
-  const ctx = await requireAdminForMedications();
+  const admin = await readMedicationAdmin();
+  if (!admin.ok) return admin;
+  const ctx = admin.ctx;
   const supabase = await createSupabaseServerClient();
 
   const { data: medication, error: medError } = await supabase
@@ -319,7 +350,8 @@ export async function registerReplacementPack(
 export async function pauseMedicationPack(
   packId: string,
 ): Promise<MedicationActionResult> {
-  await requireAdminForMedications();
+  const admin = await readMedicationAdmin();
+  if (!admin.ok) return admin;
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from("medication_packs")

@@ -59,6 +59,7 @@ export async function getHojeMedications(input: {
       confirmed: copy.timeline.confirmed,
       upcoming: copy.timeline.upcoming,
       refillTitle: copy.timeline.refillTitle,
+      refillEndedTitle: copy.timeline.refillEndedTitle,
       refillSubtitle: copy.timeline.refillSubtitle,
       linkLabel: copy.timeline.refillLink,
     },

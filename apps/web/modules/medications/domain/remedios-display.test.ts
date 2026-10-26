@@ -47,10 +47,26 @@ describe("resolveListTag", () => {
       refillAlertDays: 5,
       warnLabel: "Faltam {dias} dias",
       okLabel: "{dias} dias restantes",
+      endedLabel: "A caixa acabou",
       noReminderLabel: "Sem lembrete",
     });
     expect(tag.tagTone).toBe("warning");
     expect(tag.tagLabel).toBe("Faltam 3 dias");
+  });
+
+  it("troca dias negativos por caixa acabada", () => {
+    const tag = resolveListTag({
+      times: ["12:00"],
+      daysRemaining: -45,
+      refillAlertDays: 5,
+      warnLabel: "Faltam {dias} dias",
+      okLabel: "{dias} dias restantes",
+      endedLabel: "A caixa acabou",
+      noReminderLabel: "Sem lembrete",
+    });
+    expect(tag.tagTone).toBe("warning");
+    expect(tag.shouldWarn).toBe(true);
+    expect(tag.tagLabel).toBe("A caixa acabou");
   });
 
   it("usa etiqueta neutra sem horários", () => {
@@ -60,6 +76,7 @@ describe("resolveListTag", () => {
       refillAlertDays: 5,
       warnLabel: "Faltam {dias} dias",
       okLabel: "{dias} dias restantes",
+      endedLabel: "A caixa acabou",
       noReminderLabel: "Sem lembrete",
     });
     expect(tag.tagTone).toBe("muted");
@@ -229,6 +246,7 @@ describe("mapRemediosListItem", () => {
         noSchedule: "Sem horário",
         warnDays: "Faltam {dias} dias",
         okDays: "{dias} dias restantes",
+        ended: "A caixa acabou",
         noReminder: "Sem lembrete",
       },
     );

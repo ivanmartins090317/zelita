@@ -239,8 +239,39 @@ export interface BuildTimelineCopy {
   confirmed: string;
   upcoming: string;
   refillTitle: string;
+  refillEndedTitle: string;
   refillSubtitle: string;
   linkLabel: string;
+}
+
+export function formatRefillTimelineTitle(input: {
+  medicationName: string;
+  daysRemaining: number;
+  titleTemplate: string;
+  endedTemplate: string;
+}): string {
+  if (input.daysRemaining < 0) {
+    return input.endedTemplate.replace("{medicamento}", input.medicationName);
+  }
+
+  return input.titleTemplate
+    .replace("{medicamento}", input.medicationName)
+    .replace("{dias}", String(input.daysRemaining));
+}
+
+export function formatRefillUrgencyHint(input: {
+  name: string;
+  daysRemaining: number;
+  hintTemplate: string;
+  endedTemplate: string;
+}): string {
+  if (input.daysRemaining < 0) {
+    return input.endedTemplate.replace("{nome}", input.name);
+  }
+
+  return input.hintTemplate
+    .replace("{nome}", input.name)
+    .replace("{dias}", String(input.daysRemaining));
 }
 
 export function buildDayTimeline(
@@ -293,9 +324,12 @@ export function buildDayTimeline(
         timeLabel: copy.refillSubtitle.includes("{dias}")
           ? "alerta"
           : "alerta",
-        title: copy.refillTitle
-          .replace("{medicamento}", med.medicationName)
-          .replace("{dias}", String(med.daysRemaining)),
+        title: formatRefillTimelineTitle({
+          medicationName: med.medicationName,
+          daysRemaining: med.daysRemaining,
+          titleTemplate: copy.refillTitle,
+          endedTemplate: copy.refillEndedTitle,
+        }),
         subtitle: copy.refillSubtitle.replace(
           "{data}",
           med.endDateEstimated.split("-").reverse().join("/"),

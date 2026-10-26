@@ -49,6 +49,50 @@ export async function loadReminderRecipient(
   };
 }
 
+export async function loadPackScheduleTimes(
+  supabase: SupabaseClient,
+  packId: string,
+): Promise<string[] | null> {
+  const { data, error } = await supabase
+    .from("medication_packs")
+    .select("medications(medication_schedules(times))")
+    .eq("id", packId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Falha ao ler horários da cartela: ${error.message}.`);
+  }
+  if (!data) return null;
+
+  const medication = Array.isArray(data.medications)
+    ? data.medications[0]
+    : data.medications;
+  if (!medication) return null;
+
+  const schedules = medication.medication_schedules;
+  const schedule = Array.isArray(schedules) ? schedules[0] : schedules;
+  if (!schedule?.times?.length) return null;
+
+  return schedule.times.map((time: string) => String(time).slice(0, 5));
+}
+
+export async function medicationPackExists(
+  supabase: SupabaseClient,
+  packId: string,
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("medication_packs")
+    .select("id")
+    .eq("id", packId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Falha ao ler a cartela: ${error.message}.`);
+  }
+
+  return Boolean(data);
+}
+
 export async function hasReminderOccurrence(
   supabase: SupabaseClient,
   packId: string,

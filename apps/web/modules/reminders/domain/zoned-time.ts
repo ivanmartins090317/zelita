@@ -90,6 +90,16 @@ export interface DaySlot {
   scheduledAt: Date;
 }
 
+export function clockMatchesSchedule(
+  scheduledAt: Date,
+  times: string[],
+  timeZone: string = CARE_TIMEZONE,
+): boolean {
+  const parts = getZonedParts(scheduledAt, timeZone);
+  const clock = `${String(parts.hour).padStart(2, "0")}:${String(parts.minute).padStart(2, "0")}`;
+  return times.some((time) => time.slice(0, 5) === clock);
+}
+
 export function slotsOnDate(times: string[], dateKey: string): DaySlot[] {
   return times.map((time) => {
     const clock = normalizeClockTime(time.slice(0, 5));

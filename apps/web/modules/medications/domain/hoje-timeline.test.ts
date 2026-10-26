@@ -6,6 +6,8 @@ import {
   computeRefillAlertSummary,
   findNextMedication,
   formatLongDate,
+  formatRefillTimelineTitle,
+  formatRefillUrgencyHint,
   formatRelativeUntil,
   resolveTimeGreeting,
 } from "./hoje-timeline";
@@ -40,6 +42,7 @@ const timelineCopy = {
   confirmed: "tomada confirmada",
   upcoming: "{medicamento} — lembrete será enviado",
   refillTitle: "A {medicamento} deve acabar em {dias} dias",
+  refillEndedTitle: "A caixa de {medicamento} acabou",
   refillSubtitle: "Compre outra caixa até {data}",
   linkLabel: "anotar a nova caixa",
 };
@@ -94,6 +97,23 @@ describe("buildDayTimeline", () => {
 
     expect(items.some((item) => item.variant === "muted")).toBe(true);
     expect(items.some((item) => item.variant === "warning")).toBe(true);
+    const warning = items.find((item) => item.variant === "warning");
+    expect(warning?.title).toBe("A Losartana deve acabar em 3 dias");
+  });
+
+  it("troca dias negativos por caixa acabada", () => {
+    const now = new Date("2026-08-12T13:00:00.000-03:00");
+    const items = buildDayTimeline(
+      [{ ...meds[0], daysRemaining: -45 }],
+      [],
+      now,
+      "America/Sao_Paulo",
+      timelineCopy,
+      "/familia/remedios",
+    );
+
+    const warning = items.find((item) => item.variant === "warning");
+    expect(warning?.title).toBe("A caixa de Losartana acabou");
   });
 
   it("marca lembrete enviado como concluído sem confundir com tomada", () => {
@@ -146,6 +166,32 @@ describe("buildActivityFeed", () => {
     );
 
     expect(feed.length).toBeLessThanOrEqual(5);
+  });
+});
+
+describe("formatRefillTimelineTitle", () => {
+  it("mantém a contagem quando ainda faltam dias", () => {
+    expect(
+      formatRefillTimelineTitle({
+        medicationName: "Losartana",
+        daysRemaining: 3,
+        titleTemplate: timelineCopy.refillTitle,
+        endedTemplate: timelineCopy.refillEndedTitle,
+      }),
+    ).toBe("A Losartana deve acabar em 3 dias");
+  });
+});
+
+describe("formatRefillUrgencyHint", () => {
+  it("usa o aviso de caixa acabada quando a data já passou", () => {
+    expect(
+      formatRefillUrgencyHint({
+        name: "Losartana",
+        daysRemaining: -45,
+        hintTemplate: "{nome} acaba em {dias} dias",
+        endedTemplate: "A caixa de {nome} acabou",
+      }),
+    ).toBe("A caixa de Losartana acabou");
   });
 });
 

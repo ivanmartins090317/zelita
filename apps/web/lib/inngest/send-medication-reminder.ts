@@ -10,10 +10,13 @@ import {
   reminderSentCopy,
 } from "@/modules/reminders/domain/eligibility";
 import { createWhatsAppPort } from "@/modules/reminders/infrastructure/whatsapp-port";
+import { clockMatchesSchedule } from "@/modules/reminders/domain/zoned-time";
 import {
   hasReminderOccurrence,
   insertMedicationEvent,
+  loadPackScheduleTimes,
   loadReminderRecipient,
+  medicationPackExists,
 } from "@/modules/reminders/infrastructure/reminder-job-store";
 import { createSupabaseServiceClient } from "@/lib/supabase/server";
 
@@ -76,6 +79,18 @@ async function evaluateReminder(
 
   if (await hasReminderOccurrence(supabase, data.packId, data.scheduledAt)) {
     return { kind: "skip", reason: "already_processed" };
+  }
+
+  if (!(await medicationPackExists(supabase, data.packId))) {
+    return { kind: "skip", reason: "pack_missing" };
+  }
+
+  const scheduleTimes = await loadPackScheduleTimes(supabase, data.packId);
+  if (
+    !scheduleTimes ||
+    !clockMatchesSchedule(new Date(data.scheduledAt), scheduleTimes)
+  ) {
+    return { kind: "skip", reason: "schedule_changed" };
   }
 
   const recipient = await loadReminderRecipient(supabase, data.careRecipientId);

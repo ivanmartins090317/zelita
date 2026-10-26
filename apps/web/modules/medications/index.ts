@@ -4,6 +4,7 @@ import {
   DEFAULT_REFILL_ALERT_DAYS,
   shouldWarnRefill,
 } from "./domain/pack-end";
+import { deleteMedication } from "./application/delete-medication";
 import {
   createMedicationWithPack,
   pauseMedicationPack,
@@ -26,6 +27,7 @@ export {
   DEFAULT_REFILL_ALERT_DAYS,
   shouldWarnRefill,
   createMedicationWithPack,
+  deleteMedication,
   pauseMedicationPack,
   previewPackEnd,
   registerReplacementPack,

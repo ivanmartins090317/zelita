@@ -130,6 +130,7 @@ export function resolveListTag(input: {
   refillAlertDays: number;
   warnLabel: string;
   okLabel: string;
+  endedLabel: string;
   noReminderLabel: string;
 }): Pick<RemediosListItemDisplay, "tagLabel" | "tagTone" | "shouldWarn"> {
   if (input.times.length === 0) {
@@ -137,6 +138,14 @@ export function resolveListTag(input: {
       tagLabel: input.noReminderLabel,
       tagTone: "muted",
       shouldWarn: false,
+    };
+  }
+
+  if (input.daysRemaining < 0) {
+    return {
+      tagLabel: input.endedLabel,
+      tagTone: "warning",
+      shouldWarn: true,
     };
   }
 
@@ -174,6 +183,7 @@ export function mapRemediosListItem(
     noSchedule: string;
     warnDays: string;
     okDays: string;
+    ended: string;
     noReminder: string;
   },
 ): RemediosListItemDisplay {
@@ -183,6 +193,7 @@ export function mapRemediosListItem(
     refillAlertDays: input.refillAlertDays,
     warnLabel: copy.warnDays,
     okLabel: copy.okDays,
+    endedLabel: copy.ended,
     noReminderLabel: copy.noReminder,
   });
 

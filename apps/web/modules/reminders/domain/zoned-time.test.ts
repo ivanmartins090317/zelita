@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   calendarDaysUntil,
+  clockMatchesSchedule,
   dateKeyInZone,
   remainingSlotsToday,
   slotsOnDate,
@@ -25,6 +26,18 @@ describe("remainingSlotsToday", () => {
   it("não agenda o passado de hoje", () => {
     const now = new Date("2026-09-21T21:00:00.000-03:00");
     expect(remainingSlotsToday(["08:00", "20:00"], now)).toEqual([]);
+  });
+});
+
+describe("clockMatchesSchedule", () => {
+  it("reconhece o horário de Brasília ainda cadastrado", () => {
+    const scheduled = zonedDateFromHm("2026-10-26", "09:30");
+    expect(clockMatchesSchedule(scheduled, ["08:00", "09:30"])).toBe(true);
+  });
+
+  it("ignora horário que saiu da cartela", () => {
+    const scheduled = zonedDateFromHm("2026-10-26", "08:00");
+    expect(clockMatchesSchedule(scheduled, ["09:30"])).toBe(false);
   });
 });
 

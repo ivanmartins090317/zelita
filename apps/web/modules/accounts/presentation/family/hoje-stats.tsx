@@ -3,9 +3,10 @@ import Link from "next/link";
 import { Stat } from "@/components/ui/stat";
 import { familyContent, familyRoutes } from "@/content/family";
 import type { NoticesStatViewModel } from "@/modules/alerts/domain/alert-open-count";
-import type {
-  NextMedicationStat,
-  RefillAlertSummary,
+import {
+  formatRefillUrgencyHint,
+  type NextMedicationStat,
+  type RefillAlertSummary,
 } from "@/modules/medications/domain/hoje-timeline";
 import type { HojeLocationStat } from "@/modules/location/application/get-hoje-location-snapshot";
 
@@ -45,9 +46,12 @@ function HojeStats({
         tone={refillSummary.count > 0 ? "warning" : "default"}
         hint={
           refillSummary.mostUrgentName && refillSummary.mostUrgentDays !== null
-            ? copy.refillHint
-                .replace("{nome}", refillSummary.mostUrgentName)
-                .replace("{dias}", String(refillSummary.mostUrgentDays))
+            ? formatRefillUrgencyHint({
+                name: refillSummary.mostUrgentName,
+                daysRemaining: refillSummary.mostUrgentDays,
+                hintTemplate: copy.refillHint,
+                endedTemplate: copy.refillEndedHint,
+              })
             : undefined
         }
       />

@@ -17,6 +17,8 @@ export default async function RemediosPage({ searchParams }: RemediosPageProps) 
     modal: params.modal,
     replacementMedicationId:
       params.modal === "reposicao" ? params.remedio : null,
+    scheduleMedicationId:
+      params.modal === "horarios" ? params.remedio : null,
   });
 
   if (!result.ok) {

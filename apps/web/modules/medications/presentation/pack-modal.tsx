@@ -3,7 +3,6 @@
 import { useActionState, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Chip, Chips } from "@/components/ui/chips";
 import { DatePickerField } from "@/components/ui/date-picker-field";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -18,8 +17,7 @@ import {
   buildPackPreview,
   formatDisplayDate,
 } from "@/modules/medications/domain/remedios-display";
-
-const TIME_OPTIONS = ["08:00", "12:00", "18:00", "22:00"] as const;
+import { PackTimeField, sortTimes } from "@/modules/medications/presentation/pack-time-field";
 
 const initialState: MedicationActionResult = { ok: false };
 
@@ -36,6 +34,7 @@ interface PackModalProps {
   open: boolean;
   mode: "new" | "replacement";
   careRecipientId: string;
+  isPaused?: boolean;
   replacement?: PackModalReplacementContext | null;
   onClose: () => void;
 }
@@ -43,6 +42,7 @@ interface PackModalProps {
 interface PackModalContentProps {
   mode: "new" | "replacement";
   careRecipientId: string;
+  isPaused?: boolean;
   replacement?: PackModalReplacementContext | null;
   onClose: () => void;
 }
@@ -50,6 +50,7 @@ interface PackModalContentProps {
 function PackModalContent({
   mode,
   careRecipientId,
+  isPaused = false,
   replacement,
   onClose,
 }: PackModalContentProps) {
@@ -68,7 +69,7 @@ function PackModalContent({
   );
   const [selectedTimes, setSelectedTimes] = useState<string[]>(
     isReplacement && replacement.times.length > 0
-      ? replacement.times
+      ? sortTimes(replacement.times)
       : ["08:00"],
   );
   const [instructions, setInstructions] = useState("");
@@ -91,19 +92,8 @@ function PackModalContent({
   );
 
   const timesValid = selectedTimes.length === dosesPerDay;
-  const canSubmit = preview.ok && timesValid && !pending && Boolean(startDate);
-
-  function toggleTime(time: string) {
-    setSelectedTimes((current) => {
-      if (current.includes(time)) {
-        return current.filter((value) => value !== time);
-      }
-      if (current.length >= dosesPerDay) {
-        return [...current.slice(1), time];
-      }
-      return [...current, time];
-    });
-  }
+  const canSubmit =
+    preview.ok && timesValid && !pending && Boolean(startDate) && !isPaused;
 
   return (
     <Modal
@@ -223,27 +213,12 @@ function PackModalContent({
           />
         </Field>
 
-        <Field label={copy.fields.times}>
-          <Chips>
-            {TIME_OPTIONS.map((time) => (
-              <Chip
-                key={time}
-                type="button"
-                selected={selectedTimes.includes(time)}
-                disabled={Boolean(isReplacement)}
-                onClick={() => toggleTime(time)}
-              >
-                {time}
-              </Chip>
-            ))}
-          </Chips>
-          <input type="hidden" name="times" value={selectedTimes.join(",")} />
-          {!timesValid ? (
-            <p className="mt-2 text-sm text-red-700">
-              {copy.timesMismatch.replace("{count}", String(dosesPerDay))}
-            </p>
-          ) : null}
-        </Field>
+        <PackTimeField
+          dosesPerDay={dosesPerDay}
+          selectedTimes={selectedTimes}
+          readOnly={Boolean(isReplacement)}
+          onChange={setSelectedTimes}
+        />
 
         {!isReplacement ? (
           <Field label={copy.fields.instructions} htmlFor="pack-instructions">
@@ -298,6 +273,10 @@ function PackModalContent({
           )}
         </div>
 
+        {isPaused ? (
+          <p className="text-sm text-amber-900">{copy.pausedHint}</p>
+        ) : null}
+
         {state.message && !state.ok ? (
           <p className="text-sm text-red-700">{state.message}</p>
         ) : null}
@@ -310,6 +289,7 @@ function PackModal({
   open,
   mode,
   careRecipientId,
+  isPaused = false,
   replacement,
   onClose,
 }: PackModalProps) {
@@ -322,6 +302,7 @@ function PackModal({
       key={`${mode}-${replacement?.medicationId ?? "new"}`}
       mode={mode}
       careRecipientId={careRecipientId}
+      isPaused={isPaused}
       replacement={replacement}
       onClose={onClose}
     />

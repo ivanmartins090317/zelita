@@ -9,6 +9,7 @@ import { Tag } from "@/components/ui/tag";
 import { familyContent, familyRoutes } from "@/content/family";
 import type { RemediosPageViewModel } from "@/modules/medications/application/get-remedios-page";
 import { PackModal } from "@/modules/medications/presentation/pack-modal";
+import { ScheduleModal } from "@/modules/medications/presentation/schedule-modal";
 import { RemediosDetailPanel } from "@/modules/medications/presentation/remedios-detail-panel";
 import { RemediosListCard } from "@/modules/medications/presentation/remedios-list-card";
 import { RemediosRecentReminders } from "@/modules/medications/presentation/remedios-recent-reminders";
@@ -49,6 +50,13 @@ function RemediosPageView({ data }: RemediosPageViewProps) {
     );
   }, [data.selectedMedicationId, router]);
 
+  const openScheduleModal = useCallback(() => {
+    if (!data.selectedMedicationId) return;
+    router.push(
+      `${familyRoutes.remedios}?remedio=${data.selectedMedicationId}&modal=horarios`,
+    );
+  }, [data.selectedMedicationId, router]);
+
   const modalOpen = modalMode !== null;
 
   return (
@@ -74,6 +82,7 @@ function RemediosPageView({ data }: RemediosPageViewProps) {
             canManage={data.canManage}
             isPaused={data.isPaused}
             onRegisterPurchase={openReplacementModal}
+            onEditSchedule={openScheduleModal}
           />
 
           <div className="space-y-4">
@@ -130,6 +139,7 @@ function RemediosPageView({ data }: RemediosPageViewProps) {
           open={Boolean(modalOpen)}
           mode={modalMode === "replacement" ? "replacement" : "new"}
           careRecipientId={data.careRecipientId}
+          isPaused={data.isPaused}
           replacement={
             modalMode === "replacement" && selectedMedication
               ? {
@@ -142,6 +152,20 @@ function RemediosPageView({ data }: RemediosPageViewProps) {
                 }
               : null
           }
+          onClose={closeModal}
+        />
+      ) : null}
+
+      {data.canManage && selectedMedication ? (
+        <ScheduleModal
+          key={selectedMedication.medicationId}
+          open={data.scheduleMedicationId === selectedMedication.medicationId}
+          medicationId={selectedMedication.medicationId}
+          name={selectedMedication.name}
+          dosageLabel={selectedMedication.dosageLabel}
+          times={selectedMedication.times}
+          dosesPerDay={selectedMedication.dosesPerDay}
+          isPaused={data.isPaused}
           onClose={closeModal}
         />
       ) : null}

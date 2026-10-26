@@ -1,14 +1,16 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
+import { Modal } from "@/components/ui/modal";
 import { Progress } from "@/components/ui/progress";
 import { Stat } from "@/components/ui/stat";
 import { Tag } from "@/components/ui/tag";
-import { familyContent } from "@/content/family";
+import { familyContent, familyRoutes } from "@/content/family";
+import { deleteMedication } from "@/modules/medications/application/delete-medication";
 import type { RemediosDetailViewModel } from "@/modules/medications/application/get-remedios-page";
 import { pauseMedicationPack } from "@/modules/medications/application/medication-actions";
 
@@ -17,6 +19,7 @@ interface RemediosDetailPanelProps {
   canManage: boolean;
   isPaused: boolean;
   onRegisterPurchase: () => void;
+  onEditSchedule: () => void;
 }
 
 function RemediosDetailPanel({
@@ -24,10 +27,14 @@ function RemediosDetailPanel({
   canManage,
   isPaused,
   onRegisterPurchase,
+  onEditSchedule,
 }: RemediosDetailPanelProps) {
   const copy = familyContent.remedios.detail;
   const router = useRouter();
   const [isPausing, startPause] = useTransition();
+  const [isDeleting, startDelete] = useTransition();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   function handlePause() {
     if (!window.confirm(copy.actions.pauseConfirm)) return;
@@ -37,6 +44,33 @@ function RemediosDetailPanel({
       if (result.ok) {
         router.refresh();
       }
+    });
+  }
+
+  function openDelete() {
+    setDeleteError(null);
+    setDeleteOpen(true);
+  }
+
+  function closeDelete() {
+    if (isDeleting) return;
+    setDeleteOpen(false);
+    setDeleteError(null);
+  }
+
+  function handleDelete() {
+    setDeleteError(null);
+    startDelete(async () => {
+      const result = await deleteMedication(detail.medicationId);
+      if (!result.ok) {
+        setDeleteError(
+          result.message ??
+            "Não foi possível apagar agora. Atualize a página e tente de novo.",
+        );
+        return;
+      }
+      setDeleteOpen(false);
+      router.replace(familyRoutes.remedios);
     });
   }
 
@@ -70,9 +104,21 @@ function RemediosDetailPanel({
           />
           <Stat
             className="shadow-none"
-            label={copy.stats.remainingLabel}
-            value={detail.daysRemaining}
-            hint={copy.stats.remainingHint}
+            label={
+              detail.daysRemaining < 0
+                ? copy.stats.endedLabel
+                : copy.stats.remainingLabel
+            }
+            value={
+              detail.daysRemaining < 0
+                ? copy.stats.endedValue
+                : detail.daysRemaining
+            }
+            hint={
+              detail.daysRemaining < 0
+                ? copy.stats.endedHint
+                : copy.stats.remainingHint
+            }
             tone={detail.tagTone === "warning" ? "warning" : "default"}
           />
         </div>
@@ -126,8 +172,14 @@ function RemediosDetailPanel({
             >
               {copy.actions.registerPurchase}
             </Button>
-            <Button type="button" size="sm" variant="secondary" disabled>
-              {copy.actions.editSchedule} · {copy.actions.editScheduleSoon}
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              disabled={isPaused}
+              onClick={onEditSchedule}
+            >
+              {copy.actions.editSchedule}
             </Button>
             <Button
               type="button"
@@ -138,8 +190,54 @@ function RemediosDetailPanel({
             >
               {isPausing ? "Pausando…" : copy.actions.pause}
             </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              disabled={isPaused || isDeleting}
+              onClick={openDelete}
+            >
+              {copy.actions.delete}
+            </Button>
           </div>
         ) : null}
+
+        <Modal
+          open={deleteOpen}
+          onClose={closeDelete}
+          title={copy.actions.deleteTitle}
+          className="w-[min(100%,480px)]"
+          footer={
+            <div className="flex flex-wrap justify-end gap-2">
+              <Button
+                type="button"
+                size="sm"
+                disabled={isDeleting}
+                onClick={closeDelete}
+              >
+                {copy.actions.deleteKeep}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                disabled={isDeleting}
+                onClick={handleDelete}
+              >
+                {isDeleting ? copy.actions.deletePending : copy.actions.deleteConfirm}
+              </Button>
+            </div>
+          }
+        >
+          <div className="space-y-3 text-sm text-ink">
+            <p>{copy.actions.deleteLead.replace("{nome}", detail.title)}</p>
+            <p>{copy.actions.deleteHistory}</p>
+            <p className="text-muted">{copy.actions.deleteDisclaimer}</p>
+            {deleteError ? (
+              <p className="text-amber-900">{deleteError}</p>
+            ) : null}
+          </div>
+        </Modal>
 
         {canManage && isPaused ? (
           <p className="mt-3 text-sm text-muted">

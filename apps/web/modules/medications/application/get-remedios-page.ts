@@ -67,6 +67,7 @@ export interface RemediosPageViewModel {
   activeMedicationCount: number;
   openModal: boolean;
   replacementMedicationId: string | null;
+  scheduleMedicationId: string | null;
 }
 
 export type RemediosPageResult =
@@ -143,6 +144,7 @@ export async function getRemediosPage(input: {
   remedioId?: string | null;
   modal?: string | null;
   replacementMedicationId?: string | null;
+  scheduleMedicationId?: string | null;
   now?: Date;
 }): Promise<RemediosPageResult> {
   try {
@@ -254,6 +256,11 @@ export async function getRemediosPage(input: {
       medicationIds.includes(input.replacementMedicationId)
         ? input.replacementMedicationId
         : null;
+    const scheduleMedicationId =
+      input.scheduleMedicationId &&
+      medicationIds.includes(input.scheduleMedicationId)
+        ? input.scheduleMedicationId
+        : null;
 
     return {
       ok: true,
@@ -270,6 +277,7 @@ export async function getRemediosPage(input: {
         activeMedicationCount: listItems.length,
         openModal,
         replacementMedicationId,
+        scheduleMedicationId,
       },
     };
   } catch {
