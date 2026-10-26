@@ -14,12 +14,14 @@ import {
   resolveValidSelectedAccountId,
 } from "@/modules/accounts/application/login-routing";
 import {
+  canManageBilling,
   canManageMedications,
   isAccountPaused,
   type AccountStatus,
 } from "@/modules/accounts/domain/roles";
 import {
   computeTrialDisplay,
+  resolveFamilyAccessNotice,
   type ShellContext,
   type ShellMembershipOption,
 } from "@/modules/accounts/application/shell-context";
@@ -125,9 +127,14 @@ export async function getShellContext(): Promise<ShellContext | null> {
     careRecipientAge: age,
     careRecipientRelationship: membership.careRecipientRelationship,
     canManageMedications: canManageMedications(membership.role),
+    canManageBilling: canManageBilling(membership.role),
     trial: computeTrialDisplay({
       trialEndsAt,
       plan: accountPlan,
+    }),
+    accessNotice: resolveFamilyAccessNotice({
+      accountStatus,
+      trialEndsAt,
     }),
     isPaused: isAccountPaused(accountStatus),
     memberships: mapShellMembershipOptions(memberships, membership.accountId),

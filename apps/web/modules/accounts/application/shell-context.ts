@@ -1,5 +1,10 @@
-import type { AccountStatus } from "@/modules/accounts/domain/roles";
-import type { AccountRole } from "@/modules/accounts/domain/roles";
+import {
+  ACCOUNT_STATUSES,
+  isAccountPaused,
+  type AccountRole,
+  type AccountStatus,
+} from "@/modules/accounts/domain/roles";
+import { CARE_TIMEZONE, calendarDaysUntil } from "@/modules/reminders/domain/zoned-time";
 
 export interface TrialDisplay {
   currentDay: number;
@@ -29,7 +34,9 @@ export interface ShellContext {
   careRecipientAge: number | null;
   careRecipientRelationship: string | null;
   canManageMedications: boolean;
+  canManageBilling: boolean;
   trial: TrialDisplay | null;
+  accessNotice: FamilyAccessNotice;
   isPaused: boolean;
   memberships: ShellMembershipOption[];
   activeMedicationCount: number;
@@ -45,6 +52,59 @@ const TRIAL_DAYS_BY_PLAN: Record<string, number> = {
 export function resolveTrialTotalDays(plan: string | null | undefined): number {
   if (!plan) return TRIAL_DAYS_BY_PLAN.essential;
   return TRIAL_DAYS_BY_PLAN[plan] ?? TRIAL_DAYS_BY_PLAN.essential;
+}
+
+/** Janela em que o painel deixa de ser calmo e avisa que a pausa vem. */
+export const FAMILY_TRIAL_WARNING_DAYS = 5;
+
+export interface FamilyAccessNotice {
+  phase: "hidden" | "calm" | "ending" | "paused";
+  endsAtLabel: string | null;
+  isCanceled: boolean;
+}
+
+export function formatTrialNoticeDate(iso: string): string | null {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: CARE_TIMEZONE,
+  }).format(date);
+}
+
+/** Faixa do painel: calma, últimos 5 dias, ou conta já pausada. */
+export function resolveFamilyAccessNotice(input: {
+  accountStatus: AccountStatus;
+  trialEndsAt: string | null | undefined;
+  now?: Date;
+}): FamilyAccessNotice {
+  const now = input.now ?? new Date();
+  const endsAtLabel = input.trialEndsAt
+    ? formatTrialNoticeDate(input.trialEndsAt)
+    : null;
+  const isCanceled = input.accountStatus === ACCOUNT_STATUSES.canceled;
+
+  if (isAccountPaused(input.accountStatus)) {
+    return { phase: "paused", endsAtLabel, isCanceled };
+  }
+
+  if (!input.trialEndsAt || !endsAtLabel) {
+    return { phase: "hidden", endsAtLabel: null, isCanceled: false };
+  }
+
+  const end = new Date(input.trialEndsAt);
+  if (Number.isNaN(end.getTime())) {
+    return { phase: "hidden", endsAtLabel: null, isCanceled: false };
+  }
+
+  const daysRemaining = calendarDaysUntil(end, now);
+  if (daysRemaining > FAMILY_TRIAL_WARNING_DAYS) {
+    return { phase: "calm", endsAtLabel, isCanceled: false };
+  }
+
+  return { phase: "ending", endsAtLabel, isCanceled: false };
 }
 
 /** Trial ativo quando a data de fim está no futuro. */

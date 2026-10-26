@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Tag, tagVariants } from "@/components/ui/tag";
 import {
   familyContent,
   familyRoutes,
@@ -41,7 +42,7 @@ function FamilyTopbar({ shell }: FamilyTopbarProps) {
             <Link href={familyRoutes.guia}>{copy.tourLabel}</Link>
           </Button>
 
-          {shell.canManageMedications ? (
+          {shell.canManageMedications && !shell.isPaused ? (
             <Button asChild variant="outline" size="sm">
               <Link href={`${familyRoutes.remedios}?modal=nova`}>
                 {copy.addMedicationLabel}
@@ -49,12 +50,30 @@ function FamilyTopbar({ shell }: FamilyTopbarProps) {
             </Button>
           ) : null}
 
-          {shell.canManageMedications ? (
+          {shell.canManageMedications && !shell.isPaused ? (
             <Button asChild variant="outline" size="sm">
               <Link href={`${familyRoutes.exames}?modal=exame`}>
                 {copy.addExamLabel}
               </Link>
             </Button>
+          ) : null}
+
+          {shell.isPaused && shell.canManageBilling ? (
+            <Link
+              href={familyRoutes.plano}
+              className={tagVariants({
+                tone: "warning",
+                className: "min-h-9 px-3 text-sm no-underline",
+              })}
+            >
+              {familyContent.pausedBanner.badgeLabel}
+            </Link>
+          ) : null}
+
+          {shell.isPaused && !shell.canManageBilling ? (
+            <Tag tone="warning" className="min-h-9 px-3 text-sm">
+              {familyContent.pausedBanner.badgeLabel}
+            </Tag>
           ) : null}
 
           <span

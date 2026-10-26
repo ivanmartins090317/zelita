@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 
+import { ACCOUNT_STATUSES } from "@/modules/accounts/domain/roles";
+
 import {
   computeTrialDisplay,
   formatRecipientAgeLine,
   isTrialActive,
+  resolveFamilyAccessNotice,
   resolveTrialTotalDays,
 } from "./shell-context";
 
@@ -76,5 +79,78 @@ describe("formatRecipientAgeLine", () => {
     expect(
       formatRecipientAgeLine({ age: null, ageUnknownCopy: "idade não informada" }),
     ).toBe("idade não informada");
+  });
+});
+
+describe("resolveFamilyAccessNotice", () => {
+  const now = new Date("2026-10-21T15:00:00.000Z");
+
+  it("fica calmo quando faltam mais de 5 dias", () => {
+    expect(
+      resolveFamilyAccessNotice({
+        accountStatus: ACCOUNT_STATUSES.active,
+        trialEndsAt: "2026-10-27T15:00:00.000Z",
+        now,
+      }).phase,
+    ).toBe("calm");
+  });
+
+  it("avisa nos últimos 5 dias, no dia do fim e se o trial já venceu sem pausar", () => {
+    expect(
+      resolveFamilyAccessNotice({
+        accountStatus: ACCOUNT_STATUSES.active,
+        trialEndsAt: "2026-10-26T15:00:00.000Z",
+        now,
+      }).phase,
+    ).toBe("ending");
+    expect(
+      resolveFamilyAccessNotice({
+        accountStatus: ACCOUNT_STATUSES.active,
+        trialEndsAt: "2026-10-21T15:00:00.000Z",
+        now,
+      }).phase,
+    ).toBe("ending");
+    expect(
+      resolveFamilyAccessNotice({
+        accountStatus: ACCOUNT_STATUSES.active,
+        trialEndsAt: "2026-10-20T15:00:00.000Z",
+        now,
+      }),
+    ).toMatchObject({ phase: "ending", endsAtLabel: "20/10/2026" });
+  });
+
+  it("mostra pausa mesmo com data antiga e distingue cancelamento", () => {
+    expect(
+      resolveFamilyAccessNotice({
+        accountStatus: ACCOUNT_STATUSES.paused,
+        trialEndsAt: "2026-10-20T15:00:00.000Z",
+        now,
+      }),
+    ).toEqual({
+      phase: "paused",
+      endsAtLabel: "20/10/2026",
+      isCanceled: false,
+    });
+    expect(
+      resolveFamilyAccessNotice({
+        accountStatus: ACCOUNT_STATUSES.canceled,
+        trialEndsAt: null,
+        now,
+      }),
+    ).toEqual({
+      phase: "paused",
+      endsAtLabel: null,
+      isCanceled: true,
+    });
+  });
+
+  it("esconde o aviso quando não há trial", () => {
+    expect(
+      resolveFamilyAccessNotice({
+        accountStatus: ACCOUNT_STATUSES.active,
+        trialEndsAt: null,
+        now,
+      }).phase,
+    ).toBe("hidden");
   });
 });
