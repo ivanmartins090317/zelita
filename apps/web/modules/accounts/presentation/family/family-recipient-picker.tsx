@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 
@@ -65,22 +66,37 @@ function FamilyRecipientPicker({ shell }: FamilyRecipientPickerProps) {
         ref={triggerRef}
         type="button"
         onClick={handleOpen}
-        className="mb-3.5 flex min-h-tap w-full items-center gap-2.5 rounded-control bg-white/10 px-2.5 py-2.5 text-left transition-colors hover:bg-white/15"
+        className="group mb-4 flex min-h-tap w-full items-center gap-2.5 rounded-control border border-white/10 bg-white/10 px-2 py-2 text-left transition-colors duration-200 hover:border-white/15 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-on-dark focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
         aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-label={`${copy.switchLabel} pessoa. Agora: ${shell.careRecipientDisplayName}, ${ageLine}`}
       >
         <span
           aria-hidden
-          className="flex size-8 flex-none items-center justify-center rounded-pill bg-brand-400 text-[13px] font-extrabold text-brand-900"
+          className="flex size-10 flex-none items-center justify-center rounded-control-sm bg-brand-600 text-[13px] font-extrabold text-white"
         >
           {shell.careRecipientInitials}
         </span>
-        <span className="min-w-0">
-          <span className="block truncate text-[13px] font-bold text-white">
-            {shell.careRecipientDisplayName}
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-1.5">
+            <span
+              className="truncate text-[14px] font-bold leading-tight text-white"
+              title={shell.careRecipientDisplayName}
+            >
+              {shell.careRecipientDisplayName}
+            </span>
+            <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-brand-400" />
           </span>
-          <span className="block truncate text-[11px] text-on-dark-muted">
-            {ageLine} · {copy.switchLabel}
+          <span className="mt-0.5 block truncate text-[12px] leading-tight text-on-dark-muted">
+            {ageLine}
           </span>
+        </span>
+        <span
+          aria-hidden
+          className="inline-flex shrink-0 items-center gap-0.5 rounded-pill bg-brand-800 px-2.5 py-1.5 text-[12px] font-bold text-on-dark group-hover:bg-brand-700 group-hover:text-white"
+        >
+          {copy.switchLabel}
+          <ChevronDown className="size-3.5" strokeWidth={2.25} />
         </span>
       </button>
 

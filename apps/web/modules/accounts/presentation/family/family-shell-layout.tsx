@@ -1,14 +1,21 @@
 import type { ReactNode } from "react";
 
-function FamilyMark() {
+import { cn } from "@/lib/utils";
+
+interface FamilyMarkProps {
+  planLabel: string;
+  planPaused?: boolean;
+}
+
+function FamilyMark({ planLabel, planPaused = false }: FamilyMarkProps) {
   return (
-    <div className="flex items-center gap-2 px-2.5 pb-4 pt-1.5">
+    <div className="flex items-center gap-2.5 px-1.5 pb-4 pt-1">
       <svg
         width={24}
         height={24}
         viewBox="0 0 48 48"
         aria-hidden="true"
-        className="text-brand-on-dark"
+        className="shrink-0 text-brand-on-dark"
       >
         <path
           d="M 38.11 24.64 A 14.8 14.8 0 1 1 14.23 15.46 A 12.8 12.8 0 0 0 38.11 24.64 Z"
@@ -16,8 +23,19 @@ function FamilyMark() {
         />
         <circle cx="26.5" cy="16" r="5.6" fill="currentColor" />
       </svg>
-      <span className="font-head text-[17px] font-extrabold tracking-tight text-white">
+      <span className="font-head text-[18px] font-extrabold tracking-tight text-white">
         Zelita
+      </span>
+      <span
+        className={cn(
+          "ml-auto rounded-pill border px-2 py-1 text-[10px] font-extrabold tracking-wide",
+          planPaused
+            ? "border-amber-line bg-amber-bg text-amber-ink"
+            : "border-white/15 bg-white/10 text-brand-on-dark",
+        )}
+      >
+        <span className="sr-only">{planPaused ? "Conta " : "Plano "}</span>
+        {planLabel}
       </span>
     </div>
   );

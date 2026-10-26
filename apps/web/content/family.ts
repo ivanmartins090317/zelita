@@ -1206,7 +1206,7 @@ export const familyContent: FamilyContent = {
     name: "Zelita",
   },
   recipientPicker: {
-    switchLabel: "trocar ⌄",
+    switchLabel: "Trocar",
     ageUnknown: "idade não informada",
     modalTitle: "Quem você quer acompanhar",
     closeLabel: "Fechar",
