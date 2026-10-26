@@ -42,9 +42,9 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 - [x] **Webhook WA assinado** — HMAC `X-Hub-Signature-256`; fail closed sem `WHATSAPP_APP_SECRET` (código 2026-09-21)
 - [x] **Job de cartela** — 5 dias / véspera / último dia + e-mail (código 2026-09-21)
 - [x] **Pausa de trial D30** — aviso D-5 + `paused` sem cobrança (código 2026-09-21)
-- [ ] **Inngest em produção:** keys locais existem; falta sync na Vercel em `https://zelita-web.vercel.app/api/webhooks/inngest`
-- [ ] **WhatsApp na Vercel:** token/phone/verify locais (sandbox); falta `WHATSAPP_APP_SECRET` + mesmas keys em Production
-- [ ] **Templates Meta Approved** — nomes `zelita_opt_in` e `zelita_med_reminder`
+- [x] **Inngest em produção:** sync 22/09 em `https://zelita-web.vercel.app/api/webhooks/inngest` (6 functions)
+- [x] **WhatsApp na Vercel:** número BR (`+55 13 97401-0646`, Phone Number ID `1343091472226387`, conta Zelita `2569543983548855`) + token permanente em Production, redeploy confirmado em 26/10
+- [x] **Templates Meta Approved na conta Zelita** — `zelita_opt_in` e `zelita_med_reminder`, Utilidade, Português (BR), Ativo em 26/10 na conta `2569543983548855`
 - [ ] **Opt-in + lembrete ponta a ponta** — homologar FL-04 (TC-FL04-01…08) no Vercel
 
 #### 2.2 Lado do idoso (produto)
@@ -61,7 +61,7 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 - Gateway de pagamento / NF / trocar cartão (stubs ok; trial sem cartão)
 - Voz Cuidado+ (P2)
 - Domínio custom (`zelita.com.br`)
-- Editar horários da cartela (“Em breve” na F4.3)
+- [x] Editar horários da cartela (26/10) — botão ativo; doses por dia e duração da caixa permanecem
 - Passkey / biometria
 - Texto grande (adiado F5)
 - Canal de suporte WA (placeholder na ajuda)

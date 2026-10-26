@@ -179,7 +179,7 @@ Não bloqueia produção real. Só depois do piloto.
 - [ ] Gateway de pagamento / NF / trocar cartão
 - [ ] Voz Cuidado+ (P2)
 - [ ] Domínio custom (`zelita.com.br`)
-- [ ] Editar horários da cartela (hoje “Em breve”)
+- [x] Editar horários da cartela (26/10)
 - [ ] Passkey / biometria
 - [ ] Texto grande (adiado à F5)
 - [ ] Canal de suporte WA (placeholder na ajuda)
