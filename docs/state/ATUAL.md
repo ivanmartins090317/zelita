@@ -2,12 +2,13 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | **Gate 2.2 — F5** Spec escrita, aguardando aprovação |
+| Etapa | **Gate 2.2 — F5** código da prévia entregue; falta homologar FL-05 no Vercel |
 | Spec | [`specs/2026-10-28-f5-pwa-idoso.md`](../../specs/2026-10-28-f5-pwa-idoso.md) |
+| Entrega | [`docs/implementation/2026-10-28-f5-pwa-idoso.md`](../implementation/2026-10-28-f5-pwa-idoso.md) |
 | Plano de telas | [`docs/state/PLANO-ALTA-FIDELIDADE.md`](./PLANO-ALTA-FIDELIDADE.md) § F5 |
 | Plano de produção | [`docs/plans/2026-09-11-producao-real.md`](../plans/2026-09-11-producao-real.md) § 6.1 |
 | Autonomia | `tight` |
-| Status | Sem código até a aprovação humana |
+| Status | Prévia `/idoso` no código. SOS desta fase é ensaio e não grava alerta. |
 
 ## Gate 2.1 — envio Meta (fechado em 28/10)
 
@@ -25,7 +26,5 @@ Ainda abertos no FL-04 (não bloqueiam a F5):
 
 ## Próximo
 
-1. Aprovar ou ajustar `specs/2026-10-28-f5-pwa-idoso.md`
-2. Implementar só o que a Spec pedir
-3. Homologar FL-05
-4. Spec da F6 em seguida
+1. Homologar FL-05 no Vercel (faixa de prévia visível; ensaio sem linha em `sos_alerts`)
+2. Spec da F6 — vínculo do aparelho

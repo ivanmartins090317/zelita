@@ -51,7 +51,8 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 
 #### 2.2 Lado do idoso (produto)
 
-- [ ] **F5 — PWA do idoso** — Spec escrita, aguardando aprovação: [`specs/2026-10-28-f5-pwa-idoso.md`](../../specs/2026-10-28-f5-pwa-idoso.md). `/idoso` continua placeholder até a aprovação
+- [x] **F5 — PWA do idoso (código)** — prévia `/idoso` entregue em 28/10: [`docs/implementation/2026-10-28-f5-pwa-idoso.md`](../implementation/2026-10-28-f5-pwa-idoso.md). SOS desta fase não grava alerta
+- [ ] **FL-05 no Vercel** — homologar a prévia com a faixa visível e conferir que o ensaio não cria linha em `sos_alerts`
 - [ ] **F6 — Vínculo de aparelho:** token curto, uso único, só no WA cadastrado, preso ao 1º device, revogável em Ajustes
 - [ ] **SOS real:** insert pelo device → notifica papéis da ordem (ignora DND) → painel Pedidos de ajuda
 - [ ] **Confirmar Casa (GPS)** — alerta de zona só com coords; posição real só vem do PWA
@@ -65,7 +66,7 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 - Domínio custom (`zelita.com.br`)
 - [x] Editar horários da cartela (26/10) — botão ativo; doses por dia e duração da caixa permanecem
 - Passkey / biometria
-- Texto grande (adiado F5)
+- Texto grande no app do idoso — entregue na F5 (28/10). O painel da família segue no piso de 15,5px
 - Canal de suporte WA (placeholder na ajuda)
 - LCP das fontes / conferência visual extra
 - Copy “Resumo semanal” no plano Família (fora do MVP)
@@ -81,7 +82,7 @@ Fazer **no ambiente Vercel**, não só local.
 - [x] FL-02 Onboarding + pessoa cuidada *(2026-09-20 — 8 passos ok; convite do passo 7 não persiste)*
 - [x] FL-03 Remédios e cartela *(2026-09-20)*
 - [x] FL-04 Lembretes (job + WA) *(envio Meta 100% em 26–28/10; ficam abertos TC-FL04-04, 07 e 08)*
-- [ ] FL-05 PWA idoso *(Gate 2 — F5)*
+- [ ] FL-05 PWA idoso *(código da prévia em 28/10; falta homologar no Vercel)*
 - [ ] FL-06 SOS *(Gate 2 — F5/F6)*
 - [x] FL-07 Segurança / RLS smoke *(Gate 1 — aceite via **Copiar link** ok, 2026-09-20; e-mail automático ficou no Gate 3)*
 - [x] FL-08 Exames smoke *(2026-09-20 upload ok; posição real Gate 2)*

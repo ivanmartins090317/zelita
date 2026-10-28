@@ -20,6 +20,7 @@ import {
 } from "./application/family-context";
 import { bootstrapFamilyAccount } from "./infrastructure/bootstrap-family-account";
 import { getHojeDashboard } from "./application/get-hoje-dashboard";
+import { readCareCircleForElderPreview } from "./application/read-care-circle-for-elder-preview";
 import {
   computeOnboardingChecklist,
   isFirstAccessMode,
@@ -46,6 +47,7 @@ export {
   requireUser,
   bootstrapFamilyAccount,
   getHojeDashboard,
+  readCareCircleForElderPreview,
   computeOnboardingChecklist,
   isFirstAccessMode,
 };
