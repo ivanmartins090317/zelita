@@ -1,6 +1,6 @@
 # Plano — Produção real (ciclo de valor do MVP)
 
-- Status: `research` — aguardando aprovação para executar o Gate 1
+- Status: Gate 1 feito. Gate 2.1 de envio Meta homologado em 28/10. Próximo: Spec F5
 - Data: 2026-09-11
 - Origem: research de prontidão de produção + `docs/state/PENDENCIAS.md`
 - Autonomia: Gate 1 `medium` · Gate 2.1 `medium` (WA/Inngest) · F5/F6 `tight` (paths críticos)
@@ -16,7 +16,7 @@ O app **já está hospedado**. O buraco não é “subir o app”. Produção re
 | Pergunta | Resposta |
 | --- | --- |
 | Dá para piloto fechado da família agora? | Sim — 2–3 contas conhecidas, sem anunciar a landing |
-| Dá para produção real do MVP? | Não — Gate 2 (WA + Inngest + F5/F6) ainda bloqueia |
+| Dá para produção real do MVP? | Ainda não — o envio WhatsApp fechou em 28/10; F5/F6 (PWA + vínculo + SOS) ainda bloqueiam |
 | Dá para usuários pagantes? | Não — gateway de pagamento é Gate 3 (stubs ok no trial) |
 
 ---
@@ -93,32 +93,32 @@ Skill `manual-report`. Ambiente: [zelita-web.vercel.app](https://zelita-web.verc
 
 ## 5. Checklist P1 — Gate 2.1 (canal e jobs)
 
-O código atual **não basta**. Preencher env sem template Meta e sem recorrência/fuso não fecha o pilar de remédios.
+Gap de 11/09 fechado no código em 21/09 e no envio real em 26–28/10. O texto abaixo descreve o buraco original; as caixas refletem o estado em 28/10.
 
 ### 5.1 Inngest
 
-- [ ] `INNGEST_EVENT_KEY` e `INNGEST_SIGNING_KEY` na Vercel
-- [ ] Sync do app em `https://zelita-web.vercel.app/api/webhooks/inngest`
-- [ ] Smoke: evento `wa/opt_in.request` e `med/reminder.send` aparecem no dashboard Inngest
+- [x] `INNGEST_EVENT_KEY` e `INNGEST_SIGNING_KEY` na Vercel
+- [x] Sync do app em `https://zelita-web.vercel.app/api/webhooks/inngest`
+- [x] Smoke: evento `wa/opt_in.request` e `med/reminder.send` aparecem no dashboard Inngest
 
 ### 5.2 Agenda (gap de código)
 
-Hoje `scheduleMedicationReminders` dispara só o **dia seguinte** e ancora hora em **UTC**.
+Em 11/09, `scheduleMedicationReminders` disparava só o dia seguinte em UTC. Corrigido em 21/09.
 
-- [ ] Série diária / cron (não um único disparo)
-- [ ] Fuso `America/Sao_Paulo` (UTC-3 — senão o lembrete atrasa ~3 h)
-- [ ] Job de aviso de cartela à família (5 dias / véspera / último dia) — cálculo existe no painel; envio não
-- [ ] Job de pausa de trial D30 — UI mostra trial; conta não pausa sozinha (PRD: sem cobrança automática)
+- [x] Série diária / cron (não um único disparo)
+- [x] Fuso `America/Sao_Paulo`
+- [x] Job de aviso de cartela à família (5 dias / véspera / último dia) — código pronto; homologação TC-FL04-07 ainda aberta
+- [x] Job de pausa de trial D30 — código pronto; homologação TC-FL04-08 ainda aberta
 
 ### 5.3 WhatsApp
 
-- [ ] `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN` na Vercel
-- [ ] Templates Meta **aprovados** (opt-in + lembrete) — o adapter manda `type: text` livre; a Cloud API rejeita mensagem iniciada pelo negócio fora da janela de 24 h
-- [ ] Adapter passa a usar template (não só texto livre)
-- [ ] Webhook em `https://zelita-web.vercel.app/api/webhooks/whatsapp`
-- [ ] Validar assinatura do POST (`SECURITY.md` — hoje não checa)
-- [ ] Opt-in ponta a ponta: pedido → idoso responde SIM → `wa_opt_in_at` → lembretes só depois
-- [ ] Homologação FL-04 (job + WA sandbox/produção)
+- [x] `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN` na Vercel (número BR, 26/10)
+- [x] Templates Meta aprovados na conta Zelita (`zelita_opt_in`, `zelita_med_reminder`)
+- [x] Adapter envia template
+- [x] Webhook em `https://zelita-web.vercel.app/api/webhooks/whatsapp`
+- [x] Assinatura do POST (HMAC; POST sem assinatura → 403 em 22/09)
+- [x] Opt-in ponta a ponta: lembretes reais desde 26/10
+- [x] Homologação do envio FL-04 no Vercel (26–28/10). Abertos: TC-FL04-04, 07 e 08
 
 **Done do Gate 2.1:** lembrete chega no WhatsApp no horário de Brasília, só após opt-in, com job recorrente e webhook assinado.
 
@@ -130,9 +130,9 @@ Paths críticos (`elder-access`, `sos`, `(elder)/`). **Uma Spec por fase, aprova
 
 ### 6.1 F5 — PWA do idoso
 
-`/idoso` ainda é placeholder. Sem Spec aprovada, não implementar.
+`/idoso` ainda é placeholder. Spec escrita em 28/10, sem código até a aprovação.
 
-- [ ] Spec `specs/…-f5-pwa-idoso.md` aprovada
+- [ ] Spec [`specs/2026-10-28-f5-pwa-idoso.md`](../../specs/2026-10-28-f5-pwa-idoso.md) aprovada
 - [ ] Início (próximo remédio, botão de ajuda, ligar para a família, horários)
 - [ ] Horários do dia
 - [ ] Lista da família + SAMU 192
@@ -201,7 +201,7 @@ Fazer **no Vercel**. Skill `manual-report`.
 | FL-03 Remédios | P0 | [x] |
 | FL-07 RLS smoke | P0 | [x] aceite via Copiar link |
 | FL-08 Exames smoke | P0 | [x] |
-| FL-04 Lembretes + WA | P1 | [ ] |
+| FL-04 Lembretes + WA | P1 | [x] envio 26–28/10; 04, 07 e 08 abertos |
 | FL-05 PWA idoso | P2 | [ ] |
 | FL-06 SOS | P2 | [ ] |
 | FL-08 Localização real | P2 | [ ] |

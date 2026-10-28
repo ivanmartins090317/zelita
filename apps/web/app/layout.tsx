@@ -20,6 +20,9 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Zelita",
   description: "Cuide de quem você ama, mesmo à distância.",
+  icons: {
+    icon: [{ url: "/brand/zelita-mark.svg", type: "image/svg+xml" }],
+  },
 };
 
 interface RootLayoutProps {

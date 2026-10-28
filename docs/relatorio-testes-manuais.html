@@ -126,23 +126,23 @@
       <div class="flow-body">
         <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">
           Ambiente: <a href="https://zelita-web.vercel.app/">zelita-web.vercel.app</a>.
-          Pré: templates Meta Approved, <code>WHATSAPP_APP_SECRET</code> na Vercel, Inngest syncado.
-          Código pronto em 2026-09-21 — execução humana pendente.
+          Executor: Ivan · 26/10 a 28/10/2026 · conta comercial Celular Zelita.
+          Envio recorrente declarado 100%. Três casos seguem pendentes (04, 07, 08).
         </p>
         <div class="tc">
           <strong>TC-FL04-01</strong> — Salvar cartela pede opt-in<br />
-          <span class="status pending">Pendente</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">Dado pessoa sem autorização, ao salvar cartela o pedido SIM aparece no WhatsApp (ou dry-run no Inngest).</p>
+          <span class="status pass">Aprovado</span>
+          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">Ciclo real desde 26/10. Lembrete recorrente só sai depois do opt-in.</p>
         </div>
         <div class="tc">
           <strong>TC-FL04-02</strong> — Responder SIM autoriza<br />
-          <span class="status pending">Pendente</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">SIM no número cadastrado registra autorização; lembretes passam a poder sair.</p>
+          <span class="status pass">Aprovado</span>
+          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">Mesma rodada: lembretes passaram a chegar no número cadastrado.</p>
         </div>
         <div class="tc">
           <strong>TC-FL04-03</strong> — Lembrete no horário de Brasília<br />
-          <span class="status pending">Pendente</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">Com opt-in e fora do DND, o template chega no horário local — não 3 h atrasado (UTC).</p>
+          <span class="status pass">Aprovado</span>
+          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">27/10 e 28/10 às 08:00, 12:00 e 12:19. Sem atraso de UTC.</p>
         </div>
         <div class="tc">
           <strong>TC-FL04-04</strong> — Sem opt-in não envia<br />
@@ -150,11 +150,13 @@
         </div>
         <div class="tc">
           <strong>TC-FL04-05</strong> — Webhook sem assinatura não grava opt-in<br />
-          <span class="status pending">Pendente</span>
+          <span class="status pass">Aprovado</span>
+          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">22/09: POST sem assinatura devolveu 403. Não reexecutado em outubro.</p>
         </div>
         <div class="tc">
           <strong>TC-FL04-06</strong> — Copy nunca afirma tomada<br />
-          <span class="status pending">Pendente</span>
+          <span class="status pass">Aprovado</span>
+          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">“Está na hora de tomar… Qualquer coisa é só chamar a família.”</p>
         </div>
         <div class="tc">
           <strong>TC-FL04-07</strong> — Aviso de cartela (5 dias / véspera / último dia)<br />
@@ -163,6 +165,12 @@
         <div class="tc">
           <strong>TC-FL04-08</strong> — Trial D30 pausa sem cobrar<br />
           <span class="status pending">Pendente</span>
+        </div>
+        <div class="gallery">
+          <div class="evidence-item" onclick="openLightbox('evidencias/tc-fl04-03-lembretes-whatsapp.png')">
+            <img src="evidencias/tc-fl04-03-lembretes-whatsapp.png" alt="Lembretes no WhatsApp da conta Celular Zelita" />
+            <div class="evidence-caption">TC-FL04-03 / 06 — Lembretes 27/10 e 28/10</div>
+          </div>
         </div>
       </div>
     </div>
@@ -173,7 +181,7 @@
   <script>
     const testData = {
       site: { total: 6, pass: 6, fail: 0, block: 0 },
-      fl04: { total: 8, pass: 0, fail: 0, block: 0 },
+      fl04: { total: 8, pass: 5, fail: 0, block: 0 },
     };
 
     function initScoreboard() {
@@ -186,7 +194,7 @@
         <div class="score-card"><span>Total TCs</span><strong>${totals.total}</strong></div>
         <div class="score-card"><span>Aprovados</span><strong>${totals.pass}</strong></div>
         <div class="score-card"><span>Taxa</span><strong>${pct}%</strong></div>
-        <div class="score-card"><span>F1 / FL-04</span><strong>6/6 · 0/8</strong></div>`;
+        <div class="score-card"><span>F1 / FL-04</span><strong>6/6 · 5/8</strong></div>`;
     }
 
     function openLightbox(src) {

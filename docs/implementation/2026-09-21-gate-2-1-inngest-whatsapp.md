@@ -6,7 +6,7 @@
 | Spec | `specs/2026-09-21-gate-2-1-inngest-whatsapp.md` |
 | Plano | `docs/plans/2026-09-21-gate-2-1-inngest-whatsapp.md` |
 | Autonomia | `tight` |
-| Status | Done de código + Vitest. FL-04 no Vercel pendente (templates Meta + `WHATSAPP_APP_SECRET`) |
+| Status | Done de código + Vitest. Envio Meta homologado em 26–28/10. Abertos: TC-FL04-04, 07 e 08 |
 
 ## Objetivo
 
@@ -24,7 +24,7 @@ Lembrete no WhatsApp no horário de Brasília, só após opt-in, com série diá
 ## O que ficou de fora
 
 - F5/F6, SOS, voz, gateway, convite por e-mail
-- Homologação FL-04 no Vercel (TCs criados em `docs/relatorio-testes-manuais.html`)
+- Homologação restante do FL-04: TC-FL04-04 (sem opt-in), TC-FL04-07 (aviso de cartela) e TC-FL04-08 (pausa D30)
 
 ## Comandos Done
 
@@ -36,11 +36,11 @@ pnpm test       # 382 testes ok
 
 ## Ops (sem valores)
 
-| Integração | Local 2026-09-21 | Falta |
-| --- | --- | --- |
-| Inngest | Event key + signing key preenchidas | Sync na Vercel + dashboard |
-| WhatsApp | Token, phone id, verify preenchidos (sandbox) | `WHATSAPP_APP_SECRET`; templates Approved; keys na Vercel |
-| Resend | OTP já usa Resend no Auth | `RESEND_API_KEY` no app para aviso de cartela/trial |
+| Integração | Situação em 28/10 |
+| --- | --- |
+| Inngest | Sync em produção desde 22/09 |
+| WhatsApp | Número BR + token permanente na Vercel; templates ativos; envio real homologado 26–28/10 |
+| Resend | OTP ok. Aviso de cartela/trial (TC-FL04-07 e 08) ainda não homologado |
 
 ## SECURITY.md (checklist aplicável)
 
@@ -72,9 +72,23 @@ A agenda saiu do “um disparo amanhã em UTC” para uma série diária ancorad
 
 Manutenção: novos horários entram pelo cron; troca de BSP fica no port. Risco residual é ops (templates Approved + secret na Vercel). Sem isso o código opera em dry-run ou o webhook recusa POST — fail closed, não painel quebrado.
 
-## Próximos passos (humano)
+## Homologação do envio (28/10/2026)
 
-1. Criar/aprovar templates `zelita_opt_in` e `zelita_med_reminder` na Meta
-2. Colocar `WHATSAPP_APP_SECRET` (e as demais keys) na Vercel — **não** commitar
-3. Sync Inngest em `https://zelita-web.vercel.app/api/webhooks/inngest`
-4. Homologar TC-FL04-01…08 no Vercel
+Ivan testou em produção desde 26/10 e declarou o disparo Meta 100%. Evidência em `docs/evidencias/tc-fl04-03-lembretes-whatsapp.png`: conta comercial Celular Zelita, lembretes de 27/10 e 28/10 (08:00, 12:00, 12:19). Copy de lembrete, sem afirmar tomada.
+
+| TC | Status |
+| --- | --- |
+| TC-FL04-01 opt-in ao salvar | Aprovado — ciclo real; sem opt-in o job não envia |
+| TC-FL04-02 SIM autoriza | Aprovado — mesma rodada |
+| TC-FL04-03 horário de Brasília | Aprovado — print |
+| TC-FL04-04 sem opt-in não envia | Pendente |
+| TC-FL04-05 webhook sem assinatura | Aprovado em 22/09 (POST → 403) |
+| TC-FL04-06 copy não afirma tomada | Aprovado — print |
+| TC-FL04-07 aviso de cartela | Pendente |
+| TC-FL04-08 pausa D30 | Pendente |
+
+Ops de template, token permanente, Phone Number ID e sync Inngest já estavam na Vercel em 26/10 (`docs/state/PENDENCIAS.md`).
+
+## Próximo
+
+Spec da F5 (PWA do idoso), autonomia `tight`, sem código antes da aprovação.

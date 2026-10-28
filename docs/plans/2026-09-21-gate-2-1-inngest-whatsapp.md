@@ -1,6 +1,6 @@
 # Plano — Gate 2.1 (Inngest + WhatsApp)
 
-- Status: `codigo_done` — FL-04 / templates Meta ainda são ops humanas
+- Status: `envio_homologado` — Meta 100% em 26–28/10. Abertos TC-FL04-04, 07 e 08
 - Data: 2026-09-21
 - Origem: Gate 2.1 de [`docs/plans/2026-09-11-producao-real.md`](./2026-09-11-producao-real.md) + `docs/state/PENDENCIAS.md`
 - Autonomia: `tight` (toca `reminders/domain`, webhook, `billing`, `accounts`)

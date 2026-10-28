@@ -45,11 +45,13 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 - [x] **Inngest em produção:** sync 22/09 em `https://zelita-web.vercel.app/api/webhooks/inngest` (6 functions)
 - [x] **WhatsApp na Vercel:** número BR (`+55 13 97401-0646`, Phone Number ID `1343091472226387`, conta Zelita `2569543983548855`) + token permanente em Production, redeploy confirmado em 26/10
 - [x] **Templates Meta Approved na conta Zelita** — `zelita_opt_in` e `zelita_med_reminder`, Utilidade, Português (BR), Ativo em 26/10 na conta `2569543983548855`
-- [ ] **Opt-in + lembrete ponta a ponta** — homologar FL-04 (TC-FL04-01…08) no Vercel
+- [x] **Opt-in + lembrete ponta a ponta** — homologado no Vercel de 26/10 a 28/10 (conta comercial Celular Zelita; recorrência 27/10 e 28/10, horários 08:00 / 12:00 / 12:19). Evidência: `docs/evidencias/tc-fl04-03-lembretes-whatsapp.png`. TC-FL04-01, 02, 03 e 06 aprovados
+- [x] **TC-FL04-05** — POST sem assinatura devolve 403 (ops 22/09; não reexecutado nesta rodada)
+- [ ] **TC-FL04-04, 07 e 08** — caso sem opt-in, aviso de cartela e pausa D30. Não bloqueiam a F5
 
 #### 2.2 Lado do idoso (produto)
 
-- [ ] **F5 — PWA do idoso** (`/idoso` ainda é placeholder): início, horários, SOS 2 etapas + disclaimer SAMU, sem senha. Texto ≥17px, alvos ≥56px, SOS >100px
+- [ ] **F5 — PWA do idoso** — Spec escrita, aguardando aprovação: [`specs/2026-10-28-f5-pwa-idoso.md`](../../specs/2026-10-28-f5-pwa-idoso.md). `/idoso` continua placeholder até a aprovação
 - [ ] **F6 — Vínculo de aparelho:** token curto, uso único, só no WA cadastrado, preso ao 1º device, revogável em Ajustes
 - [ ] **SOS real:** insert pelo device → notifica papéis da ordem (ignora DND) → painel Pedidos de ajuda
 - [ ] **Confirmar Casa (GPS)** — alerta de zona só com coords; posição real só vem do PWA
@@ -78,7 +80,7 @@ Fazer **no ambiente Vercel**, não só local.
 - [x] FL-01 Auth OTP *(2026-09-20 no Vercel — código chega; só no spam)*
 - [x] FL-02 Onboarding + pessoa cuidada *(2026-09-20 — 8 passos ok; convite do passo 7 não persiste)*
 - [x] FL-03 Remédios e cartela *(2026-09-20)*
-- [ ] FL-04 Lembretes (job + WA) *(Gate 2.1 — código pronto; TCs no relatório; execução no Vercel)*
+- [x] FL-04 Lembretes (job + WA) *(envio Meta 100% em 26–28/10; ficam abertos TC-FL04-04, 07 e 08)*
 - [ ] FL-05 PWA idoso *(Gate 2 — F5)*
 - [ ] FL-06 SOS *(Gate 2 — F5/F6)*
 - [x] FL-07 Segurança / RLS smoke *(Gate 1 — aceite via **Copiar link** ok, 2026-09-20; e-mail automático ficou no Gate 3)*
@@ -92,8 +94,8 @@ Fazer **no ambiente Vercel**, não só local.
 ## Ordem sugerida
 
 ```text
-1. Gate 1 (headers + db 007/009 + homologar família no Vercel + legal mínimo)
-2. Gate 2.1 (Inngest sync + templates WA + webhook assinado + recorrência/fuso)
+1. Gate 1 — feito
+2. Gate 2.1 — envio Meta feito (26–28/10). Restam TC-FL04-04, 07 e 08, sem bloquear a F5
 3. Spec + F5 (PWA) → Spec + F6 (vínculo)  [paths críticos, autonomia tight]
 4. Piloto família + idoso (1 conta controlada)
 5. Gate 3 só depois (tour, billing real, domínio, voz)
