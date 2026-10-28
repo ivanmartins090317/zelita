@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
-import { getElderPreview } from "@/modules/elder-access/application/get-elder-preview";
+import { getElderSurface } from "@/modules/elder-access/application/get-elder-surface";
 import { readElderDisplayFromCookie } from "@/modules/elder-access/application/read-elder-display";
+import { showsPreviewBanner } from "@/modules/elder-access/domain/device-link";
 import { ElderShell } from "@/modules/elder-access/presentation/elder-shell";
 import { ElderUnlinked } from "@/modules/elder-access/presentation/elder-unlinked";
 
@@ -16,9 +17,13 @@ interface ElderLayoutProps {
 }
 
 export default async function ElderLayout({ children }: ElderLayoutProps) {
-  const preview = await getElderPreview();
-  if (preview.kind !== "ready") return <ElderUnlinked />;
+  const surface = await getElderSurface();
+  if (surface.kind !== "ready") return <ElderUnlinked />;
 
   const display = await readElderDisplayFromCookie();
-  return <ElderShell display={display}>{children}</ElderShell>;
+  return (
+    <ElderShell display={display} showPreviewBanner={showsPreviewBanner(surface.door)}>
+      {children}
+    </ElderShell>
+  );
 }

@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { elderContent } from "@/content/elder";
 import { canViewCareRoutine, getFamilyContext } from "@/modules/accounts";
 import { readOptionalUserId } from "@/modules/elder-access/application/read-optional-user-id";
+import { lookupActiveDeviceCookie } from "@/modules/elder-access/infrastructure/device-cookie";
 import {
   ELDER_DISPLAY_COOKIE,
   ELDER_DISPLAY_MAX_AGE_SECONDS,
@@ -46,14 +47,16 @@ export async function saveElderDisplayAction(
     return { ok: false, message: elderContent.settings.saveError };
   }
 
-  const userId = await readOptionalUserId();
-  if (!userId) {
-    return { ok: false, message: elderContent.settings.saveDenied };
-  }
-
-  const ctx = await getFamilyContext();
-  if (!ctx.role || !canViewCareRoutine(ctx.role)) {
-    return { ok: false, message: elderContent.settings.saveDenied };
+  const device = await lookupActiveDeviceCookie();
+  if (device.status !== "active") {
+    const userId = await readOptionalUserId();
+    if (!userId) {
+      return { ok: false, message: elderContent.settings.saveDenied };
+    }
+    const ctx = await getFamilyContext();
+    if (!ctx.role || !canViewCareRoutine(ctx.role)) {
+      return { ok: false, message: elderContent.settings.saveDenied };
+    }
   }
 
   const cookieStore = await cookies();

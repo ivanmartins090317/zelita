@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | **Gate 2.2 — F5** código da prévia entregue. Homologação manual só no fim da implementação |
-| Spec | [`specs/2026-10-28-f5-pwa-idoso.md`](../../specs/2026-10-28-f5-pwa-idoso.md) |
-| Entrega | [`docs/implementation/2026-10-28-f5-pwa-idoso.md`](../implementation/2026-10-28-f5-pwa-idoso.md) |
-| Plano de telas | [`docs/state/PLANO-ALTA-FIDELIDADE.md`](./PLANO-ALTA-FIDELIDADE.md) § F5 |
-| Plano de produção | [`docs/plans/2026-09-11-producao-real.md`](../plans/2026-09-11-producao-real.md) § 6.1 |
+| Etapa | **Gate 2.2 — F6** código entregue; homologação fica na rodada final |
+| Spec | [`specs/2026-10-28-f6-vinculo-aparelho.md`](../../specs/2026-10-28-f6-vinculo-aparelho.md) |
+| Entrega | [`docs/implementation/2026-10-28-f6-vinculo-aparelho.md`](../implementation/2026-10-28-f6-vinculo-aparelho.md) |
+| Plano de telas | [`docs/state/PLANO-ALTA-FIDELIDADE.md`](./PLANO-ALTA-FIDELIDADE.md) § F6 |
+| Plano de produção | [`docs/plans/2026-09-11-producao-real.md`](../plans/2026-09-11-producao-real.md) § 6.2 |
 | Autonomia | `tight` |
-| Status | Prévia no Vercel. FL-05 segue pendente até a rodada final de testes. |
+| Status | Vínculo no código e migration `013` no remoto. SOS real e Confirmar Casa ainda não começaram. |
 
 ## Gate 2.1 — envio Meta (fechado em 28/10)
 
@@ -26,8 +26,8 @@ Ainda abertos no FL-04 (não bloqueiam a F5):
 
 ## Próximo
 
-Homologação manual (FL-05 e o que restar) fica para o fim das tarefas de implementação.
+Homologação manual continua para o fim das tarefas de implementação.
 
-1. Spec da F6 — vínculo do aparelho
-2. SOS real e Confirmar Casa, conforme o Gate 2.2
-3. Só então a rodada no Vercel: FL-05, FL-06 e os casos ainda abertos
+1. Spec seguinte: SOS real e Confirmar Casa
+2. Aprovar o template Meta `zelita_device_link` antes do caminho remoto em produção
+3. Rodada no Vercel: FL-05, FL-06 e os casos ainda abertos

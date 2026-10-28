@@ -10,10 +10,11 @@ import { ElderTabBar } from "@/modules/elder-access/presentation/elder-tab-bar";
 
 interface ElderShellProps {
   display: ElderDisplayPreferences;
+  showPreviewBanner: boolean;
   children: ReactNode;
 }
 
-export function ElderShell({ display, children }: ElderShellProps) {
+export function ElderShell({ display, showPreviewBanner, children }: ElderShellProps) {
   const metrics = elderTextMetrics(display.text);
   const style = {
     "--elder-body": `${metrics.bodyPx}px`,
@@ -28,7 +29,7 @@ export function ElderShell({ display, children }: ElderShellProps) {
       className="mx-auto flex h-dvh w-full max-w-lg flex-col overflow-hidden bg-sand text-ink"
     >
       <style>{ELDER_APP_CSS}</style>
-      <ElderPreviewBanner />
+      {showPreviewBanner ? <ElderPreviewBanner /> : null}
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-5">{children}</div>
       <ElderTabBar />
     </div>

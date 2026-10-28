@@ -104,6 +104,34 @@ export interface FamilyPlanoContent {
   };
 }
 
+export interface FamilyInstallContent {
+  title: string;
+  lead: string;
+  whatsappLine: string;
+  remoteTitle: string;
+  remoteButton: string;
+  remoteHint: string;
+  inPersonTitle: string;
+  inPersonButton: string;
+  inPersonHint: string;
+  sent: string;
+  dryRun: string;
+  sendFailed: string;
+  activeDevice: string;
+  hourlyLimit: string;
+  none: string;
+  revoke: string;
+  revoked: string;
+  revokeMissing: string;
+  caregiverNote: string;
+  missingOptIn: string;
+  missingWhatsapp: string;
+  bigLinkLead: string;
+  onceNote: string;
+  invalid: string;
+  loadFailed: string;
+}
+
 export interface FamilyAjustesContent {
   signOutDescription: string;
   readOnlyNote: string;
@@ -366,6 +394,7 @@ export interface FamilyContent {
   guia: {
     tourNote: string;
   };
+  install: FamilyInstallContent;
   ajustes: FamilyAjustesContent;
   plano: FamilyPlanoContent;
   planLabels: Record<string, string>;
@@ -1199,6 +1228,7 @@ export const familyRoutes = {
   participantes: "/familia/participantes",
   plano: "/familia/plano",
   ajustes: "/familia/ajustes",
+  instalar: "/familia/instalar",
 } as const;
 
 export const familyContent: FamilyContent = {
@@ -1460,6 +1490,41 @@ export const familyContent: FamilyContent = {
   guia: {
     tourNote:
       "O tour interativo de 1 minuto virá em uma atualização futura. Enquanto isso, leia cada seção abaixo no seu tempo.",
+  },
+  install: {
+    title: "Instalar no celular dele",
+    lead: "O link vale 15 minutos e serve uma vez. Ele não cria senha.",
+    whatsappLine: "WhatsApp dele: {mascara}",
+    remoteTitle: "Estou longe",
+    remoteButton: "Enviar o link para ele",
+    remoteHint: "A mensagem sai no WhatsApp já cadastrado.",
+    inPersonTitle: "Estou com o celular dele agora",
+    inPersonButton: "Mostrar o link aqui",
+    inPersonHint: "Nada é enviado. O endereço aparece nesta tela.",
+    sent: "Link enviado. Vale até {quando}.",
+    dryRun:
+      "Ambiente local: a mensagem não saiu de verdade. O link presencial vale até {quando}.",
+    sendFailed:
+      "A mensagem não saiu. Use o caminho presencial. O link vale até {quando}.",
+    activeDevice:
+      "Já existe um celular ligado. Desvincule antes de mandar outro link.",
+    hourlyLimit: "Já foram 5 links nesta hora. Espere um pouco e tente de novo.",
+    none: "Nenhum aparelho vinculado",
+    revoke: "Desvincular",
+    revoked: "Aparelho desvinculado. O atalho para no próximo carregamento.",
+    revokeMissing:
+      "Este aparelho já não estava ligado. Recarregue a página para ver a lista.",
+    caregiverNote:
+      "Você pode ver se há aparelho ligado. Só quem administra envia o link ou desvincula.",
+    missingOptIn:
+      "Antes de enviar, confirme o WhatsApp em Ajustes. O caminho presencial continua disponível.",
+    missingWhatsapp:
+      "Não há WhatsApp cadastrado. Preencha em Ajustes. O caminho presencial continua disponível.",
+    bigLinkLead: "Abra este endereço no celular dele. Vale até {quando}.",
+    onceNote:
+      "Se você sair desta tela, este endereço não aparece de novo. Dá para gerar outro, e o anterior deixa de valer.",
+    invalid: "Não foi possível criar o link. Recarregue a página e tente de novo.",
+    loadFailed: "Não foi possível carregar os aparelhos. Recarregue a página.",
   },
   ajustes: {
     signOutDescription: "Encerra sua sessão neste aparelho.",

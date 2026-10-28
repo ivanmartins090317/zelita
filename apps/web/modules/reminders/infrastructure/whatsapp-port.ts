@@ -1,11 +1,12 @@
 export const WHATSAPP_TEMPLATE_NAMES = {
   optIn: "zelita_opt_in",
   reminder: "zelita_med_reminder",
+  deviceLink: "zelita_device_link",
 } as const;
 
 export interface WhatsAppTemplateMessage {
   toE164ish: string;
-  kind: "opt_in_request" | "reminder";
+  kind: "opt_in_request" | "reminder" | "device_link";
   bodyVariables: string[];
 }
 
@@ -32,6 +33,12 @@ export function resolveTemplateName(
   if (kind === "opt_in_request") {
     return (
       process.env.WHATSAPP_TEMPLATE_OPT_IN ?? WHATSAPP_TEMPLATE_NAMES.optIn
+    );
+  }
+  if (kind === "device_link") {
+    return (
+      process.env.WHATSAPP_TEMPLATE_DEVICE_LINK ??
+      WHATSAPP_TEMPLATE_NAMES.deviceLink
     );
   }
   return (

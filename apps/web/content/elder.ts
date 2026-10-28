@@ -3,6 +3,7 @@ export const elderRoutes = {
   schedule: "/idoso/horarios",
   family: "/idoso/familia",
   settings: "/idoso/ajustes",
+  installed: "/idoso/instalado",
   login: "/entrar",
 } as const;
 
@@ -22,6 +23,7 @@ export const elderContent = {
     empty: "A família ainda não cadastrou horários.",
     help: "Preciso de ajuda",
     helpHint: "Aperte para ver como o pedido aparece",
+    helpHintLinked: "Aperte se precisar falar com alguém agora.",
     callFamily: "Ligar para a família",
     today: "Meus horários de hoje",
   },
@@ -51,6 +53,35 @@ export const elderContent = {
       "Se for grave, não espere. Ligue agora para o SAMU 192 ou os Bombeiros 193.",
     callSamu: "Ligar 192",
     backHome: "Voltar ao início",
+    linkedConfirmBody:
+      "Toque só se for para pedir ajuda. O aviso para a família ainda não sai por este celular.",
+    linkedSentTitle: "O aviso ainda não sai por aqui",
+    linkedSentBody:
+      "A família ainda não recebe este pedido pelo aplicativo. Ligue para eles ou para o SAMU 192.",
+    callFamily: "Ligar para a família",
+  },
+  linkDead: {
+    title: "Este link não serve mais",
+    body: "Peça para a família mandar outro. Nesta tela não há remédio nem telefone.",
+  },
+  activate: {
+    title: "Usar a Zelita neste celular?",
+    body: "Se confirmar, os horários desta pessoa aparecem neste navegador. O link funciona uma vez.",
+    confirm: "Sim, quero usar",
+    later: "Agora não",
+    laterBody:
+      "Tudo bem. Nada foi ligado neste celular. O link continua valendo até expirar, ou até a família gerar outro.",
+  },
+  installed: {
+    title: "Adicionar à tela de início",
+    lead: "Assim o atalho abre sem precisar do link.",
+    steps: [
+      "Toque em compartilhar, no navegador.",
+      "Toque em Adicionar à Tela de Início.",
+      "Toque em Adicionar.",
+    ],
+    help: "Se não conseguir, a família já vê este aparelho no painel e pode ajudar por telefone.",
+    enter: "Ir para o início",
   },
   settings: {
     title: "Está fácil de ler?",

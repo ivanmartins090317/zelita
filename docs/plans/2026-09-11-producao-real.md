@@ -143,7 +143,7 @@ Paths críticos (`elder-access`, `sos`, `(elder)/`). **Uma Spec por fase, aprova
 
 ### 6.2 F6 — Vínculo de aparelho
 
-- [ ] Spec `specs/…-f6-vinculo-aparelho.md` aprovada
+- [ ] Spec [`specs/2026-10-28-f6-vinculo-aparelho.md`](../../specs/2026-10-28-f6-vinculo-aparelho.md) aprovada *(escrita em 28/10; ainda `aguardando_aprovacao`)*
 - [ ] Token curto (15 min), uso único, só no WA cadastrado
 - [ ] Preso ao primeiro aparelho que abrir
 - [ ] Revogável em Ajustes

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -7,13 +8,12 @@ import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { Modal } from "@/components/ui/modal";
 import { Tag } from "@/components/ui/tag";
-import { familyContent } from "@/content/family";
+import { familyContent, familyRoutes } from "@/content/family";
 import type { AjustesPrivacyViewModel } from "@/modules/care-recipients/application/ajustes-view-models";
 import {
   LOCATION_CONSENT_STATUS,
   WA_OPT_IN_STATUS,
 } from "@/modules/care-recipients/domain/care-settings-labels";
-import { DevicesStubNote } from "@/modules/elder-access/presentation/devices-stub-note";
 import { AjustesLgpdModal } from "@/modules/care-recipients/presentation/ajustes-lgpd-modal";
 
 interface AjustesPrivacyCardProps {
@@ -21,6 +21,7 @@ interface AjustesPrivacyCardProps {
   careDisplayName: string;
   canEdit: boolean;
   isPaused: boolean;
+  deviceSubtitle?: string | null;
 }
 
 function resolveMessagesSubtitle(
@@ -55,11 +56,11 @@ function AjustesPrivacyCard({
   careDisplayName,
   canEdit,
   isPaused,
+  deviceSubtitle,
 }: AjustesPrivacyCardProps) {
   const copy = familyContent.ajustes.privacy;
   const [lgpdOpen, setLgpdOpen] = useState(false);
   const [accessLogOpen, setAccessLogOpen] = useState(false);
-  const [devicesNoteOpen, setDevicesNoteOpen] = useState(false);
 
   const messagesTag =
     privacy.waOptInStatus === WA_OPT_IN_STATUS.active
@@ -132,14 +133,10 @@ function AjustesPrivacyCard({
           <ListRow
             icon="📱"
             title={copy.devicesTitle}
-            subtitle={copy.devicesSubtitle}
+            subtitle={deviceSubtitle || copy.devicesSubtitle}
             trailing={
-              <Button
-                variant="secondary"
-                size="xs"
-                onClick={() => setDevicesNoteOpen(true)}
-              >
-                {copy.devicesManageButton}
+              <Button variant="secondary" size="xs" asChild>
+                <Link href={familyRoutes.instalar}>{copy.devicesManageButton}</Link>
               </Button>
             }
           />
@@ -180,22 +177,6 @@ function AjustesPrivacyCard({
         </p>
       </Modal>
 
-      <Modal
-        open={devicesNoteOpen}
-        onClose={() => setDevicesNoteOpen(false)}
-        title={copy.devicesTitle}
-        footer={
-          <Button variant="secondary" size="sm" onClick={() => setDevicesNoteOpen(false)}>
-            {familyContent.ajustes.accessLogModal.closeButton}
-          </Button>
-        }
-      >
-        <DevicesStubNote
-          title={copy.devicesSubtitle}
-          body="Disponível quando você instalar no celular dele."
-          guideLinkLabel={familyContent.ajustes.channels.howItWorks}
-        />
-      </Modal>
     </>
   );
 }

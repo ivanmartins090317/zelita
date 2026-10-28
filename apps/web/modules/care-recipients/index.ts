@@ -7,6 +7,7 @@ import {
   canEditCareSettings,
   canViewAjustes,
 } from "./application/can-edit-care-settings";
+import { readCareChannelForDeviceLink } from "./application/read-channel-for-device-link";
 
 export const careRecipientsModule = {
   id: "care-recipients",
@@ -21,4 +22,5 @@ export {
   submitDataSubjectRequestAction,
   canEditCareSettings,
   canViewAjustes,
+  readCareChannelForDeviceLink,
 };

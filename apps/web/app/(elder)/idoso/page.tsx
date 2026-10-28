@@ -1,16 +1,18 @@
-import { getElderPreview } from "@/modules/elder-access/application/get-elder-preview";
+import { getElderSurface } from "@/modules/elder-access/application/get-elder-surface";
 import { ElderHome } from "@/modules/elder-access/presentation/elder-home";
 
 export default async function ElderHomePage() {
-  const preview = await getElderPreview();
-  if (preview.kind !== "ready") return null;
+  const surface = await getElderSurface();
+  if (surface.kind !== "ready") return null;
 
   return (
     <ElderHome
-      greeting={preview.greeting}
-      dateLabel={preview.dateLabel}
-      homeCard={preview.homeCard}
-      loadWarning={preview.loadWarning}
+      greeting={surface.greeting}
+      dateLabel={surface.dateLabel}
+      homeCard={surface.homeCard}
+      loadWarning={surface.loadWarning}
+      linkedDevice={surface.door === "device"}
+      familyTel={surface.calls.find((call) => call.tel)?.tel ?? null}
     />
   );
 }

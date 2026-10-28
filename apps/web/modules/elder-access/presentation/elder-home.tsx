@@ -18,6 +18,8 @@ interface ElderHomeProps {
   dateLabel: string;
   homeCard: ElderHomeCard;
   loadWarning: string | null;
+  linkedDevice: boolean;
+  familyTel: string | null;
 }
 
 export function ElderHome({
@@ -25,9 +27,19 @@ export function ElderHome({
   dateLabel,
   homeCard,
   loadWarning,
+  linkedDevice,
+  familyTel,
 }: ElderHomeProps) {
   const [sent, setSent] = useState(false);
-  if (sent) return <ElderSosSent onBack={() => setSent(false)} />;
+  if (sent) {
+    return (
+      <ElderSosSent
+        linkedDevice={linkedDevice}
+        familyTel={familyTel}
+        onBack={() => setSent(false)}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col">
@@ -46,9 +58,9 @@ export function ElderHome({
       <h1 className={elderTitleClass}>{greeting}</h1>
       <p className="mt-2 text-[length:var(--elder-body)] text-muted">{dateLabel}</p>
       <ElderMedicineCard card={homeCard} loadWarning={loadWarning} />
-      <ElderHelpButton onConfirm={() => setSent(true)} />
+      <ElderHelpButton linkedDevice={linkedDevice} onConfirm={() => setSent(true)} />
       <p className="my-3 text-center text-[length:var(--elder-body)] text-muted">
-        {elderContent.home.helpHint}
+        {linkedDevice ? elderContent.home.helpHintLinked : elderContent.home.helpHint}
       </p>
       <Link href={elderRoutes.family} className={`${elderTapClass} mb-3`}>
         <span aria-hidden>📞</span>
@@ -98,7 +110,13 @@ function ElderMedicineCard({
   );
 }
 
-function ElderHelpButton({ onConfirm }: { onConfirm: () => void }) {
+function ElderHelpButton({
+  linkedDevice,
+  onConfirm,
+}: {
+  linkedDevice: boolean;
+  onConfirm: () => void;
+}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   return (
@@ -120,7 +138,9 @@ function ElderHelpButton({ onConfirm }: { onConfirm: () => void }) {
           {elderContent.sos.confirmTitle}
         </h2>
         <p className="mt-3 text-center text-[length:var(--elder-body)] text-muted">
-          {elderContent.sos.confirmBody}
+          {linkedDevice
+            ? elderContent.sos.linkedConfirmBody
+            : elderContent.sos.confirmBody}
         </p>
         <button
           type="button"
@@ -145,7 +165,44 @@ function ElderHelpButton({ onConfirm }: { onConfirm: () => void }) {
   );
 }
 
-function ElderSosSent({ onBack }: { onBack: () => void }) {
+function ElderSosSent({
+  linkedDevice,
+  familyTel,
+  onBack,
+}: {
+  linkedDevice: boolean;
+  familyTel: string | null;
+  onBack: () => void;
+}) {
+  if (linkedDevice) {
+    return (
+      <div className="flex flex-1 flex-col items-center text-center">
+        <h1 className={`${elderTitleClass} mt-4`}>{elderContent.sos.linkedSentTitle}</h1>
+        <p className="mt-4 text-[length:var(--elder-body)] text-muted">
+          {elderContent.sos.linkedSentBody}
+        </p>
+        {familyTel ? (
+          <a href={familyTel} className={`${elderTapClass} mt-5 justify-center`}>
+            <span aria-hidden>📞</span>
+            {elderContent.sos.callFamily}
+          </a>
+        ) : (
+          <Link href={elderRoutes.family} className={`${elderTapClass} mt-5 justify-center`}>
+            <span aria-hidden>📞</span>
+            {elderContent.sos.callFamily}
+          </Link>
+        )}
+        <a href={SAMU_TEL} className={`${elderSosClass} mt-3`}>
+          <span aria-hidden>📞</span>
+          {elderContent.sos.callSamu}
+        </a>
+        <button type="button" className={`${elderTapClass} mt-3 justify-center`} onClick={onBack}>
+          {elderContent.sos.backHome}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-1 flex-col items-center text-center">
       <p className="flex size-16 items-center justify-center rounded-pill bg-ok-bg text-[28px] text-ok" aria-hidden>
