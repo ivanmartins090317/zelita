@@ -52,7 +52,7 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 #### 2.2 Lado do idoso (produto)
 
 - [x] **F5 — PWA do idoso (código)** — prévia `/idoso` entregue em 28/10: [`docs/implementation/2026-10-28-f5-pwa-idoso.md`](../implementation/2026-10-28-f5-pwa-idoso.md). SOS desta fase não grava alerta
-- [ ] **FL-05 no Vercel** — homologar a prévia com a faixa visível e conferir que o ensaio não cria linha em `sos_alerts`
+- [ ] **FL-05 no Vercel** — adiado para o fim das tarefas de implementação. Print de 28/10 do início está em `docs/evidencias/`; não fecha o caso
 - [ ] **F6 — Vínculo de aparelho:** token curto, uso único, só no WA cadastrado, preso ao 1º device, revogável em Ajustes
 - [ ] **SOS real:** insert pelo device → notifica papéis da ordem (ignora DND) → painel Pedidos de ajuda
 - [ ] **Confirmar Casa (GPS)** — alerta de zona só com coords; posição real só vem do PWA
@@ -75,14 +75,14 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 
 ## Homologação manual restante (skill `manual-report`)
 
-Fazer **no ambiente Vercel**, não só local.
+Fazer **no ambiente Vercel**, numa rodada só, **depois** de fechar as tarefas de implementação do Gate 2.2. Não intercalar caso a caso no meio do código.
 
 - [x] F1 · Landing — TC-F1-01…TC-F1-06
 - [x] FL-01 Auth OTP *(2026-09-20 no Vercel — código chega; só no spam)*
 - [x] FL-02 Onboarding + pessoa cuidada *(2026-09-20 — 8 passos ok; convite do passo 7 não persiste)*
 - [x] FL-03 Remédios e cartela *(2026-09-20)*
 - [x] FL-04 Lembretes (job + WA) *(envio Meta 100% em 26–28/10; ficam abertos TC-FL04-04, 07 e 08)*
-- [ ] FL-05 PWA idoso *(código da prévia em 28/10; falta homologar no Vercel)*
+- [ ] FL-05 PWA idoso *(código em 28/10; homologar na rodada final)*
 - [ ] FL-06 SOS *(Gate 2 — F5/F6)*
 - [x] FL-07 Segurança / RLS smoke *(Gate 1 — aceite via **Copiar link** ok, 2026-09-20; e-mail automático ficou no Gate 3)*
 - [x] FL-08 Exames smoke *(2026-09-20 upload ok; posição real Gate 2)*
@@ -97,7 +97,8 @@ Fazer **no ambiente Vercel**, não só local.
 ```text
 1. Gate 1 — feito
 2. Gate 2.1 — envio Meta feito (26–28/10). Restam TC-FL04-04, 07 e 08, sem bloquear a F5
-3. Spec + F5 (PWA) → Spec + F6 (vínculo)  [paths críticos, autonomia tight]
-4. Piloto família + idoso (1 conta controlada)
-5. Gate 3 só depois (tour, billing real, domínio, voz)
+3. Implementação: F5 (código feito) → F6 (vínculo) → SOS real e GPS  [paths críticos, autonomia tight]
+4. Homologação manual restante no Vercel (FL-05, FL-06 e casos abertos)
+5. Piloto família + idoso (1 conta controlada)
+6. Gate 3 só depois (tour, billing real, domínio, voz)
 ```

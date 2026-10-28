@@ -16,4 +16,10 @@ Nomenclatura: `tc[número]-[descricao-curta].[ext]`
 | --- | --- | --- |
 | `tc-fl04-03-lembretes-whatsapp.png` | TC-FL04-03 / 06 | Conta comercial Celular Zelita. Lembretes de 27/10 e 28/10 às 08:00, 12:00 e 12:19. Copy não afirma tomada |
 
+## FL-05 · PWA do idoso (2026-10-28)
+
+| Arquivo | TC | Descrição |
+| --- | --- | --- |
+| `tc-fl05-02-proximo-horario.png` | TC-FL05-02 | Captura antecipada em 28/10 (Vercel, João, REMEDIO TC-03 50mg às 22:00). Não fecha o caso; a rodada oficial é no fim da implementação |
+
 Formatos aceitos: `.jpeg`, `.jpg`, `.png`, `.webp`

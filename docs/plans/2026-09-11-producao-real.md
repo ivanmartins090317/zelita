@@ -191,7 +191,7 @@ Não bloqueia produção real. Só depois do piloto.
 
 ## 9. Homologação manual (mapa)
 
-Fazer **no Vercel**. Skill `manual-report`.
+Fazer **no Vercel**, numa rodada só, depois das tarefas de implementação do Gate 2.2. Skill `manual-report`.
 
 | Fluxo | Gate | Status |
 | --- | --- | --- |

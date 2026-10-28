@@ -179,37 +179,42 @@
       <div class="flow-head">FL-05 · PWA do idoso (prévia) — Gate 2.2</div>
       <div class="flow-body">
         <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">
-          Código da prévia em 28/10. Homologação oficial continua no
-          <a href="https://zelita-web.vercel.app/idoso">Vercel</a>, com sessão de família.
-          Smoke local não fecha estes casos. Conferir também que o ensaio não cria linha em <code>sos_alerts</code>.
+          Homologação no <a href="https://zelita-web.vercel.app/idoso">Vercel</a> fica para o fim das tarefas de implementação.
+          Há um print de 28/10 do início (REMEDIO TC-03 50mg às 22:00); ele não fecha o TC-FL05-02.
         </p>
         <div class="tc">
           <strong>TC-FL05-01</strong> — Sem sessão, /idoso não mostra remédio nem telefone<br />
-          <span class="status pending">Pendente no Vercel</span>
+          <span class="status pending">Pendente — rodada final</span>
         </div>
         <div class="tc">
           <strong>TC-FL05-02</strong> — Com sessão, início mostra o próximo horário real<br />
-          <span class="status pending">Pendente no Vercel</span>
+          <span class="status pending">Pendente — rodada final</span>
         </div>
         <div class="tc">
           <strong>TC-FL05-03</strong> — Horários usam “Já avisamos” / “É o próximo”, nunca “tomou”<br />
-          <span class="status pending">Pendente no Vercel</span>
+          <span class="status pending">Pendente — rodada final</span>
         </div>
         <div class="tc">
           <strong>TC-FL05-04</strong> — Família disca; SAMU é tel:192<br />
-          <span class="status pending">Pendente no Vercel</span>
+          <span class="status pending">Pendente — rodada final</span>
         </div>
         <div class="tc">
           <strong>TC-FL05-05</strong> — Cancelar o SOS volta ao início e não cria alerta<br />
-          <span class="status pending">Pendente no Vercel</span>
+          <span class="status pending">Pendente — rodada final</span>
         </div>
         <div class="tc">
           <strong>TC-FL05-06</strong> — Confirmar mostra a tela de depois e a faixa; sos_alerts não ganha linha<br />
-          <span class="status pending">Pendente no Vercel</span>
+          <span class="status pending">Pendente — rodada final</span>
         </div>
         <div class="tc">
           <strong>TC-FL05-07</strong> — Letra e contraste persistem; corpo ≥17px; ajuda &gt;100px<br />
-          <span class="status pending">Pendente no Vercel</span>
+          <span class="status pending">Pendente — rodada final</span>
+        </div>
+        <div class="gallery">
+          <div class="evidence-item" onclick="openLightbox('evidencias/tc-fl05-02-proximo-horario.png')">
+            <img src="evidencias/tc-fl05-02-proximo-horario.png" alt="Início da prévia com o próximo remédio às 22:00" />
+            <div class="evidence-caption">TC-FL05-02 — captura 28/10, caso ainda pendente</div>
+          </div>
         </div>
       </div>
     </div>
