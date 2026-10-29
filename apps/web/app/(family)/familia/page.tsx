@@ -5,9 +5,14 @@ import { familyContent } from "@/content/family";
 import { getHojeDashboard } from "@/modules/accounts/application/get-hoje-dashboard";
 import { HojeMaduroView } from "@/modules/accounts/presentation/family/hoje-maduro-view";
 import { PrimeiroAcessoView } from "@/modules/accounts/presentation/family/primeiro-acesso-view";
+import { readHojeDeviceStatus } from "@/modules/elder-access";
 
 export default async function FamiliaHojePage() {
-  const result = await getHojeDashboard();
+  const device = await readHojeDeviceStatus();
+  const result = await getHojeDashboard(new Date(), {
+    includeDeviceTask: device.visible,
+    hasLinkedDevice: device.hasDevice,
+  });
 
   if (!result.ok) {
     if (result.reason === "incomplete") {
@@ -26,10 +31,16 @@ export default async function FamiliaHojePage() {
   }
 
   const { data } = result;
+  const deviceCard = {
+    visible: device.visible,
+    canManage: device.canManage,
+    hasDevice: device.hasDevice,
+    statusLine: device.statusLine,
+  };
 
   if (data.mode === "primeiro_acesso") {
-    return <PrimeiroAcessoView data={data} />;
+    return <PrimeiroAcessoView data={data} deviceCard={deviceCard} />;
   }
 
-  return <HojeMaduroView data={data} />;
+  return <HojeMaduroView data={data} deviceCard={deviceCard} />;
 }

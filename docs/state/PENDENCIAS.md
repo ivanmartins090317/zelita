@@ -54,6 +54,7 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 - [x] **F5 — PWA do idoso (código)** — prévia `/idoso` entregue em 28/10: [`docs/implementation/2026-10-28-f5-pwa-idoso.md`](../implementation/2026-10-28-f5-pwa-idoso.md). SOS desta fase não grava alerta
 - [ ] **FL-05 no Vercel** — adiado para o fim das tarefas de implementação. Print de 28/10 do início está em `docs/evidencias/`; não fecha o caso
 - [x] **F6 — Vínculo de aparelho (código)** — entregue em 28/10: [`docs/implementation/2026-10-28-f6-vinculo-aparelho.md`](../implementation/2026-10-28-f6-vinculo-aparelho.md). O template Meta `zelita_device_link` ainda é passo de operação. SOS deste aparelho ainda não grava alerta
+- [x] **Atalho para instalar no celular (código, 29/10)** — cartão no Hoje, rótulo em Ajustes e botão “Sim, quero usar” legível: [`docs/implementation/2026-10-29-atalho-instalar-celular.md`](../implementation/2026-10-29-atalho-instalar-celular.md). Só aparece no Vercel depois do deploy
 - [ ] **SOS real:** insert pelo device → notifica papéis da ordem (ignora DND) → painel Pedidos de ajuda
 - [ ] **Confirmar Casa (GPS)** — alerta de zona só com coords; posição real só vem do PWA
 

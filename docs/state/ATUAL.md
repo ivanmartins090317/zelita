@@ -4,11 +4,11 @@
 | --- | --- |
 | Etapa | **Gate 2.2 — F6** código entregue; homologação fica na rodada final |
 | Spec | [`specs/2026-10-28-f6-vinculo-aparelho.md`](../../specs/2026-10-28-f6-vinculo-aparelho.md) |
-| Entrega | [`docs/implementation/2026-10-28-f6-vinculo-aparelho.md`](../implementation/2026-10-28-f6-vinculo-aparelho.md) |
+| Entrega | [`docs/implementation/2026-10-28-f6-vinculo-aparelho.md`](../implementation/2026-10-28-f6-vinculo-aparelho.md) · atalho [`docs/implementation/2026-10-29-atalho-instalar-celular.md`](../implementation/2026-10-29-atalho-instalar-celular.md) |
 | Plano de telas | [`docs/state/PLANO-ALTA-FIDELIDADE.md`](./PLANO-ALTA-FIDELIDADE.md) § F6 |
 | Plano de produção | [`docs/plans/2026-09-11-producao-real.md`](../plans/2026-09-11-producao-real.md) § 6.2 |
 | Autonomia | `tight` |
-| Status | Vínculo no código e migration `013` no remoto. SOS real e Confirmar Casa ainda não começaram. |
+| Status | Vínculo no código e migration `013` no remoto. Atalho do Hoje, rótulo em Ajustes e botão legível no celular estão no código; aparecem no Vercel depois do deploy. SOS real e Confirmar Casa ainda não começaram. |
 
 ## Gate 2.1 — envio Meta (fechado em 28/10)
 

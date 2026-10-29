@@ -11,13 +11,18 @@ import { familyContent, familyRoutes } from "@/content/family";
 import type { HojeDashboardViewModel } from "@/modules/accounts/application/get-hoje-dashboard";
 import { HojeActivityFeed } from "@/modules/accounts/presentation/family/hoje-activity-feed";
 import { HojeChecklistCard } from "@/modules/accounts/presentation/family/hoje-checklist-card";
+import {
+  HojeDeviceCard,
+  type HojeDeviceCardStatus,
+} from "@/modules/accounts/presentation/family/hoje-device-card";
 import { HojeStats } from "@/modules/accounts/presentation/family/hoje-stats";
 
 interface HojeMaduroViewProps {
   data: HojeDashboardViewModel;
+  deviceCard: HojeDeviceCardStatus;
 }
 
-function HojeMaduroView({ data }: HojeMaduroViewProps) {
+function HojeMaduroView({ data, deviceCard }: HojeMaduroViewProps) {
   const copy = familyContent.hoje;
   const apelido = data.careRecipientDisplayName;
   const stats = data.stats;
@@ -47,6 +52,8 @@ function HojeMaduroView({ data }: HojeMaduroViewProps) {
           real quando WHATSAPP_* estiver no .env.local.
         </p>
       ) : null}
+
+      <HojeDeviceCard status={deviceCard} />
 
       {stats ? (
         <HojeStats
@@ -93,6 +100,7 @@ function HojeMaduroView({ data }: HojeMaduroViewProps) {
             medicationCount={data.activeMedicationCount}
             examCount={data.activeExamCount}
             activeMemberCount={data.activeMemberCount}
+            canManageDevices={deviceCard.canManage}
             trailing={
               <Button variant="secondary" size="xs" asChild>
                 <Link href={familyRoutes.guia}>{copy.maduro.centralTour}</Link>

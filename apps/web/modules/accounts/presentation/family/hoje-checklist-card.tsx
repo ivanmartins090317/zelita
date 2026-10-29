@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tag } from "@/components/ui/tag";
 import {
   familyContent,
+  familyRoutes,
   formatChecklistProgress,
   type FamilyChecklistTaskContent,
 } from "@/content/family";
@@ -20,6 +21,7 @@ interface HojeChecklistCardProps {
   medicationCount: number;
   examCount?: number;
   activeMemberCount?: number;
+  canManageDevices?: boolean;
   trailing?: ReactNode;
 }
 
@@ -38,6 +40,7 @@ function HojeChecklistCard({
   medicationCount,
   examCount = 0,
   activeMemberCount = 1,
+  canManageDevices = false,
   trailing,
 }: HojeChecklistCardProps) {
   const copy = familyContent.hoje;
@@ -50,10 +53,12 @@ function HojeChecklistCard({
       ? formatChecklistProgress(
           copy.primeiroAcesso.progressFeitas,
           checklist.completedCount,
+          checklist.tasks.length,
         )
       : formatChecklistProgress(
           copy.maduro.centralProgressProntas,
           checklist.completedCount,
+          checklist.tasks.length,
         );
 
   return (
@@ -73,10 +78,14 @@ function HojeChecklistCard({
         />
 
         {variant === "primeiro_acesso"
-          ? copy.checklistTasks.map((task, index) => {
+          ? copy.checklistTasks.slice(0, checklist.tasks.length).map((task, index) => {
               const completed = checklist.tasks[index]?.completed ?? false;
-              const showCta =
-                index === 0 ? canManageMedications && !isPaused : true;
+              const isDeviceTask = task.href === familyRoutes.instalar;
+              const showCta = isDeviceTask
+                ? canManageDevices
+                : index === 0
+                  ? canManageMedications && !isPaused
+                  : true;
 
               return (
                 <div
@@ -113,7 +122,9 @@ function HojeChecklistCard({
                 </div>
               );
             })
-          : copy.maduro.checklistAreas.map((area, index) => {
+          : copy.maduro.checklistAreas
+              .slice(0, checklist.tasks.length)
+              .map((area, index) => {
               const completed = checklist.tasks[index]?.completed ?? false;
               const detail =
                 area.id === "medications"
@@ -141,7 +152,7 @@ function HojeChecklistCard({
                   >
                     {completed ? "✓" : "○"}
                   </span>
-                  {area.href && !completed ? (
+                  {area.href && !completed && (area.id !== "device" || canManageDevices) ? (
                     <Link
                       href={area.href}
                       className="font-semibold text-brand-600"

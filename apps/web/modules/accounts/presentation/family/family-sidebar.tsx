@@ -82,7 +82,10 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
           aria-label="Áreas do painel"
         >
           {sections.map((section) => (
-            <div key={section.label ?? "principal"} className="flex flex-col gap-2">
+            <div
+              key={section.label ?? "principal"}
+              className="flex flex-col gap-2"
+            >
               {section.label ? (
                 <p className="px-3 pb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-on-dark-muted">
                   {section.label}
@@ -107,7 +110,7 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
         <form action={signOut} className="mt-2 border-t border-white/10 pt-3">
           <button
             type="submit"
-            className="flex min-h-tap w-full items-center rounded-control px-3 text-left text-sm font-semibold text-on-dark-muted transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-on-dark focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+            className="border flex min-h-tap w-full items-center justify-center rounded-control px-3 text-left text-sm font-semibold text-on-dark-muted transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-on-dark focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
           >
             {familyContent.topbar.signOutLabel}
           </button>
@@ -124,7 +127,12 @@ interface FamilyNavLinkProps {
   onNavigate: () => void;
 }
 
-function FamilyNavLink({ item, active, badge, onNavigate }: FamilyNavLinkProps) {
+function FamilyNavLink({
+  item,
+  active,
+  badge,
+  onNavigate,
+}: FamilyNavLinkProps) {
   const Icon = familyNavIcons[item.id];
   const isEmergency = item.id === "pedidos-de-ajuda";
   const countSuffix = badge ? formatNavCountSuffix(item.id, badge) : null;

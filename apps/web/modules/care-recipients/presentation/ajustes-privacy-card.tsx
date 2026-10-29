@@ -22,6 +22,7 @@ interface AjustesPrivacyCardProps {
   canEdit: boolean;
   isPaused: boolean;
   deviceSubtitle?: string | null;
+  deviceLinked?: boolean;
 }
 
 function resolveMessagesSubtitle(
@@ -57,6 +58,7 @@ function AjustesPrivacyCard({
   canEdit,
   isPaused,
   deviceSubtitle,
+  deviceLinked = false,
 }: AjustesPrivacyCardProps) {
   const copy = familyContent.ajustes.privacy;
   const [lgpdOpen, setLgpdOpen] = useState(false);
@@ -136,7 +138,11 @@ function AjustesPrivacyCard({
             subtitle={deviceSubtitle || copy.devicesSubtitle}
             trailing={
               <Button variant="secondary" size="xs" asChild>
-                <Link href={familyRoutes.instalar}>{copy.devicesManageButton}</Link>
+                <Link href={familyRoutes.instalar}>
+                  {canEdit && !deviceLinked
+                    ? copy.devicesInstallButton
+                    : copy.devicesViewButton}
+                </Link>
               </Button>
             }
           />

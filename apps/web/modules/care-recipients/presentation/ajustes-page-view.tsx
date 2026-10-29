@@ -10,9 +10,14 @@ import { AjustesToneCard } from "@/modules/care-recipients/presentation/ajustes-
 interface AjustesPageViewProps {
   data: AjustesPageViewModel;
   deviceSubtitle?: string | null;
+  deviceLinked?: boolean;
 }
 
-function AjustesPageView({ data, deviceSubtitle }: AjustesPageViewProps) {
+function AjustesPageView({
+  data,
+  deviceSubtitle,
+  deviceLinked = false,
+}: AjustesPageViewProps) {
   const copy = familyContent.ajustes;
 
   return (
@@ -54,6 +59,7 @@ function AjustesPageView({ data, deviceSubtitle }: AjustesPageViewProps) {
           canEdit={data.canEdit}
           isPaused={data.isPaused}
           deviceSubtitle={deviceSubtitle}
+          deviceLinked={deviceLinked}
         />
         <AjustesRecipientCard
           careDisplayName={data.careDisplayName}

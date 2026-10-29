@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { elderContent, elderRoutes } from "@/content/elder";
 import {
-  elderTapClass,
+  elderPrimaryTapClass,
   elderTitleClass,
 } from "@/modules/elder-access/presentation/elder-classes";
 
@@ -24,7 +24,7 @@ export function ElderInstalledGuide() {
         ))}
       </ol>
       <p className="mt-5 text-[length:var(--elder-body)] text-muted">{copy.help}</p>
-      <Link href={elderRoutes.home} className={`${elderTapClass} mt-6 justify-center bg-brand-700 text-white`}>
+      <Link href={elderRoutes.home} className={`${elderPrimaryTapClass} mt-6`}>
         {copy.enter}
       </Link>
     </div>

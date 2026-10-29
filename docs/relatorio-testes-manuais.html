@@ -1,256 +1,1001 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Relatório de Testes Manuais — Zelita</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg-page: #F2EFE8;
-      --bg-card: #FAF7F2;
-      --border: #E4E0D8;
-      --accent: #12766E;
-      --brand-900: #072B27;
-      --brand-100: #D6F2EC;
-      --pass: #2E7D62;
-      --pass-bg: #E3F3EC;
-      --pending: #667572;
-      --pending-bg: rgba(102, 117, 114, 0.12);
-      --text-primary: #14201E;
-      --text-secondary: #4E5D5A;
-      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-      --font-sans: 'Inter', system-ui, sans-serif;
-      --radius: 16px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-sans); background: var(--bg-page); color: var(--text-primary); line-height: 1.55; }
-    .topbar { background: var(--brand-900); color: #DCEFEA; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
-    .topbar h1 { font-family: var(--font-display); font-size: 1.1rem; }
-    .badge-version { background: rgba(255,255,255,.1); padding: 4px 10px; border-radius: 99px; font-size: 12px; }
-    .hero { background: linear-gradient(135deg, #0B3B36, #12766E); color: white; padding: 40px 24px; }
-    .hero h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 8px 0; }
-    .hero p { color: #CBE9E2; max-width: 640px; }
-    .container { max-width: 960px; margin: 0 auto; padding: 24px; }
-    .scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-    .score-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
-    .score-card strong { display: block; font-family: var(--font-display); font-size: 1.75rem; color: var(--accent); }
-    .flow { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
-    .flow-head { padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
-    .flow-body { padding: 0 20px 20px; }
-    .tc { border-top: 1px solid var(--border); padding: 14px 0; }
-    .tc:first-child { border-top: none; }
-    .status { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
-    .status.pass { background: var(--pass-bg); color: var(--pass); }
-    .status.pending { background: var(--pending-bg); color: var(--pending); }
-    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
-    .evidence-item { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; background: white; }
-    .evidence-item img { width: 100%; display: block; aspect-ratio: 16/10; object-fit: cover; object-position: top; }
-    .evidence-caption { padding: 8px 10px; font-size: 12px; color: var(--text-secondary); }
-    .footer { text-align: center; padding: 24px; color: var(--text-secondary); font-size: 13px; }
-    #lightbox { display: none; position: fixed; inset: 0; background: rgba(7,43,39,.85); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
-    #lightbox.open { display: flex; }
-    #lightbox img { max-width: 100%; max-height: 90vh; border-radius: 12px; }
-    @media (max-width: 640px) { .scoreboard { grid-template-columns: repeat(2, 1fr); } }
-  </style>
-</head>
-<body>
-  <div id="lightbox" onclick="closeLightbox()">
-    <img id="lightbox-img" src="" alt="Evidência ampliada" onclick="event.stopPropagation()" />
-  </div>
-
-  <header class="topbar">
-    <div><h1>Zelita</h1><span>Relatório de Testes Manuais · MVP</span></div>
-    <span class="badge-version">POP-QA-ZELITA-001</span>
-  </header>
-
-  <section class="hero">
-    <div class="hero-tag">QA Report · F1 Site</div>
-    <h2>Homologação — Landing pública</h2>
-    <p>Validação da primeira página pública: copy, CTAs, layout mobile/desktop, redirect `/cadastro` e âncora "Como funciona".</p>
-    <p style="margin-top:12px;font-size:14px;">Ambiente: localhost:3000 · Data: 2026-08-12 · Executor: agente F1</p>
-  </section>
-
-  <main class="container">
-    <div class="scoreboard" id="scoreboard"></div>
-
-    <div class="flow">
-      <div class="flow-head">F1 · Site (landing)</div>
-      <div class="flow-body">
-        <div class="tc">
-          <strong>TC-F1-01</strong> — Landing completa desktop<br />
-          <span class="status pass">Aprovado</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">Todas as seções do protótipo visíveis na ordem correta.</p>
-        </div>
-        <div class="tc">
-          <strong>TC-F1-02</strong> — Layout mobile (375px)<br />
-          <span class="status pass">Aprovado</span>
-        </div>
-        <div class="tc">
-          <strong>TC-F1-03</strong> — CTA Entrar → `/entrar`<br />
-          <span class="status pass">Aprovado</span>
-        </div>
-        <div class="tc">
-          <strong>TC-F1-04</strong> — CTA grátis → `/cadastro` → redirect `/entrar`<br />
-          <span class="status pass">Aprovado</span>
-        </div>
-        <div class="tc">
-          <strong>TC-F1-05</strong> — "Ver como funciona por dentro" → `#como-funciona`<br />
-          <span class="status pass">Aprovado</span>
-        </div>
-        <div class="tc">
-          <strong>TC-F1-06</strong> — Preços R$ 39 / 69 / 119 via formatador<br />
-          <span class="status pass">Aprovado</span>
-        </div>
-        <div class="gallery">
-          <div class="evidence-item" onclick="openLightbox('evidencias/tc-f1-01-landing-desktop.png')">
-            <img src="evidencias/tc-f1-01-landing-desktop.png" alt="TC-F1-01 desktop" />
-            <div class="evidence-caption">TC-F1-01 — Desktop</div>
-          </div>
-          <div class="evidence-item" onclick="openLightbox('evidencias/tc-f1-02-landing-mobile.png')">
-            <img src="evidencias/tc-f1-02-landing-mobile.png" alt="TC-F1-02 mobile" />
-            <div class="evidence-caption">TC-F1-02 — Mobile</div>
-          </div>
-          <div class="evidence-item" onclick="openLightbox('evidencias/tc-f1-03-cadastro-redirect-entrar.png')">
-            <img src="evidencias/tc-f1-03-cadastro-redirect-entrar.png" alt="TC-F1-03 cadastro" />
-            <div class="evidence-caption">TC-F1-03 — Redirect cadastro</div>
-          </div>
-        </div>
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zelita · Homologação manual MVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-page: #f2efe8;
+        --bg-card: #faf7f2;
+        --bg-card2: #ffffff;
+        --bg-soft: #eef8f5;
+        --border: #e4e0d8;
+        --border-strong: #d6d0c6;
+        --accent: #12766e;
+        --accent-hover: #0f5b54;
+        --brand-900: #072b27;
+        --brand-800: #0b3b36;
+        --brand-200: #a9e0d5;
+        --brand-100: #d6f2ec;
+        --coral: #e4572e;
+        --coral-bg: #fdeae2;
+        --pass: #2e7d62;
+        --pass-bg: #e3f3ec;
+        --fail: #c2401c;
+        --fail-bg: #fdeae2;
+        --block: #d98c1f;
+        --block-bg: #fdf0dc;
+        --pending: #667572;
+        --pending-bg: rgba(102, 117, 114, 0.12);
+        --text: #14201e;
+        --muted: #4e5d5a;
+        --ink-3: #667572;
+        --radius: 16px;
+        --shadow: 0 1px 2px rgba(7, 43, 39, 0.05), 0 4px 14px rgba(7, 43, 39, 0.06);
+        --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+        --font: "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: var(--font);
+        background: var(--bg-page);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 56px; }
+      header { margin-bottom: 20px; }
+      h1 {
+        font-family: var(--font-display);
+        font-size: 1.7rem;
+        font-weight: 800;
+        margin: 0 0 6px;
+        color: var(--brand-900);
+      }
+      .lede { margin: 0 0 16px; color: var(--muted); max-width: 72ch; }
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 8px 16px;
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+      }
+      .meta .k {
+        display: block;
+        color: var(--ink-3);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .scoreboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 10px;
+        margin: 12px 0 8px;
+      }
+      .score {
+        background: var(--bg-card2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 10px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      .score strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 1.45rem;
+        color: var(--brand-900);
+      }
+      .score.pass strong { color: var(--pass); }
+      .score.fail strong { color: var(--fail); }
+      .score.rate strong {
+        background: linear-gradient(135deg, #0b3b36 0%, #12766e 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .progress {
+        height: 10px;
+        background: var(--bg-soft);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: 12px 0 4px;
+        border: 1px solid var(--border);
+      }
+      .progress > i { display: block; height: 100%; background: var(--pass); width: 0; }
+      .progress-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; }
+      section, details.flow {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 18px 8px;
+        margin-bottom: 12px;
+        box-shadow: var(--shadow);
+      }
+      details.flow { padding: 0; }
+      details.flow > summary {
+        cursor: pointer;
+        list-style: none;
+        padding: 16px 18px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.02rem;
+        color: var(--brand-900);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+      }
+      details.flow > summary::-webkit-details-marker { display: none; }
+      details.flow > summary::after {
+        content: attr(data-count);
+        font-family: var(--font);
+        font-weight: 500;
+        font-size: 0.78rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .flow-body { padding: 0 18px 16px; }
+      .hint { font-size: 0.85rem; color: var(--muted); margin: 0 0 12px; }
+      h2 {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        margin: 0 0 10px;
+        color: var(--brand-900);
+      }
+      table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+      th, td {
+        border-bottom: 1px solid var(--border);
+        padding: 9px 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--ink-3);
+        font-weight: 650;
+      }
+      .code {
+        font-variant-numeric: tabular-nums;
+        font-weight: 650;
+        white-space: nowrap;
+        color: var(--brand-900);
+      }
+      small { color: var(--muted); }
+      code { font-size: 0.86em; }
+      .pill {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 650;
+        padding: 2px 8px;
+        border-radius: 99px;
+        background: var(--bg-soft);
+        color: var(--brand-900);
+        white-space: nowrap;
+      }
+      .pill.admin { background: var(--brand-900); color: #fff; }
+      .pill.cuidador { background: var(--brand-100); color: var(--brand-800); }
+      .pill.visualizador { background: #eef8f5; color: var(--accent); }
+      .pill.emergencia { background: var(--coral-bg); color: var(--fail); }
+      .pill.visitante { background: #e4e0d8; color: var(--muted); }
+      .pill.idoso { background: var(--accent); color: #fff; }
+      .pill.baixo { background: var(--bg-soft); color: var(--accent); }
+      .pill.medio { background: var(--block-bg); color: #9a6b12; }
+      .pill.alto { background: var(--coral-bg); color: var(--fail); }
+      .pill.critico { background: var(--brand-900); color: #fff; }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        font-weight: 650;
+        padding: 3px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+      }
+      .status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .status.pending { color: var(--pending); background: var(--pending-bg); }
+      .status.pass { color: var(--pass); background: var(--pass-bg); }
+      .status.fail { color: var(--fail); background: var(--fail-bg); }
+      .status.block { color: var(--block); background: var(--block-bg); }
+      .matrix-wrap { overflow-x: auto; }
+      .matrix { font-size: 0.78rem; }
+      .matrix td, .matrix th { text-align: center; white-space: nowrap; padding: 7px 5px; }
+      .matrix th:first-child, .matrix td:first-child { text-align: left; font-weight: 650; }
+      .cell-e { background: var(--pass-bg); color: var(--pass); font-weight: 700; }
+      .cell-l { background: #f3e2c2; color: #9a6b12; font-weight: 700; }
+      .cell-n { color: var(--ink-3); }
+      .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.8rem; color: var(--muted); margin: 8px 0 0; }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 10px;
+        margin-top: 8px;
+      }
+      .evidence-item {
+        border: 1px dashed var(--border-strong);
+        border-radius: 10px;
+        background: var(--bg-soft);
+        min-height: 90px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+        font-size: 0.75rem;
+        color: var(--ink-3);
+        cursor: pointer;
+        gap: 6px;
+        overflow: hidden;
+      }
+      .evidence-item img {
+        max-width: 100%;
+        max-height: 110px;
+        object-fit: cover;
+        object-position: top;
+        border-radius: 8px;
+        display: block;
+      }
+      .evidence-item.missing img { display: none; }
+      .evidence-item:not(.missing) { border-style: solid; background: var(--bg-card2); }
+      #lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(7, 43, 39, 0.86);
+        z-index: 40;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      #lightbox.open { display: flex; }
+      #lightbox img { max-width: 96vw; max-height: 90vh; border-radius: 8px; }
+      footer { margin-top: 28px; font-size: 0.82rem; color: var(--muted); }
+      a { color: var(--accent-hover); }
+      @media (max-width: 720px) { .hide-sm { display: none; } }
+    </style>
+  </head>
+  <body>
+    <div id="lightbox" onclick="closeLightbox()">
+      <img id="lightbox-img" alt="Evidência ampliada" onclick="event.stopPropagation()" />
     </div>
-
-    <div class="flow">
-      <div class="flow-head">FL-04 · Lembretes (job + WhatsApp) — Gate 2.1</div>
-      <div class="flow-body">
-        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">
-          Ambiente: <a href="https://zelita-web.vercel.app/">zelita-web.vercel.app</a>.
-          Executor: Ivan · 26/10 a 28/10/2026 · conta comercial Celular Zelita.
-          Envio recorrente declarado 100%. Três casos seguem pendentes (04, 07, 08).
+    <div class="wrap">
+      <header>
+        <h1>Zelita · Homologação manual MVP</h1>
+        <p class="lede">
+          Coordenação familiar para cuidado de idosos. Este relatório cobre a
+          landing (F1), os lembretes (FL-04) e o PWA do idoso (FL-05, prévia e
+          vínculo). Executar no Vercel
+          (<a href="https://zelita-web.vercel.app/">zelita-web.vercel.app</a>)
+          ou em <code>http://localhost:3000</code>. Sem Playwright. Evidências em
+          <code>docs/evidencias/</code>. FL-01, FL-02, FL-03, FL-07 e FL-08 já
+          constam como feitos em <code>docs/state/PENDENCIAS.md</code>; os casos
+          deles ainda não estão neste HTML.
         </p>
-        <div class="tc">
-          <strong>TC-FL04-01</strong> — Salvar cartela pede opt-in<br />
-          <span class="status pass">Aprovado</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">Ciclo real desde 26/10. Lembrete recorrente só sai depois do opt-in.</p>
-        </div>
-        <div class="tc">
-          <strong>TC-FL04-02</strong> — Responder SIM autoriza<br />
-          <span class="status pass">Aprovado</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">Mesma rodada: lembretes passaram a chegar no número cadastrado.</p>
-        </div>
-        <div class="tc">
-          <strong>TC-FL04-03</strong> — Lembrete no horário de Brasília<br />
-          <span class="status pass">Aprovado</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">27/10 e 28/10 às 08:00, 12:00 e 12:19. Sem atraso de UTC.</p>
-        </div>
-        <div class="tc">
-          <strong>TC-FL04-04</strong> — Sem opt-in não envia<br />
-          <span class="status pending">Pendente</span>
-        </div>
-        <div class="tc">
-          <strong>TC-FL04-05</strong> — Webhook sem assinatura não grava opt-in<br />
-          <span class="status pass">Aprovado</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">22/09: POST sem assinatura devolveu 403. Não reexecutado em outubro.</p>
-        </div>
-        <div class="tc">
-          <strong>TC-FL04-06</strong> — Copy nunca afirma tomada<br />
-          <span class="status pass">Aprovado</span>
-          <p style="margin-top:8px;font-size:14px;color:var(--text-secondary)">“Está na hora de tomar… Qualquer coisa é só chamar a família.”</p>
-        </div>
-        <div class="tc">
-          <strong>TC-FL04-07</strong> — Aviso de cartela (5 dias / véspera / último dia)<br />
-          <span class="status pending">Pendente</span>
-        </div>
-        <div class="tc">
-          <strong>TC-FL04-08</strong> — Trial D30 pausa sem cobrar<br />
-          <span class="status pending">Pendente</span>
-        </div>
-        <div class="gallery">
-          <div class="evidence-item" onclick="openLightbox('evidencias/tc-fl04-03-lembretes-whatsapp.png')">
-            <img src="evidencias/tc-fl04-03-lembretes-whatsapp.png" alt="Lembretes no WhatsApp da conta Celular Zelita" />
-            <div class="evidence-caption">TC-FL04-03 / 06 — Lembretes 27/10 e 28/10</div>
+        <div class="meta">
+          <div>
+            <span class="k">Ambiente</span>
+            Vercel · local só para smoke
+          </div>
+          <div>
+            <span class="k">Entrada</span>
+            OTP por e-mail · sem senha seed
+          </div>
+          <div>
+            <span class="k">Dispositivos</span>
+            Desktop e celular
+          </div>
+          <div>
+            <span class="k">Status do plano</span>
+            <span id="plan-status">Em execução</span>
           </div>
         </div>
-      </div>
-    </div>
+        <div class="scoreboard" id="scoreboard"></div>
+        <div class="progress"><i id="progress-bar"></i></div>
+        <p class="progress-label" id="progress-label"></p>
+      </header>
 
-    <div class="flow">
-      <div class="flow-head">FL-05 · PWA do idoso (prévia) — Gate 2.2</div>
-      <div class="flow-body">
-        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">
-          Homologação no <a href="https://zelita-web.vercel.app/idoso">Vercel</a> fica para o fim das tarefas de implementação.
-          Há um print de 28/10 do início (REMEDIO TC-03 50mg às 22:00); ele não fecha o TC-FL05-02.
+      <section>
+        <h2>Quem testa</h2>
+        <p class="hint">
+          A pessoa cuidada não tem conta. Fonte dos papéis:
+          <code>accounts/domain/roles.ts</code> e
+          <code>elder-access/domain/device-link.ts</code>.
         </p>
-        <div class="tc">
-          <strong>TC-FL05-01</strong> — Sem sessão, /idoso não mostra remédio nem telefone<br />
-          <span class="status pending">Pendente — rodada final</span>
+        <table>
+          <thead>
+            <tr>
+              <th>Papel</th>
+              <th>Como entra</th>
+              <th>O que validar neste relatório</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill admin">Admin</span></td>
+              <td>OTP no e-mail da família</td>
+              <td>Painel, prévia <code>/idoso</code>, link do aparelho e desvincular</td>
+            </tr>
+            <tr>
+              <td><span class="pill cuidador">Cuidador</span></td>
+              <td>OTP · convite aceito</td>
+              <td>Vê a rotina e o estado do aparelho. Não vê botão de enviar, mostrar link ou desvincular</td>
+            </tr>
+            <tr>
+              <td><span class="pill visualizador">Visualizador</span></td>
+              <td>OTP · convite aceito</td>
+              <td>Vê a prévia. Não gerencia aparelho nem remédio</td>
+            </tr>
+            <tr>
+              <td><span class="pill emergencia">Emergência</span></td>
+              <td>OTP · convite aceito</td>
+              <td><code>/idoso</code> fica na página calma. Sem horário e sem telefone</td>
+            </tr>
+            <tr>
+              <td><span class="pill visitante">Visitante</span></td>
+              <td>Sem sessão</td>
+              <td>Landing e <code>/idoso</code> sem dado de saúde</td>
+            </tr>
+            <tr>
+              <td><span class="pill idoso">Pessoa cuidada</span></td>
+              <td>Cookie do aparelho · sem login</td>
+              <td><code>/idoso</code> sem faixa de prévia. SOS desta fase não grava alerta</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Matriz de permissão</h2>
+        <p class="hint">
+          E = escreve. L = lê. Não = a rota recusa. Ver a rotina libera a prévia.
+          Só o admin cria o link do aparelho.
+        </p>
+        <div class="matrix-wrap">
+          <table class="matrix">
+            <thead>
+              <tr>
+                <th>Papel</th>
+                <th>Rotina</th>
+                <th>Remédios</th>
+                <th>Convite</th>
+                <th>Plano</th>
+                <th>Aparelho</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Admin</td>
+                <td class="cell-l">L</td>
+                <td class="cell-e">E</td>
+                <td class="cell-e">E</td>
+                <td class="cell-e">E</td>
+                <td class="cell-e">E</td>
+              </tr>
+              <tr>
+                <td>Cuidador</td>
+                <td class="cell-l">L</td>
+                <td class="cell-l">L</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-l">L</td>
+              </tr>
+              <tr>
+                <td>Visualizador</td>
+                <td class="cell-l">L</td>
+                <td class="cell-l">L</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-n">Não</td>
+              </tr>
+              <tr>
+                <td>Emergência</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-n">Não</td>
+                <td class="cell-n">Não</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="tc">
-          <strong>TC-FL05-02</strong> — Com sessão, início mostra o próximo horário real<br />
-          <span class="status pending">Pendente — rodada final</span>
+        <p class="legend">
+          <span>E escreve</span>
+          <span>L só consulta</span>
+          <span>Não = ausente e recusado na rota</span>
+        </p>
+      </section>
+
+      <details class="flow">
+        <summary data-flow="site">F1 · Site (landing)</summary>
+        <div class="flow-body">
+          <p class="hint">
+            Primeira página pública. Copy, CTAs, layout e preços. Homologado em
+            12/08/2026 no local.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>TC</th>
+                <th>Papel</th>
+                <th>Caso e resultado esperado</th>
+                <th class="hide-sm">Disp.</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-flow="site" data-status="pass" data-roles="visitante">
+                <td class="code">TC-F1-01</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  Landing completa no desktop. Todas as seções do protótipo na ordem correta.
+                  <br /><small>Aprovado 12/08/2026 · evidência <code>tc-f1-01-landing-desktop.png</code>.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="site" data-status="pass" data-roles="visitante">
+                <td class="code">TC-F1-02</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  Viewport 375px. Hero e navegação cabem sem corte.
+                  <br /><small>Aprovado 12/08/2026 · evidência <code>tc-f1-02-landing-mobile.png</code>.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="site" data-status="pass" data-roles="visitante">
+                <td class="code">TC-F1-03</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  CTA Entrar abre <code>/entrar</code>.
+                  <br /><small>Aprovado 12/08/2026 · evidência <code>tc-f1-03-cadastro-redirect-entrar.png</code>.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="site" data-status="pass" data-roles="visitante">
+                <td class="code">TC-F1-04</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  CTA grátis vai para <code>/cadastro</code> e redireciona para <code>/entrar</code>.
+                  <br /><small>Aprovado 12/08/2026.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="site" data-status="pass" data-roles="visitante">
+                <td class="code">TC-F1-05</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  “Ver como funciona por dentro” desce até <code>#como-funciona</code>.
+                  <br /><small>Aprovado 12/08/2026.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="site" data-status="pass" data-roles="visitante">
+                <td class="code">TC-F1-06</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  Preços R$ 39, R$ 69 e R$ 119 pelo formatador, não digitados na página.
+                  <br /><small>Aprovado 12/08/2026 · inspeção visual.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="tc">
-          <strong>TC-FL05-03</strong> — Horários usam “Já avisamos” / “É o próximo”, nunca “tomou”<br />
-          <span class="status pending">Pendente — rodada final</span>
+      </details>
+
+      <details class="flow">
+        <summary data-flow="reminders">FL-04 · Lembretes (job + WhatsApp)</summary>
+        <div class="flow-body">
+          <p class="hint">
+            Ambiente:
+            <a href="https://zelita-web.vercel.app/">zelita-web.vercel.app</a>.
+            Executor: Ivan · 26/10 a 28/10/2026 · conta comercial Celular Zelita.
+            Lembrete não significa tomada. Abertos: 04, 07 e 08.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>TC</th>
+                <th>Papel</th>
+                <th>Caso e resultado esperado</th>
+                <th class="hide-sm">Disp.</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-flow="reminders" data-status="pass" data-roles="admin">
+                <td class="code">TC-FL04-01</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Salvar cartela pede opt-in. Lembrete recorrente só sai depois disso.
+                  <br /><small>Aprovado 26–28/10/2026 · ciclo real no Vercel.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="reminders" data-status="pass" data-roles="admin">
+                <td class="code">TC-FL04-02</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Responder SIM autoriza. Os lembretes passam a chegar no número cadastrado.
+                  <br /><small>Aprovado 26–28/10/2026 · mesma rodada.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="reminders" data-status="pass" data-roles="admin">
+                <td class="code">TC-FL04-03</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Lembrete no horário de Brasília, sem atraso de UTC.
+                  <br /><small>Aprovado 27/10 e 28/10 às 08:00, 12:00 e 12:19 · evidência <code>tc-fl04-03-lembretes-whatsapp.png</code>.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="reminders" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL04-04</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Sem opt-in, o job não envia WhatsApp.
+                  <br /><small>Pendente. Não bloqueia o FL-05.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="reminders" data-status="pass" data-roles="visitante">
+                <td class="code">TC-FL04-05</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  POST do webhook sem assinatura não grava opt-in. Resposta 403.
+                  <br /><small>Aprovado 22/09/2026. Não reexecutado em outubro.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="reminders" data-status="pass" data-roles="admin">
+                <td class="code">TC-FL04-06</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  A copy diz que está na hora e chama a família. Nunca afirma que o remédio foi tomado.
+                  <br /><small>Aprovado 26–28/10/2026 · mesma evidência do TC-FL04-03.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pass">Aprovado</span></td>
+              </tr>
+              <tr data-flow="reminders" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL04-07</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Aviso de cartela em 5 dias, na véspera e no último dia.
+                  <br /><small>Pendente. Código pronto; e-mail ainda não homologado.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="reminders" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL04-08</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  No dia 30 do trial a conta pausa e não cobra.
+                  <br /><small>Pendente. Código pronto.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="tc">
-          <strong>TC-FL05-04</strong> — Família disca; SAMU é tel:192<br />
-          <span class="status pending">Pendente — rodada final</span>
+      </details>
+
+      <details class="flow" open>
+        <summary data-flow="elder">FL-05 · PWA do idoso</summary>
+        <div class="flow-body">
+          <p class="hint">
+            Rodada oficial no
+            <a href="https://zelita-web.vercel.app/idoso">Vercel /idoso</a>.
+            Casos 01–07 são a prévia da família. Casos 08–14 são o vínculo do
+            aparelho (F6) e entram nesta mesma rodada. O print de 28/10 não fecha
+            o TC-FL05-02. Nos casos 05, 06 e 12, conferir <code>sos_alerts</code>.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>TC</th>
+                <th>Papel</th>
+                <th>Caso e resultado esperado</th>
+                <th class="hide-sm">Disp.</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-flow="elder" data-status="pending" data-roles="visitante">
+                <td class="code">TC-FL05-01</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  Sem sessão, <code>/idoso</code> e as subrotas não mostram remédio nem telefone. Há o link “Sou da família” para <code>/entrar</code>.
+                  <br /><small>Pendente · rodada final.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-02</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Com sessão e pessoa cuidada selecionada, o início mostra o próximo horário real.
+                  <br /><small>Pendente. Captura antecipada <code>tc-fl05-02-proximo-horario.png</code> (28/10, João, REMEDIO TC-03 50mg às 22:00) não fecha o caso.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-03</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Em <code>/idoso/horarios</code> os rótulos são “Já avisamos”, “É o próximo” e “Mais tarde”. Nunca “tomou”.
+                  <br /><small>Pendente · rodada final.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-04</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  A família disca o telefone cadastrado. SAMU é <code>tel:192</code>. O texto lembra o 193, sem segundo botão de emergência.
+                  <br /><small>Pendente · rodada final.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-05</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  “Preciso de ajuda” e depois Cancelar volta ao início. Nenhuma linha nova em <code>sos_alerts</code>.
+                  <br /><small>Pendente · rodada final. Conferir o banco.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-06</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Confirmar mostra a tela de depois e a faixa de prévia continua dizendo que ninguém foi avisado. <code>sos_alerts</code> não ganha linha.
+                  <br /><small>Pendente · rodada final. Conferir o banco.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-07</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Letra e contraste persistem depois de recarregar. Corpo ≥17px. Botão de ajuda com altura &gt;100px.
+                  <br /><small>Pendente · rodada final. Medir no celular.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin,cuidador">
+                <td class="code">TC-FL05-08</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Admin envia o link em <code>/familia/instalar</code>. Cuidador vê o estado e não vê o botão.
+                  <br /><small>Pendente · vínculo (F6), mesma rodada.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-09</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Sem opt-in, o WhatsApp não sai e o caminho presencial aparece.
+                  <br /><small>Pendente · mesma rodada.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="visitante">
+                <td class="code">TC-FL05-10</td>
+                <td><span class="pill visitante">Visitante</span></td>
+                <td>
+                  Link expirado ou repetido não mostra remédio nem telefone.
+                  <br /><small>Pendente · mesma rodada.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="idoso">
+                <td class="code">TC-FL05-11</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  “Sim, quero usar” abre <code>/idoso</code> sem login e sem faixa de prévia.
+                  <br /><small>Pendente · mesma rodada.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="idoso">
+                <td class="code">TC-FL05-12</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  Confirmar a ajuda no aparelho não cria <code>sos_alerts</code> e não diz que a família foi avisada.
+                  <br /><small>Pendente · mesma rodada. Conferir o banco.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin,idoso">
+                <td class="code">TC-FL05-13</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Desvincular derruba o atalho no carregamento seguinte, mesmo com o cookie ainda no celular.
+                  <br /><small>Pendente · mesma rodada.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="elder" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL05-14</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  A prévia da família, com sessão e sem o cookie do aparelho, continua com a faixa.
+                  <br /><small>Pendente · mesma rodada.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="tc">
-          <strong>TC-FL05-05</strong> — Cancelar o SOS volta ao início e não cria alerta<br />
-          <span class="status pending">Pendente — rodada final</span>
+      </details>
+
+      <section>
+        <h2>Matriz de cobertura dos TCs</h2>
+        <p class="hint">Quantos casos citam cada papel (um TC pode contar em mais de um).</p>
+        <div class="scoreboard" id="role-board"></div>
+        <div class="matrix-wrap" style="margin-top: 12px">
+          <table class="matrix" id="tc-matrix"></table>
         </div>
-        <div class="tc">
-          <strong>TC-FL05-06</strong> — Confirmar mostra a tela de depois e a faixa; sos_alerts não ganha linha<br />
-          <span class="status pending">Pendente — rodada final</span>
-        </div>
-        <div class="tc">
-          <strong>TC-FL05-07</strong> — Letra e contraste persistem; corpo ≥17px; ajuda &gt;100px<br />
-          <span class="status pending">Pendente — rodada final</span>
-        </div>
-        <div class="gallery">
-          <div class="evidence-item" onclick="openLightbox('evidencias/tc-fl05-02-proximo-horario.png')">
-            <img src="evidencias/tc-fl05-02-proximo-horario.png" alt="Início da prévia com o próximo remédio às 22:00" />
-            <div class="evidence-caption">TC-FL05-02 — captura 28/10, caso ainda pendente</div>
-          </div>
-        </div>
-      </div>
+      </section>
+
+      <section>
+        <h2>Galeria de evidências</h2>
+        <p class="hint">
+          Ao executar, salvar em <code>docs/evidencias/tcNN-descricao-curta.jpeg</code>
+          (ou <code>.png</code>). O quadro tracejado é placeholder: o arquivo ainda não está na pasta.
+        </p>
+        <div class="gallery" id="gallery"></div>
+      </section>
+
+      <section>
+        <h2>Log de bugs</h2>
+        <p class="hint">
+          Fonte: <code>docs/state/BUGS.md</code>. Nenhum bug aberto nesta data.
+          Estes três nasceram em fatias anteriores e já estão resolvidos.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Sev.</th>
+              <th>TC</th>
+              <th>Descrição</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code">BG-01</td>
+              <td><span class="pill critico">Crítico</span></td>
+              <td class="code">—</td>
+              <td>
+                Onboarding: insert em <code>accounts</code> violava a RLS. Correção: RPC
+                <code>bootstrap_family_account</code> (migration 003). Detectado em 13/08/2026.
+              </td>
+              <td>Fechado</td>
+            </tr>
+            <tr>
+              <td class="code">BG-02</td>
+              <td><span class="pill critico">Crítico</span></td>
+              <td class="code">—</td>
+              <td>
+                Hoje mostrava “Não deu para carregar o Hoje” por recursão nas policies de
+                <code>exams</code>. Correção: migration 008. Detectado em 13/08/2026.
+              </td>
+              <td>Fechado</td>
+            </tr>
+            <tr>
+              <td class="code">BG-03</td>
+              <td><span class="pill critico">Crítico</span></td>
+              <td class="code">—</td>
+              <td>
+                <code>/familia/localizacao</code> quebrava o build: client importava o barrel que puxa
+                <code>next/headers</code>. Correção: constantes fora do barrel. Detectado em 13/08/2026.
+              </td>
+              <td>Fechado</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <footer>
+        Zelita · <strong>POP-QA-ZELITA-001</strong> · Marca light-first · Vitest + QA manual ·
+        Evidências em docs/evidencias/ · Atualizado 2026-10-29
+      </footer>
     </div>
-  </main>
+    <script>
+      const FLOW_LABELS = {
+        site: "F1 Site",
+        reminders: "FL-04 Lembretes",
+        elder: "FL-05 PWA idoso",
+      };
 
-  <footer class="footer">Zelita · <strong>POP-QA-ZELITA-001</strong> · Vitest + QA manual</footer>
+      const ROLE_LABELS = {
+        admin: "Admin",
+        cuidador: "Cuidador",
+        visualizador: "Visualizador",
+        emergencia: "Emergência",
+        visitante: "Visitante",
+        idoso: "Pessoa cuidada",
+      };
 
-  <script>
-    const testData = {
-      site: { total: 6, pass: 6, fail: 0, block: 0 },
-      fl04: { total: 8, pass: 5, fail: 0, block: 0 },
-      fl05: { total: 7, pass: 0, fail: 0, block: 0 },
-    };
+      const EVIDENCE_HINTS = [
+        ["tc-f1-01-landing-desktop.png", "TC-F1-01 · landing desktop"],
+        ["tc-f1-02-landing-mobile.png", "TC-F1-02 · landing 375px"],
+        ["tc-f1-03-cadastro-redirect-entrar.png", "TC-F1-03 · redirect /cadastro"],
+        ["tc-fl04-03-lembretes-whatsapp.png", "TC-FL04-03 / 06 · lembretes WhatsApp"],
+        ["tc-fl04-04-sem-opt-in.png", "TC-FL04-04 · sem opt-in não envia"],
+        ["tc-fl04-07-aviso-cartela.png", "TC-FL04-07 · aviso de cartela"],
+        ["tc-fl04-08-pausa-trial.png", "TC-FL04-08 · pausa do trial"],
+        ["tc-fl05-02-proximo-horario.png", "TC-FL05-02 · captura 28/10, caso aberto"],
+        ["tc-fl05-01-sem-sessao.png", "TC-FL05-01 · /idoso sem sessão"],
+        ["tc-fl05-03-rotulos-horarios.png", "TC-FL05-03 · Já avisamos / É o próximo"],
+        ["tc-fl05-04-familia-samu.png", "TC-FL05-04 · família e SAMU 192"],
+        ["tc-fl05-05-cancelar-sos.png", "TC-FL05-05 · cancelar volta ao início"],
+        ["tc-fl05-06-ensaio-sos.png", "TC-FL05-06 · ensaio com faixa de prévia"],
+        ["tc-fl05-07-letra-contraste.png", "TC-FL05-07 · letra, contraste e piso"],
+        ["tc-fl05-11-aparelho-sem-login.png", "TC-FL05-11 · aparelho sem faixa"],
+      ];
 
-    function initScoreboard() {
-      const totals = Object.values(testData).reduce(
-        (acc, f) => ({ total: acc.total + f.total, pass: acc.pass + f.pass }),
-        { total: 0, pass: 0 },
-      );
-      const pct = totals.total ? Math.round((totals.pass / totals.total) * 100) : 0;
-      document.getElementById('scoreboard').innerHTML = `
-        <div class="score-card"><span>Total TCs</span><strong>${totals.total}</strong></div>
-        <div class="score-card"><span>Aprovados</span><strong>${totals.pass}</strong></div>
-        <div class="score-card"><span>Taxa</span><strong>${pct}%</strong></div>
-        <div class="score-card"><span>F1 / FL-04 / FL-05</span><strong>6/6 · 5/8 · 0/7</strong></div>`;
-    }
+      function emptyStats() {
+        return { total: 0, pass: 0, fail: 0, block: 0, pending: 0 };
+      }
 
-    function openLightbox(src) {
-      document.getElementById('lightbox-img').src = src;
-      document.getElementById('lightbox').classList.add('open');
-    }
-    function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('open');
-    }
+      function collect() {
+        const rows = [...document.querySelectorAll("tr[data-flow]")];
+        const flows = {};
+        const roles = {};
+        const totals = emptyStats();
+        const byFlowRole = {};
 
-    initScoreboard();
-  </script>
-</body>
+        for (const key of Object.keys(FLOW_LABELS)) {
+          flows[key] = emptyStats();
+          byFlowRole[key] = {};
+        }
+        for (const key of Object.keys(ROLE_LABELS)) roles[key] = 0;
+
+        for (const row of rows) {
+          const flow = row.dataset.flow;
+          const status = row.dataset.status || "pending";
+          const roleList = (row.dataset.roles || "").split(",").filter(Boolean);
+          if (!flows[flow]) flows[flow] = emptyStats();
+          flows[flow].total += 1;
+          flows[flow][status] = (flows[flow][status] || 0) + 1;
+          totals.total += 1;
+          totals[status] = (totals[status] || 0) + 1;
+          if (!byFlowRole[flow]) byFlowRole[flow] = {};
+          for (const role of roleList) {
+            roles[role] = (roles[role] || 0) + 1;
+            byFlowRole[flow][role] = (byFlowRole[flow][role] || 0) + 1;
+          }
+        }
+        return { flows, roles, totals, byFlowRole };
+      }
+
+      function initScoreboard() {
+        const { flows, roles, totals, byFlowRole } = collect();
+        const testData = flows;
+        const done = totals.pass + totals.fail + totals.block;
+        const pct = totals.total ? Math.round((totals.pass / totals.total) * 100) : 0;
+
+        document.getElementById("scoreboard").innerHTML = `
+          <div class="score"><strong>${totals.total}</strong>Total TCs</div>
+          <div class="score pass"><strong>${totals.pass}</strong>Aprovados</div>
+          <div class="score fail"><strong>${totals.fail}</strong>Reprovados</div>
+          <div class="score"><strong>${totals.block}</strong>Bloqueados</div>
+          <div class="score"><strong>${totals.pending}</strong>Pendentes</div>
+          <div class="score rate"><strong>${pct}%</strong>Taxa</div>
+        `;
+        document.getElementById("progress-bar").style.width = pct + "%";
+        document.getElementById("progress-label").textContent =
+          `${done} executados de ${totals.total} · ${totals.pending} ainda pendentes`;
+        document.getElementById("plan-status").textContent =
+          `Em execução (${totals.pass}/${totals.total} aprovados)`;
+
+        document.querySelectorAll("details.flow > summary[data-flow]").forEach((el) => {
+          const f = flows[el.dataset.flow];
+          if (!f) return;
+          el.setAttribute("data-count", `${f.pass}/${f.total} ok · ${f.pending} pend.`);
+        });
+
+        document.getElementById("role-board").innerHTML = Object.entries(ROLE_LABELS)
+          .map(([id, label]) => `<div class="score"><strong>${roles[id] || 0}</strong>${label}</div>`)
+          .join("");
+
+        const roleIds = Object.keys(ROLE_LABELS);
+        const head =
+          "<thead><tr><th>Fluxo</th>" +
+          roleIds.map((id) => `<th>${ROLE_LABELS[id]}</th>`).join("") +
+          "</tr></thead>";
+        const body =
+          "<tbody>" +
+          Object.keys(FLOW_LABELS)
+            .map((flow) => {
+              const cells = roleIds
+                .map((role) => {
+                  const n = byFlowRole[flow]?.[role] || 0;
+                  return n ? `<td class="cell-e">${n}</td>` : `<td class="cell-n">·</td>`;
+                })
+                .join("");
+              return `<tr><td>${FLOW_LABELS[flow]}</td>${cells}</tr>`;
+            })
+            .join("") +
+          "</tbody>";
+        document.getElementById("tc-matrix").innerHTML = head + body;
+
+        document.getElementById("gallery").innerHTML = EVIDENCE_HINTS.map(([file, caption]) => {
+          const src = `evidencias/${file}`;
+          return `
+          <div class="evidence-item" data-file="${file}" onclick="openLightbox('${src}')">
+            <img src="${src}" alt="${caption}" onerror="this.parentElement.classList.add('missing')" />
+            <span>${caption}<br /><code>${file}</code></span>
+          </div>`;
+        }).join("");
+
+        window.testData = testData;
+      }
+
+      function openLightbox(src) {
+        const img = document.getElementById("lightbox-img");
+        img.src = src;
+        document.getElementById("lightbox").classList.add("open");
+      }
+
+      function closeLightbox() {
+        document.getElementById("lightbox").classList.remove("open");
+      }
+
+      document.addEventListener("DOMContentLoaded", initScoreboard);
+    </script>
+  </body>
 </html>

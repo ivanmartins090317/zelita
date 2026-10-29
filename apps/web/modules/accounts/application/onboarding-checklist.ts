@@ -8,10 +8,13 @@ export interface OnboardingChecklistInput {
   activeMemberCount: number;
   activeExamCount: number;
   sosEscalationContactCount: number;
+  /** Admin e cuidador veem a tarefa do celular. Os outros papéis ficam nas quatro de sempre. */
+  includeDeviceTask?: boolean;
+  hasLinkedDevice?: boolean;
 }
 
 export interface OnboardingChecklistTask {
-  id: 1 | 2 | 3 | 4;
+  id: 1 | 2 | 3 | 4 | 5;
   completed: boolean;
 }
 
@@ -34,6 +37,10 @@ export function computeOnboardingChecklist(
     { id: 3, completed: input.activeMemberCount >= 2 },
     { id: 4, completed: input.activeExamCount >= 1 },
   ];
+
+  if (input.includeDeviceTask) {
+    tasks.push({ id: 5, completed: input.hasLinkedDevice === true });
+  }
 
   const completedCount = tasks.filter((task) => task.completed).length;
   const progressPercent = Math.round((completedCount / tasks.length) * 100);

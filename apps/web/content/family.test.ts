@@ -68,7 +68,13 @@ describe("familyContent", () => {
   });
 
   it("expõe copy do Hoje / primeiro acesso", () => {
-    expect(familyContent.hoje.checklistTasks).toHaveLength(4);
+    expect(familyContent.hoje.checklistTasks).toHaveLength(5);
+    expect(familyContent.hoje.checklistTasks[4]?.href).toBe("/familia/instalar");
+    expect(familyContent.hoje.maduro.checklistAreas[4]?.id).toBe("device");
+    expect(familyContent.hoje.deviceCard.installButton).toContain("Instalar");
+    expect(familyContent.ajustes.privacy.devicesInstallButton).toContain(
+      "Instalar",
+    );
     expect(familyContent.hoje.welcomeModal.primary).toContain("painel");
     expect(familyContent.hoje.maduro.stats.locationValue).toBe("Em breve");
     expect(familyContent.hoje.maduro.stats.noticesValue).toBe("0");
@@ -169,8 +175,8 @@ describe("familyContent", () => {
 
 describe("formatChecklistProgress", () => {
   it("substitui contagem no template", () => {
-    expect(formatChecklistProgress("{count} de 4 feitas", 2)).toBe(
-      "2 de 4 feitas",
+    expect(formatChecklistProgress("{count} de {total} feitas", 2, 5)).toBe(
+      "2 de 5 feitas",
     );
   });
 });

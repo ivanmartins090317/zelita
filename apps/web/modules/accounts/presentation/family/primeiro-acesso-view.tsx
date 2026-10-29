@@ -8,10 +8,15 @@ import { Tag } from "@/components/ui/tag";
 import { familyContent, familyRoutes } from "@/content/family";
 import type { HojeDashboardViewModel } from "@/modules/accounts/application/get-hoje-dashboard";
 import { HojeChecklistCard } from "@/modules/accounts/presentation/family/hoje-checklist-card";
+import {
+  HojeDeviceCard,
+  type HojeDeviceCardStatus,
+} from "@/modules/accounts/presentation/family/hoje-device-card";
 import { WelcomeModal } from "@/modules/accounts/presentation/family/welcome-modal";
 
 interface PrimeiroAcessoViewProps {
   data: HojeDashboardViewModel;
+  deviceCard: HojeDeviceCardStatus;
 }
 
 function resolveEmptyStatus(
@@ -41,7 +46,7 @@ function resolveEmptyStatus(
   }
 }
 
-function PrimeiroAcessoView({ data }: PrimeiroAcessoViewProps) {
+function PrimeiroAcessoView({ data, deviceCard }: PrimeiroAcessoViewProps) {
   const copy = familyContent.hoje;
   const apelido = data.careRecipientDisplayName;
   const showMedCta = data.canManageMedications && !data.isPaused;
@@ -74,6 +79,8 @@ function PrimeiroAcessoView({ data }: PrimeiroAcessoViewProps) {
         </p>
       ) : null}
 
+      <HojeDeviceCard status={deviceCard} />
+
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-4">
           <HojeChecklistCard
@@ -82,6 +89,7 @@ function PrimeiroAcessoView({ data }: PrimeiroAcessoViewProps) {
             canManageMedications={data.canManageMedications}
             isPaused={data.isPaused}
             medicationCount={0}
+            canManageDevices={deviceCard.canManage}
           />
 
           <Card>

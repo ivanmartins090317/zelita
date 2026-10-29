@@ -5,6 +5,7 @@ import { useState } from "react";
 import { elderContent } from "@/content/elder";
 import { confirmElderDeviceAction } from "@/modules/elder-access/application/device-link-actions";
 import {
+  elderPrimaryTapClass,
   elderTapClass,
   elderTitleClass,
 } from "@/modules/elder-access/presentation/elder-classes";
@@ -34,7 +35,7 @@ export function ActivateDeviceScreen({ token }: ActivateDeviceScreenProps) {
       <p className="mt-4 text-[17px] leading-snug text-muted">{copy.body}</p>
       <form action={confirmElderDeviceAction} className="mt-8 flex flex-col gap-3">
         <input type="hidden" name="token" value={token} />
-        <button type="submit" className={`${elderTapClass} justify-center bg-brand-700 text-white`}>
+        <button type="submit" className={elderPrimaryTapClass}>
           {copy.confirm}
         </button>
         <button

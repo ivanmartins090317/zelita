@@ -68,8 +68,35 @@ export async function getInstallDevicePage(): Promise<InstallDevicePageResult> {
   }
 }
 
-export async function readElderDeviceSubtitle(): Promise<string | null> {
+export interface HojeDeviceStatus {
+  visible: boolean;
+  canManage: boolean;
+  hasDevice: boolean;
+  statusLine: string;
+}
+
+const hiddenDeviceStatus: HojeDeviceStatus = {
+  visible: false,
+  canManage: false,
+  hasDevice: false,
+  statusLine: "",
+};
+
+/** Estado do aparelho para o Hoje e para o rótulo de Ajustes. Quem não vê a lista recebe o cartão oculto. */
+export async function readHojeDeviceStatus(): Promise<HojeDeviceStatus> {
   const page = await getInstallDevicePage();
-  if (!page.ok) return null;
-  return page.data.devices[0]?.statusLine ?? familyContent.install.none;
+  if (!page.ok) return hiddenDeviceStatus;
+  const hasDevice = page.data.devices.length > 0;
+  return {
+    visible: true,
+    canManage: page.data.canManage,
+    hasDevice,
+    statusLine: page.data.devices[0]?.statusLine ?? familyContent.install.none,
+  };
+}
+
+export async function readElderDeviceSubtitle(): Promise<string | null> {
+  const status = await readHojeDeviceStatus();
+  if (!status.visible) return null;
+  return status.statusLine;
 }

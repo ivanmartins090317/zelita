@@ -96,7 +96,15 @@ function buildMatureHeadline(profileName: string | null, now: Date): string {
   return greeting;
 }
 
-export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardResult> {
+export interface HojeDashboardOptions {
+  includeDeviceTask?: boolean;
+  hasLinkedDevice?: boolean;
+}
+
+export async function getHojeDashboard(
+  now = new Date(),
+  options: HojeDashboardOptions = {},
+): Promise<HojeDashboardResult> {
   try {
     const shell = await getShellContext();
     if (!shell) {
@@ -193,6 +201,8 @@ export async function getHojeDashboard(now = new Date()): Promise<HojeDashboardR
       activeMemberCount,
       activeExamCount: examSnapshot.examCount,
       sosEscalationContactCount: sosSnapshot.escalationContactCount,
+      includeDeviceTask: options.includeDeviceTask,
+      hasLinkedDevice: options.hasLinkedDevice,
     });
 
     const mode = isFirstAccessMode(meds.activeMedicationCount)

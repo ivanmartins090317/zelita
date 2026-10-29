@@ -61,6 +61,43 @@ describe("computeOnboardingChecklist", () => {
     expect(result.progressPercent).toBe(75);
   });
 
+  it("omite a tarefa do celular para quem não vê aparelhos", () => {
+    const result = computeOnboardingChecklist({
+      activeMedicationCount: 0,
+      activeMemberCount: 1,
+      activeExamCount: 0,
+      sosEscalationContactCount: 0,
+    });
+    expect(result.tasks).toHaveLength(4);
+  });
+
+  it("marca a tarefa do celular quando o aparelho está ligado", () => {
+    const pending = computeOnboardingChecklist({
+      activeMedicationCount: 0,
+      activeMemberCount: 1,
+      activeExamCount: 0,
+      sosEscalationContactCount: 0,
+      includeDeviceTask: true,
+      hasLinkedDevice: false,
+    });
+    expect(pending.tasks).toHaveLength(5);
+    expect(pending.tasks[4]?.id).toBe(5);
+    expect(pending.tasks[4]?.completed).toBe(false);
+    expect(pending.progressPercent).toBe(0);
+
+    const done = computeOnboardingChecklist({
+      activeMedicationCount: 1,
+      activeMemberCount: 2,
+      activeExamCount: 1,
+      sosEscalationContactCount: 2,
+      includeDeviceTask: true,
+      hasLinkedDevice: true,
+    });
+    expect(done.tasks[4]?.completed).toBe(true);
+    expect(done.completedCount).toBe(5);
+    expect(done.progressPercent).toBe(100);
+  });
+
   it("mantém tarefa 2 pendente com um contato na ordem SOS", () => {
     const result = computeOnboardingChecklist({
       activeMedicationCount: 5,

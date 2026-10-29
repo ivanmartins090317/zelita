@@ -205,7 +205,8 @@ export interface FamilyAjustesContent {
     loginSubtitle: string;
     devicesTitle: string;
     devicesSubtitle: string;
-    devicesManageButton: string;
+    devicesInstallButton: string;
+    devicesViewButton: string;
     accessLogTitle: string;
     accessLogButton: string;
     tags: {
@@ -718,6 +719,13 @@ export interface FamilyHojeContent {
     activityEmpty: string;
   };
   checklistTasks: FamilyChecklistTaskContent[];
+  deviceCard: {
+    title: string;
+    emptyLead: string;
+    linkedLead: string;
+    installButton: string;
+    viewButton: string;
+  };
   welcomeModal: {
     titleNamed: string;
     titleNeutral: string;
@@ -1633,7 +1641,8 @@ export const familyContent: FamilyContent = {
       loginSubtitle: "Código por e-mail neste aparelho",
       devicesTitle: "Aparelhos com acesso",
       devicesSubtitle: "Nenhum aparelho vinculado ainda",
-      devicesManageButton: "Gerenciar",
+      devicesInstallButton: "Instalar no celular",
+      devicesViewButton: "Ver aparelho",
       accessLogTitle: "Últimos acessos à conta",
       accessLogButton: "Ver",
       tags: {
@@ -1798,10 +1807,10 @@ export const familyContent: FamilyContent = {
       welcomeNeutral: "Bem-vindo!",
       intro:
         "A conta do {apelido} está criada. Agora falta o que a Zelita vai cuidar por você — e a primeira tarefa leva 40 segundos.",
-      checklistTitle: "Comece por aqui",
-      progressFeitas: "{count} de 4 feitas",
-      checklistFooter:
-        "Não precisa fazer as quatro hoje. Faça a primeira e volte quando der — a Zelita já começa a trabalhar.",
+    checklistTitle: "Comece por aqui",
+    progressFeitas: "{count} de {total} feitas",
+    checklistFooter:
+      "Não precisa fazer tudo hoje. Faça a primeira e volte quando der — a Zelita já começa a trabalhar.",
       dayCardTitle: "O dia do {apelido}",
       tourTitle: "Nunca usou a Zelita?",
       tourBody:
@@ -1877,7 +1886,7 @@ export const familyContent: FamilyContent = {
       timelineCardTitle: "O dia do {apelido}",
       weekButton: "Ver semana",
       centralTitle: "Sua central",
-      centralProgressProntas: "{count} de 4 prontas",
+      centralProgressProntas: "{count} de {total} prontas",
       centralFooter:
         "Não tem pressa. Cada coisa que entra aqui é uma a menos para você lembrar.",
       centralTour: "🎓 Rever o tour",
@@ -1905,6 +1914,12 @@ export const familyContent: FamilyContent = {
           labelDone: "Exames · {detail} guardados",
           labelPending: "Exames · envie quando tiver",
           href: familyRoutes.exames,
+        },
+        {
+          id: "device",
+          labelDone: "Celular dele · ligado",
+          labelPending: "Celular dele · instalar o atalho",
+          href: familyRoutes.instalar,
         },
       ],
       needsTitle: "Precisa de você",
@@ -1955,7 +1970,22 @@ export const familyContent: FamilyContent = {
         ctaLabel: "Enviar",
         href: familyRoutes.exames,
       },
+      {
+        title: "Colocar a Zelita no celular dele",
+        subtitle:
+          "O atalho abre os horários sem senha. O link vale 15 minutos e serve uma vez.",
+        durationTag: "2 minutos",
+        ctaLabel: "Instalar",
+        href: familyRoutes.instalar,
+      },
     ],
+    deviceCard: {
+      title: "Celular dele",
+      emptyLead: "O atalho ainda não está no celular. Ele não cria senha.",
+      linkedLead: "O atalho já abre os horários neste aparelho.",
+      installButton: "Instalar no celular dele",
+      viewButton: "Ver aparelho",
+    },
     welcomeModal: {
       titleNamed: "Sua conta está pronta, {nome}!",
       titleNeutral: "Sua conta está pronta!",
@@ -2930,10 +2960,13 @@ export function formatTrialBadge(
     .replace("{total}", String(total));
 }
 
-/** Progresso do checklist — "X de 4 feitas" ou "X de 4 prontas". */
+/** Progresso do checklist — "X de Y feitas" ou "X de Y prontas". */
 export function formatChecklistProgress(
   template: string,
   count: number,
+  total: number,
 ): string {
-  return template.replace("{count}", String(count));
+  return template
+    .replace("{count}", String(count))
+    .replace("{total}", String(total));
 }

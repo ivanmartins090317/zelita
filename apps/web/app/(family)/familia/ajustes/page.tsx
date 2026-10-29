@@ -1,12 +1,12 @@
 import { EmptyState } from "@/components/ui/empty-state";
 import { familyContent } from "@/content/family";
-import { readElderDeviceSubtitle } from "@/modules/elder-access/application/get-install-page";
+import { readHojeDeviceStatus } from "@/modules/elder-access";
 import { getAjustesPage } from "@/modules/care-recipients/application/get-ajustes-page";
 import { AjustesPageView } from "@/modules/care-recipients/presentation/ajustes-page-view";
 
 export default async function AjustesPage() {
   const result = await getAjustesPage();
-  const deviceSubtitle = result.ok ? await readElderDeviceSubtitle() : null;
+  const device = result.ok ? await readHojeDeviceStatus() : null;
 
   if (!result.ok) {
     return (
@@ -22,5 +22,11 @@ export default async function AjustesPage() {
     );
   }
 
-  return <AjustesPageView data={result.data} deviceSubtitle={deviceSubtitle} />;
+  return (
+    <AjustesPageView
+      data={result.data}
+      deviceSubtitle={device?.visible ? device.statusLine : null}
+      deviceLinked={device?.hasDevice ?? false}
+    />
+  );
 }
