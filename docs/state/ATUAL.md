@@ -26,6 +26,6 @@ Ainda abertos no FL-04 (não bloqueiam a F5):
 
 ## Próximo
 
-Homologação única no Vercel, com celular vinculado de verdade. Casos em [`docs/manual-dev/sos-real-confirmar-casa.md`](../manual-dev/sos-real-confirmar-casa.md). FL-05 e FL-06 não foram marcados como aprovados.
+Homologação única no Vercel, com celular vinculado de verdade. Casos TC-FL06-01 a TC-FL06-10 estão pendentes em [`docs/relatorio-testes-manuais.html`](../relatorio-testes-manuais.html). Roteiro: [`docs/manual-dev/sos-real-confirmar-casa.md`](../manual-dev/sos-real-confirmar-casa.md). FL-05 e FL-06 não foram marcados como aprovados.
 
 O template Meta `zelita_device_link` continua passo de operação, em paralelo.

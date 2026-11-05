@@ -84,7 +84,7 @@ Fazer **no ambiente Vercel**, numa rodada só, **depois** de fechar as tarefas d
 - [x] FL-03 Remédios e cartela *(2026-09-20)*
 - [x] FL-04 Lembretes (job + WA) *(envio Meta 100% em 26–28/10; ficam abertos TC-FL04-04, 07 e 08)*
 - [ ] FL-05 PWA idoso *(código em 28/10; homologar na rodada final)*
-- [ ] FL-06 SOS *(Gate 2 — F5/F6)*
+- [ ] FL-06 SOS *(casos TC-FL06-01 a TC-FL06-10 no relatório, pendentes; código em 05/11)*
 - [x] FL-07 Segurança / RLS smoke *(Gate 1 — aceite via **Copiar link** ok, 2026-09-20; e-mail automático ficou no Gate 3)*
 - [x] FL-08 Exames smoke *(2026-09-20 upload ok; posição real Gate 2)*
 - [ ] FL-09 Avisos

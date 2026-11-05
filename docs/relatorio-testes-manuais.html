@@ -283,8 +283,8 @@
         <h1>Zelita · Homologação manual MVP</h1>
         <p class="lede">
           Coordenação familiar para cuidado de idosos. Este relatório cobre a
-          landing (F1), os lembretes (FL-04) e o PWA do idoso (FL-05, prévia e
-          vínculo). Executar no Vercel
+          landing (F1), os lembretes (FL-04), o PWA do idoso (FL-05, prévia e
+          vínculo) e o SOS real com Confirmar Casa (FL-06). Executar no Vercel
           (<a href="https://zelita-web.vercel.app/">zelita-web.vercel.app</a>)
           ou em <code>http://localhost:3000</code>. Sem Playwright. Evidências em
           <code>docs/evidencias/</code>. FL-01, FL-02, FL-03, FL-07 e FL-08 já
@@ -358,7 +358,7 @@
             <tr>
               <td><span class="pill idoso">Pessoa cuidada</span></td>
               <td>Cookie do aparelho · sem login</td>
-              <td><code>/idoso</code> sem faixa de prévia. SOS desta fase não grava alerta</td>
+              <td><code>/idoso</code> sem faixa. A ajuda grava o pedido (FL-06). A prévia não grava</td>
             </tr>
           </tbody>
         </table>
@@ -621,7 +621,9 @@
             <a href="https://zelita-web.vercel.app/idoso">Vercel /idoso</a>.
             Casos 01–07 são a prévia da família. Casos 08–14 são o vínculo do
             aparelho (F6) e entram nesta mesma rodada. O print de 28/10 não fecha
-            o TC-FL05-02. Nos casos 05, 06 e 12, conferir <code>sos_alerts</code>.
+            o TC-FL05-02. Nos casos 05 e 06, conferir <code>sos_alerts</code>: a
+            prévia não grava. O aparelho vinculado grava — isso é o FL-06, não o
+            TC-FL05-12.
           </p>
           <table>
             <thead>
@@ -744,15 +746,15 @@
                 <td class="hide-sm">Celular</td>
                 <td><span class="status pending">Pendente</span></td>
               </tr>
-              <tr data-flow="elder" data-status="pending" data-roles="idoso">
+              <tr data-flow="elder" data-status="block" data-roles="idoso">
                 <td class="code">TC-FL05-12</td>
                 <td><span class="pill idoso">Pessoa cuidada</span></td>
                 <td>
-                  Confirmar a ajuda no aparelho não cria <code>sos_alerts</code> e não diz que a família foi avisada.
-                  <br /><small>Pendente · mesma rodada. Conferir o banco.</small>
+                  Resultado antigo: confirmar a ajuda no aparelho não criava <code>sos_alerts</code>.
+                  <br /><small>Bloqueado em 05/11. A Spec de SOS real inverteu isso. Executar TC-FL06-01 e TC-FL06-10.</small>
                 </td>
                 <td class="hide-sm">Celular</td>
-                <td><span class="status pending">Pendente</span></td>
+                <td><span class="status block">Bloqueado</span></td>
               </tr>
               <tr data-flow="elder" data-status="pending" data-roles="admin,idoso">
                 <td class="code">TC-FL05-13</td>
@@ -772,6 +774,134 @@
                   <br /><small>Pendente · mesma rodada.</small>
                 </td>
                 <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="flow" open>
+        <summary data-flow="sos">FL-06 · SOS real e Confirmar Casa</summary>
+        <div class="flow-body">
+          <p class="hint">
+            Código entregue em 05/11. Homologar no
+            <a href="https://zelita-web.vercel.app/idoso">Vercel</a>, com celular
+            vinculado de verdade. A prévia da família, logada e sem o cookie do
+            aparelho, só cobre o TC-FL06-04. Antes de gravar: ordem de aviso salva
+            com e-mail, Casa cadastrada e, para o TC-FL06-09, plano Cuidado+ com
+            “avisar ao sair” ligado. Roteiro:
+            <code>docs/manual-dev/sos-real-confirmar-casa.md</code>.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>TC</th>
+                <th>Papel</th>
+                <th>Caso e resultado esperado</th>
+                <th class="hide-sm">Disp.</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-flow="sos" data-status="pending" data-roles="idoso,admin">
+                <td class="code">TC-FL06-01</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  No aparelho, sem a faixa, toque em “Preciso de ajuda” e depois em “Sim, preciso de ajuda”. O pedido fica aberto em Pedidos de ajuda.
+                  <br /><small>Pendente. Conferir o painel. A Zelita não liga para o SAMU nem para os Bombeiros.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL06-02</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Cada pessoa da ordem salva recebe o e-mail ao mesmo tempo. A tentativa no painel fica enviada ou falhou. O e-mail diz quem pediu, o horário e que o detalhe está em Pedidos de ajuda. Não leva coordenada nem telefone.
+                  <br /><small>Pendente. Sem chave da Resend, a tentativa fica como falha e o pedido permanece.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="idoso">
+                <td class="code">TC-FL06-03</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  Na pergunta “Você precisa de ajuda agora?”, Cancelar volta ao início. Nenhum pedido novo e nenhum e-mail.
+                  <br /><small>Pendente. Conferir Pedidos de ajuda.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL06-04</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Na prévia, confirmar a ajuda não cria pedido e a faixa âmbar continua. “Estou em casa” não aparece. <code>/idoso/casa</code> volta para <code>/idoso</code>.
+                  <br /><small>Pendente. Pode ser no computador, com a sessão da família e sem o cookie do aparelho.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="idoso,admin">
+                <td class="code">TC-FL06-05</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  Com um pedido ainda aberto há menos de 2 minutos, confirmar de novo não cria outro pedido e não manda outro e-mail. A tela segue calma, com o aviso do SAMU.
+                  <br /><small>Pendente. Depois de 2 minutos, ou se o anterior já foi resolvido, um pedido novo pode nascer.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="idoso,admin">
+                <td class="code">TC-FL06-06</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  Sem permissão de localização já concedida, ou se o GPS não responder em até 8 segundos, o pedido permanece. Pedidos de ajuda mostra localização indisponível. A tela do aparelho não trata isso como erro do pedido.
+                  <br /><small>Pendente. Com GPS já autorizado e resposta a tempo, “Ver no mapa” usa essa posição.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="idoso,admin">
+                <td class="code">TC-FL06-07</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  “Estou em casa” abre a pergunta. “Sim, estou em casa” pede permissão. Se o aparelho devolver a posição, a Casa fica confirmada. Negar a permissão, ou o GPS falhar, não grava nada e a tela diz que dá para tentar de novo.
+                  <br /><small>Pendente. Texto ≥17px e alvo ≥56px. Vale em qualquer plano.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL06-08</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  No trial ou no Essencial, confirmar a Casa grava a posição. Nenhum e-mail de saída da Casa sai, mesmo abrindo o aplicativo fora de casa.
+                  <br /><small>Pendente. A conta de piloto nasce Essencial.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="admin,cuidador">
+                <td class="code">TC-FL06-09</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  No Cuidado+, com a Casa confirmada, “avisar ao sair” ligado e a autorização vigente, uma leitura de dentro para fora grava uma saída e manda um e-mail, junto, para administradora e cuidadora. Abrir de novo, ainda fora, não manda outro. A volta não manda e-mail. A saída seguinte, depois da volta, pode avisar de novo.
+                  <br /><small>Pendente. Visualizador, contato de emergência e a ordem do SOS não recebem esse e-mail.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="sos" data-status="pending" data-roles="idoso">
+                <td class="code">TC-FL06-10</td>
+                <td><span class="pill idoso">Pessoa cuidada</span></td>
+                <td>
+                  Depois de confirmar, a tela diz que a família foi avisada e lembra o SAMU 192 e os Bombeiros 193. O botão de ajuda segue com altura maior que 100px.
+                  <br /><small>Pendente. Medir no celular. A Zelita não disca esses números.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
                 <td><span class="status pending">Pendente</span></td>
               </tr>
             </tbody>
@@ -850,7 +980,7 @@
 
       <footer>
         Zelita · <strong>POP-QA-ZELITA-001</strong> · Marca light-first · Vitest + QA manual ·
-        Evidências em docs/evidencias/ · Atualizado 2026-10-29
+        Evidências em docs/evidencias/ · Atualizado 2026-11-05
       </footer>
     </div>
     <script>
@@ -858,6 +988,7 @@
         site: "F1 Site",
         reminders: "FL-04 Lembretes",
         elder: "FL-05 PWA idoso",
+        sos: "FL-06 SOS e Casa",
       };
 
       const ROLE_LABELS = {
@@ -885,6 +1016,16 @@
         ["tc-fl05-06-ensaio-sos.png", "TC-FL05-06 · ensaio com faixa de prévia"],
         ["tc-fl05-07-letra-contraste.png", "TC-FL05-07 · letra, contraste e piso"],
         ["tc-fl05-11-aparelho-sem-login.png", "TC-FL05-11 · aparelho sem faixa"],
+        ["tc-fl06-01-pedido-no-painel.png", "TC-FL06-01 · pedido em Pedidos de ajuda"],
+        ["tc-fl06-02-email-ordem.png", "TC-FL06-02 · e-mail da ordem"],
+        ["tc-fl06-03-cancelar.png", "TC-FL06-03 · cancelar não cria pedido"],
+        ["tc-fl06-04-previa-nao-grava.png", "TC-FL06-04 · prévia não grava"],
+        ["tc-fl06-05-segundo-toque.png", "TC-FL06-05 · segundo toque em 2 min"],
+        ["tc-fl06-06-sem-gps.png", "TC-FL06-06 · pedido sem localização"],
+        ["tc-fl06-07-confirmar-casa.png", "TC-FL06-07 · confirmar Casa"],
+        ["tc-fl06-08-trial-sem-saida.png", "TC-FL06-08 · trial ou Essencial sem e-mail de zona"],
+        ["tc-fl06-09-saida-cuidado-plus.png", "TC-FL06-09 · saída no Cuidado+"],
+        ["tc-fl06-10-familia-avisada.png", "TC-FL06-10 · família avisada e SAMU 192"],
       ];
 
       function emptyStats() {
