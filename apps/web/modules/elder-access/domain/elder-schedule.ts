@@ -280,7 +280,7 @@ export function canOpenElderPreview(input: {
   return input.hasSession && input.canViewRoutine;
 }
 
-/** Ensaio da F5: confirmar ajuda não grava sos_alerts. */
-export function elderSosPersistsAlert(): boolean {
-  return false;
+/** A prévia não grava. Só o aparelho vinculado registra o pedido. */
+export function elderSosPersistsAlert(linkedDevice: boolean): boolean {
+  return linkedDevice;
 }

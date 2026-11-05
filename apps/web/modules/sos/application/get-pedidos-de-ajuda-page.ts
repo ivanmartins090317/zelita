@@ -4,10 +4,13 @@ import { getShellContext } from "@/modules/accounts/application/get-shell-contex
 import { isAccountPaused } from "@/modules/accounts/domain/roles";
 import { fetchParticipantRows } from "@/modules/accounts/infrastructure/member-list-repo";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServiceClient } from "@/lib/supabase/server";
 import {
+  buildExternalMapUrl,
   resolveLocationForSos,
   toSafePlaceCoords,
 } from "@/modules/location/application/resolve-location-for-sos";
+import { fetchSosLocationPointNear } from "@/modules/location/infrastructure/location-point-repo";
 import { fetchSafePlacesForCareRecipient } from "@/modules/location/infrastructure/safe-place-repo";
 
 import { canViewSosAreaForRole } from "./can-view-sos-area";
@@ -151,11 +154,12 @@ function buildLocationBlock(
   alert: Awaited<ReturnType<typeof fetchSosAlertsForCareRecipient>>[number],
   safePlaces: ReturnType<typeof toSafePlaceCoords>,
   copy: typeof familyContent.pedidosDeAjuda,
-): { line: string; meta: string | null; hasMapTarget: boolean } {
+  point: { lat: number | null; lng: number | null; accuracyM: number | null; recordedAt: string } | null,
+): { line: string; meta: string | null; hasMapTarget: boolean; mapHref: string | null } {
   const resolved = resolveLocationForSos(
     {
-      lat: null,
-      lng: null,
+      lat: point?.lat ?? null,
+      lng: point?.lng ?? null,
       locationText: alert.locationText,
       safeZoneName: alert.safeZoneName,
       safePlaces,
@@ -168,20 +172,16 @@ function buildLocationBlock(
 
   let meta: string | null = null;
   const metaParts: string[] = [];
-  if (alert.locationAccuracyM != null) {
+  const accuracyM = alert.locationAccuracyM ?? point?.accuracyM ?? null;
+  const recordedAt = alert.locationRecordedAt ?? point?.recordedAt ?? null;
+  if (accuracyM != null) {
     metaParts.push(
-      copy.detail.locationAccuracy.replace(
-        "{metros}",
-        String(alert.locationAccuracyM),
-      ),
+      copy.detail.locationAccuracy.replace("{metros}", String(accuracyM)),
     );
   }
-  if (alert.locationRecordedAt) {
+  if (recordedAt) {
     metaParts.push(
-      copy.detail.locationTime.replace(
-        "{hora}",
-        formatDateTime(alert.locationRecordedAt).time,
-      ),
+      copy.detail.locationTime.replace("{hora}", formatDateTime(recordedAt).time),
     );
   }
   if (resolved.zoneLine) {
@@ -195,10 +195,16 @@ function buildLocationBlock(
     meta = metaParts.join(" · ");
   }
 
+  const mapHref =
+    point?.lat != null && point.lng != null
+      ? buildExternalMapUrl({ lat: point.lat, lng: point.lng })
+      : null;
+
   return {
     line: resolved.locationLine,
     meta,
     hasMapTarget: resolved.hasMapTarget,
+    mapHref,
   };
 }
 
@@ -396,10 +402,27 @@ export async function getPedidosDeAjudaPage(input?: {
             : [];
 
         const triggered = formatDateTime(alert.triggeredAt);
+        let sosPoint: Awaited<ReturnType<typeof fetchSosLocationPointNear>> = null;
+        try {
+          sosPoint = await fetchSosLocationPointNear(
+            createSupabaseServiceClient(),
+            ctx.careRecipientId,
+            alert.triggeredAt,
+          );
+        } catch (error) {
+          if (process.env.NODE_ENV === "development") {
+            console.error("[getPedidosDeAjudaPage] sos_point_unavailable", {
+              alertId: alert.id,
+              careRecipientId: ctx.careRecipientId,
+              reason: error instanceof Error ? error.name : "unknown",
+            });
+          }
+        }
         const location = buildLocationBlock(
           alert,
           toSafePlaceCoords(safePlaces),
           copy,
+          sosPoint,
         );
 
         let outcomeLine: string | null = null;
@@ -426,7 +449,12 @@ export async function getPedidosDeAjudaPage(input?: {
           ),
           triggeredAtLabel: triggered.full,
           alertTypeLabel: copy.detail.alertType,
-          locationLine: location.line,
+          locationLine:
+            sosPoint?.lat != null &&
+            sosPoint.lng != null &&
+            !alert.locationText?.trim()
+              ? "Posição recebida do celular"
+              : location.line,
           locationMeta: location.meta,
           callbackPhone: (recipient.whatsapp as string | null) ?? null,
           notifiedLines,
@@ -434,7 +462,9 @@ export async function getPedidosDeAjudaPage(input?: {
           outcomeLine,
           showResolveAction: shouldShowResolveAction(alert.status, ctx.role),
           showMapLink: location.hasMapTarget,
-          mapHref: `${familyRoutes.localizacao}?focus=alert&alerta=${alert.id}`,
+          mapHref:
+            location.mapHref ??
+            `${familyRoutes.localizacao}?focus=alert&alerta=${alert.id}`,
         };
       }
     }

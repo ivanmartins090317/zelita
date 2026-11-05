@@ -184,8 +184,8 @@ describe("porta do idoso", () => {
     ).toBe("closed");
     expect(showsPreviewBanner("preview")).toBe(true);
     expect(showsPreviewBanner("device")).toBe(false);
-    expect(elderHelpClaimsFamilyNotified("preview")).toBe(true);
-    expect(elderHelpClaimsFamilyNotified("device")).toBe(false);
+    expect(elderHelpClaimsFamilyNotified("device")).toBe(true);
+    expect(elderHelpClaimsFamilyNotified("preview")).toBe(false);
     expect(elderHelpClaimsFamilyNotified("closed")).toBe(false);
   });
 

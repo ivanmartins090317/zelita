@@ -165,9 +165,9 @@ export function showsPreviewBanner(door: ElderDoor): boolean {
   return door === "preview";
 }
 
-/** A frase de família avisada fica só na prévia. No aparelho ela mente. */
+/** A frase de família avisada vale no aparelho, onde o pedido é registrado. */
 export function elderHelpClaimsFamilyNotified(door: ElderDoor): boolean {
-  return door === "preview";
+  return door === "device";
 }
 
 export function formatPanelDateTime(date: Date): string {

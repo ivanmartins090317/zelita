@@ -1,17 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { elderContent, elderRoutes } from "@/content/elder";
+import { elderHelpClaimsFamilyNotified } from "@/modules/elder-access/domain/device-link";
 import type { ElderHomeCard } from "@/modules/elder-access/domain/elder-schedule";
 import { elderSosPersistsAlert } from "@/modules/elder-access/domain/elder-schedule";
+import {
+  ELDER_GPS_WAIT_MS,
+  ElderSosError,
+  ElderSosSent,
+  readElderGrantedPosition,
+} from "@/modules/elder-access/presentation/elder-confirm-home";
 import {
   elderSosClass,
   elderTapClass,
   elderTitleClass,
 } from "@/modules/elder-access/presentation/elder-classes";
-import { SAMU_TEL } from "@/modules/elder-access/domain/elder-call";
+import {
+  recordForegroundPositionAction,
+  shouldReadForegroundPositionAction,
+} from "@/modules/location/application/record-foreground-position";
+import {
+  attachElderSosPositionAction,
+  triggerElderSosAction,
+} from "@/modules/sos/application/trigger-elder-sos";
 
 interface ElderHomeProps {
   greeting: string;
@@ -30,15 +44,43 @@ export function ElderHome({
   linkedDevice,
   familyTel,
 }: ElderHomeProps) {
-  const [sent, setSent] = useState(false);
-  if (sent) {
+  const [screen, setScreen] = useState<"home" | "sent" | "error">("home");
+
+  useEffect(() => {
+    if (!linkedDevice) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const gate = await shouldReadForegroundPositionAction();
+        if (!gate.ok || cancelled) return;
+        const fix = await readElderGrantedPosition(ELDER_GPS_WAIT_MS);
+        if (!fix || cancelled) return;
+        await recordForegroundPositionAction(fix);
+      } catch {
+        if (process.env.NODE_ENV === "development") {
+          console.error("[elder-home] foreground_position_failed");
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [linkedDevice]);
+
+  if (screen === "sent") {
     return (
       <ElderSosSent
-        linkedDevice={linkedDevice}
+        claimsNotified={elderHelpClaimsFamilyNotified(
+          linkedDevice ? "device" : "preview",
+        )}
         familyTel={familyTel}
-        onBack={() => setSent(false)}
+        onBack={() => setScreen("home")}
       />
     );
+  }
+
+  if (screen === "error") {
+    return <ElderSosError onBack={() => setScreen("home")} />;
   }
 
   return (
@@ -58,10 +100,20 @@ export function ElderHome({
       <h1 className={elderTitleClass}>{greeting}</h1>
       <p className="mt-2 text-[length:var(--elder-body)] text-muted">{dateLabel}</p>
       <ElderMedicineCard card={homeCard} loadWarning={loadWarning} />
-      <ElderHelpButton linkedDevice={linkedDevice} onConfirm={() => setSent(true)} />
+      <ElderHelpButton
+        linkedDevice={linkedDevice}
+        onSent={() => setScreen("sent")}
+        onError={() => setScreen("error")}
+      />
       <p className="my-3 text-center text-[length:var(--elder-body)] text-muted">
         {linkedDevice ? elderContent.home.helpHintLinked : elderContent.home.helpHint}
       </p>
+      {linkedDevice ? (
+        <Link href={elderRoutes.casa} className={`${elderTapClass} mb-3`}>
+          <span aria-hidden>🏠</span>
+          {elderContent.home.atHome}
+        </Link>
+      ) : null}
       <Link href={elderRoutes.family} className={`${elderTapClass} mb-3`}>
         <span aria-hidden>📞</span>
         {elderContent.home.callFamily}
@@ -112,12 +164,54 @@ function ElderMedicineCard({
 
 function ElderHelpButton({
   linkedDevice,
-  onConfirm,
+  onSent,
+  onError,
 }: {
   linkedDevice: boolean;
-  onConfirm: () => void;
+  onSent: () => void;
+  onError: () => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function confirmHelp() {
+    if (busy) return;
+    setBusy(true);
+    dialogRef.current?.close();
+    if (!elderSosPersistsAlert(linkedDevice)) {
+      setBusy(false);
+      onSent();
+      return;
+    }
+    try {
+      const started = await triggerElderSosAction();
+      if (!started.ok) {
+        setBusy(false);
+        onError();
+        return;
+      }
+      if (started.outcome === "created" && started.tryPosition) {
+        const fix = await readElderGrantedPosition(ELDER_GPS_WAIT_MS);
+        if (fix) {
+          try {
+            await attachElderSosPositionAction(fix);
+          } catch {
+            if (process.env.NODE_ENV === "development") {
+              console.error("[elder-sos] position_attach_failed");
+            }
+          }
+        }
+      }
+      setBusy(false);
+      onSent();
+    } catch {
+      if (process.env.NODE_ENV === "development") {
+        console.error("[elder-sos] trigger_failed");
+      }
+      setBusy(false);
+      onError();
+    }
+  }
 
   return (
     <>
@@ -145,11 +239,8 @@ function ElderHelpButton({
         <button
           type="button"
           className={`${elderSosClass} mt-5`}
-          onClick={() => {
-            if (elderSosPersistsAlert()) return;
-            dialogRef.current?.close();
-            onConfirm();
-          }}
+          disabled={busy}
+          onClick={() => void confirmHelp()}
         >
           {elderContent.sos.confirm}
         </button>
@@ -165,60 +256,3 @@ function ElderHelpButton({
   );
 }
 
-function ElderSosSent({
-  linkedDevice,
-  familyTel,
-  onBack,
-}: {
-  linkedDevice: boolean;
-  familyTel: string | null;
-  onBack: () => void;
-}) {
-  if (linkedDevice) {
-    return (
-      <div className="flex flex-1 flex-col items-center text-center">
-        <h1 className={`${elderTitleClass} mt-4`}>{elderContent.sos.linkedSentTitle}</h1>
-        <p className="mt-4 text-[length:var(--elder-body)] text-muted">
-          {elderContent.sos.linkedSentBody}
-        </p>
-        {familyTel ? (
-          <a href={familyTel} className={`${elderTapClass} mt-5 justify-center`}>
-            <span aria-hidden>📞</span>
-            {elderContent.sos.callFamily}
-          </a>
-        ) : (
-          <Link href={elderRoutes.family} className={`${elderTapClass} mt-5 justify-center`}>
-            <span aria-hidden>📞</span>
-            {elderContent.sos.callFamily}
-          </Link>
-        )}
-        <a href={SAMU_TEL} className={`${elderSosClass} mt-3`}>
-          <span aria-hidden>📞</span>
-          {elderContent.sos.callSamu}
-        </a>
-        <button type="button" className={`${elderTapClass} mt-3 justify-center`} onClick={onBack}>
-          {elderContent.sos.backHome}
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-1 flex-col items-center text-center">
-      <p className="flex size-16 items-center justify-center rounded-pill bg-ok-bg text-[28px] text-ok" aria-hidden>
-        ✓
-      </p>
-      <h1 className={`${elderTitleClass} mt-4`}>{elderContent.sos.sentTitle}</h1>
-      <p className="mt-4 rounded-note border border-coral-line bg-coral-bg p-4 text-left text-[length:var(--elder-body)] text-on-coral">
-        <strong>{elderContent.sos.sentSerious}</strong>
-      </p>
-      <a href={SAMU_TEL} className={`${elderSosClass} mt-4`}>
-        <span aria-hidden>📞</span>
-        {elderContent.sos.callSamu}
-      </a>
-      <button type="button" className={`${elderTapClass} mt-3 justify-center`} onClick={onBack}>
-        {elderContent.sos.backHome}
-      </button>
-    </div>
-  );
-}

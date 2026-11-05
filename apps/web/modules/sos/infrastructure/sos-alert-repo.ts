@@ -119,6 +119,63 @@ export async function resolveSosAlertRecord(
   return mapSosAlertRow(data as Record<string, unknown>);
 }
 
+export async function fetchLatestOpenSosAlert(
+  supabase: SupabaseClient,
+  careRecipientId: string,
+): Promise<SosAlertRow | null> {
+  const { data, error } = await supabase
+    .from("sos_alerts")
+    .select("*")
+    .eq("care_recipient_id", careRecipientId)
+    .eq("status", "open")
+    .order("triggered_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data ? mapSosAlertRow(data as Record<string, unknown>) : null;
+}
+
+export async function fetchPreviousOpenSosAlert(
+  supabase: SupabaseClient,
+  input: { careRecipientId: string; beforeIso: string; exceptId: string },
+): Promise<SosAlertRow | null> {
+  const { data, error } = await supabase
+    .from("sos_alerts")
+    .select("*")
+    .eq("care_recipient_id", input.careRecipientId)
+    .eq("status", "open")
+    .neq("id", input.exceptId)
+    .lt("triggered_at", input.beforeIso)
+    .order("triggered_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data ? mapSosAlertRow(data as Record<string, unknown>) : null;
+}
+
+export async function insertElderSosAlert(
+  supabase: SupabaseClient,
+  input: { careRecipientId: string; triggeredAt: string },
+): Promise<SosAlertRow> {
+  const { data, error } = await supabase
+    .from("sos_alerts")
+    .insert({
+      care_recipient_id: input.careRecipientId,
+      status: "open",
+      triggered_at: input.triggeredAt,
+      trigger_source: "elder_device",
+    })
+    .select("*")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Falha ao registrar o pedido de ajuda.");
+  }
+  return mapSosAlertRow(data as Record<string, unknown>);
+}
+
 export async function countOpenSosAlerts(
   supabase: SupabaseClient,
   careRecipientId: string,

@@ -30,6 +30,11 @@ export {
 export { getLocalizacaoPage } from "./application/get-localizacao-page";
 export { getHojeLocationSnapshot } from "./application/get-hoje-location-snapshot";
 export { getLocationSharePage } from "./application/get-location-share-page";
+export { confirmHomeFromDeviceAction } from "./application/confirm-home-from-device";
+export {
+  recordForegroundPositionAction,
+  shouldReadForegroundPositionAction,
+} from "./application/record-foreground-position";
 
 export { LOCATION_CONSTANTS } from "./constants";
 

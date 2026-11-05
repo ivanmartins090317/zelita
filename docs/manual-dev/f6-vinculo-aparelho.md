@@ -7,7 +7,7 @@ Ambiente: local ou Vercel, com sessão de administradora e pessoa cuidada seleci
 3. “Mostrar o link aqui” não manda WhatsApp. O endereço aparece em letra grande. Se sair da tela, ele não volta; gerar outro invalida o anterior.
 4. Abra esse endereço no celular dele. A página pede confirmação e não mostra remédio nem telefone. “Agora não” não gasta o link.
 5. “Sim, quero usar” abre `/idoso/instalado` e, em seguida, `/idoso` sem a faixa de prévia e sem pedir login.
-6. “Preciso de ajuda” nesse celular não diz que a família foi avisada. Oferece ligar para a família e para o 192. Nenhuma linha nova em `sos_alerts`.
+6. “Preciso de ajuda” nesse celular agora grava o pedido e diz que a família foi avisada. O passo a passo está em [`sos-real-confirmar-casa.md`](./sos-real-confirmar-casa.md).
 7. Desvincular em `/familia/instalar` derruba o atalho no próximo carregamento, mesmo com o cookie ainda no aparelho.
 8. A prévia da família, noutro navegador, continua com a faixa âmbar.
 

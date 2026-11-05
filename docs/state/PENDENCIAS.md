@@ -53,10 +53,10 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 
 - [x] **F5 — PWA do idoso (código)** — prévia `/idoso` entregue em 28/10: [`docs/implementation/2026-10-28-f5-pwa-idoso.md`](../implementation/2026-10-28-f5-pwa-idoso.md). SOS desta fase não grava alerta
 - [ ] **FL-05 no Vercel** — adiado para o fim das tarefas de implementação. Print de 28/10 do início está em `docs/evidencias/`; não fecha o caso
-- [x] **F6 — Vínculo de aparelho (código)** — entregue em 28/10: [`docs/implementation/2026-10-28-f6-vinculo-aparelho.md`](../implementation/2026-10-28-f6-vinculo-aparelho.md). O template Meta `zelita_device_link` ainda é passo de operação. SOS deste aparelho ainda não grava alerta
+- [x] **F6 — Vínculo de aparelho (código)** — entregue em 28/10: [`docs/implementation/2026-10-28-f6-vinculo-aparelho.md`](../implementation/2026-10-28-f6-vinculo-aparelho.md). O template Meta `zelita_device_link` ainda é passo de operação
 - [x] **Atalho para instalar no celular (código, 29/10)** — cartão no Hoje, rótulo em Ajustes e botão “Sim, quero usar” legível: [`docs/implementation/2026-10-29-atalho-instalar-celular.md`](../implementation/2026-10-29-atalho-instalar-celular.md). Só aparece no Vercel depois do deploy
-- [ ] **SOS real:** insert pelo device → notifica papéis da ordem (ignora DND) → painel Pedidos de ajuda
-- [ ] **Confirmar Casa (GPS)** — alerta de zona só com coords; posição real só vem do PWA
+- [x] **SOS real (código, 05/11)** — aparelho vinculado grava o pedido, avisa a ordem por e-mail ao mesmo tempo e ignora “não incomodar”: [`docs/implementation/2026-11-05-sos-real-confirmar-casa.md`](../implementation/2026-11-05-sos-real-confirmar-casa.md)
+- [x] **Confirmar Casa (código, 05/11)** — um toque no aparelho grava a posição da Casa em qualquer plano. O e-mail de saída só no Cuidado+, com “avisar ao sair” ligado. Sem leitura contínua de GPS
 
 ### Gate 3 — Pode esperar no piloto (não bloqueia produção real)
 
@@ -98,7 +98,7 @@ Fazer **no ambiente Vercel**, numa rodada só, **depois** de fechar as tarefas d
 ```text
 1. Gate 1 — feito
 2. Gate 2.1 — envio Meta feito (26–28/10). Restam TC-FL04-04, 07 e 08, sem bloquear a F5
-3. Implementação: F5 e F6 (código feito) → SOS real e GPS  [paths críticos, autonomia tight]
+3. Implementação: F5, F6, SOS real e Confirmar Casa (código feito)
 4. Homologação manual restante no Vercel (FL-05, FL-06 e casos abertos)
 5. Piloto família + idoso (1 conta controlada)
 6. Gate 3 só depois (tour, billing real, domínio, voz)

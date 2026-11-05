@@ -30,6 +30,55 @@ function mapLocationPointRow(row: Record<string, unknown>): LocationPointRow {
   };
 }
 
+export async function insertLocationPoint(
+  supabase: SupabaseClient,
+  input: {
+    careRecipientId: string;
+    lat: number;
+    lng: number;
+    accuracyM: number | null;
+    recordedAt: string;
+    source: "sos" | "periodic" | "home_confirm";
+  },
+): Promise<void> {
+  const { error } = await supabase.from("location_points").insert({
+    care_recipient_id: input.careRecipientId,
+    lat: input.lat,
+    lng: input.lng,
+    accuracy_m: input.accuracyM,
+    recorded_at: input.recordedAt,
+    source: input.source,
+    permission_active: true,
+  });
+
+  if (error) throw new Error(error.message);
+}
+
+export async function fetchSosLocationPointNear(
+  supabase: SupabaseClient,
+  careRecipientId: string,
+  triggeredAtIso: string,
+): Promise<LocationPointRow | null> {
+  const triggeredAt = new Date(triggeredAtIso).getTime();
+  if (!Number.isFinite(triggeredAt)) return null;
+  const start = new Date(triggeredAt - 60_000).toISOString();
+  const end = new Date(triggeredAt + 2 * 60_000).toISOString();
+
+  const { data, error } = await supabase
+    .from("location_points")
+    .select("*")
+    .eq("care_recipient_id", careRecipientId)
+    .eq("source", "sos")
+    .gte("recorded_at", start)
+    .lte("recorded_at", end)
+    .order("recorded_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data ? mapLocationPointRow(data as Record<string, unknown>) : null;
+}
+
 export async function fetchLatestLocationPoint(
   supabase: SupabaseClient,
   careRecipientId: string,

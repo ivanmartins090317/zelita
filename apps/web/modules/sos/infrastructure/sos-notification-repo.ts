@@ -28,6 +28,29 @@ function mapNotificationRow(row: Record<string, unknown>): SosNotificationAttemp
   };
 }
 
+export async function insertSosNotificationAttempt(
+  supabase: SupabaseClient,
+  input: {
+    sosAlertId: string;
+    profileId: string | null;
+    displayName: string;
+    channel: "email";
+    status: "sent" | "failed";
+    attemptedAt: string;
+  },
+): Promise<void> {
+  const { error } = await supabase.from("sos_notification_attempts").insert({
+    sos_alert_id: input.sosAlertId,
+    profile_id: input.profileId,
+    display_name: input.displayName,
+    channel: input.channel,
+    status: input.status,
+    attempted_at: input.attemptedAt,
+  });
+
+  if (error) throw new Error(error.message);
+}
+
 export async function fetchNotificationAttemptsForAlert(
   supabase: SupabaseClient,
   alertId: string,

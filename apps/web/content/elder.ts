@@ -1,5 +1,6 @@
 export const elderRoutes = {
   home: "/idoso",
+  casa: "/idoso/casa",
   schedule: "/idoso/horarios",
   family: "/idoso/familia",
   settings: "/idoso/ajustes",
@@ -24,8 +25,21 @@ export const elderContent = {
     help: "Preciso de ajuda",
     helpHint: "Aperte para ver como o pedido aparece",
     helpHintLinked: "Aperte se precisar falar com alguém agora.",
+    atHome: "Estou em casa",
     callFamily: "Ligar para a família",
     today: "Meus horários de hoje",
+  },
+  casa: {
+    title: "Você está em casa agora?",
+    lead: "Se confirmar, este celular guarda o lugar da Casa.",
+    confirm: "Sim, estou em casa",
+    cancel: "Agora não",
+    wait: "Lendo o lugar…",
+    savedTitle: "Casa confirmada",
+    savedBody: "O lugar deste celular ficou guardado.",
+    denied:
+      "Não deu para ler o lugar. Pode tentar de novo. Sem isso, a família não recebe aviso quando o senhor sair.",
+    backHome: "Voltar ao início",
   },
   schedule: {
     title: "Seus horários de hoje",
@@ -54,10 +68,12 @@ export const elderContent = {
     callSamu: "Ligar 192",
     backHome: "Voltar ao início",
     linkedConfirmBody:
-      "Toque só se for para pedir ajuda. O aviso para a família ainda não sai por este celular.",
-    linkedSentTitle: "O aviso ainda não sai por aqui",
+      "Toque só se for para pedir ajuda. A família recebe o aviso agora.",
+    linkedSentTitle: "Sua família foi avisada. Aguarde contato.",
     linkedSentBody:
-      "A família ainda não recebe este pedido pelo aplicativo. Ligue para eles ou para o SAMU 192.",
+      "Se for grave, não espere. Ligue agora para o SAMU 192 ou os Bombeiros 193.",
+    persistError:
+      "Não foi possível registrar o pedido. Toque de novo. Se continuar, ligue para a família ou para o SAMU 192.",
     callFamily: "Ligar para a família",
   },
   linkDead: {

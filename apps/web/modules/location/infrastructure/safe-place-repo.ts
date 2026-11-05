@@ -127,6 +127,43 @@ export async function deleteSafePlaceRecord(
   if (error) throw new Error(error.message);
 }
 
+export async function confirmHomePlaceCoords(
+  supabase: SupabaseClient,
+  input: { placeId: string; lat: number; lng: number; confirmedAt: string },
+): Promise<void> {
+  const { data, error } = await supabase
+    .from("safe_places")
+    .update({
+      lat: input.lat,
+      lng: input.lng,
+      coords_confirmed_at: input.confirmedAt,
+      updated_at: input.confirmedAt,
+    })
+    .eq("id", input.placeId)
+    .eq("is_home", true)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Falha ao confirmar a Casa.");
+  }
+}
+
+export async function grantCareRecipientLocationConsent(
+  supabase: SupabaseClient,
+  input: { careRecipientId: string; grantedAt: string },
+): Promise<void> {
+  const { error } = await supabase
+    .from("care_recipients")
+    .update({
+      geo_consent_at: input.grantedAt,
+      geo_consent_revoked_at: null,
+    })
+    .eq("id", input.careRecipientId);
+
+  if (error) throw new Error(error.message);
+}
+
 export async function fetchHomePlace(
   supabase: SupabaseClient,
   careRecipientId: string,

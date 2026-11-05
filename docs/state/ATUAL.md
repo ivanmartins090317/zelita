@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 | --- | --- |
-| Etapa | **Gate 2.2 — F6** código entregue; homologação fica na rodada final |
-| Spec | [`specs/2026-10-28-f6-vinculo-aparelho.md`](../../specs/2026-10-28-f6-vinculo-aparelho.md) |
-| Entrega | [`docs/implementation/2026-10-28-f6-vinculo-aparelho.md`](../implementation/2026-10-28-f6-vinculo-aparelho.md) · atalho [`docs/implementation/2026-10-29-atalho-instalar-celular.md`](../implementation/2026-10-29-atalho-instalar-celular.md) |
-| Plano de telas | [`docs/state/PLANO-ALTA-FIDELIDADE.md`](./PLANO-ALTA-FIDELIDADE.md) § F6 |
-| Plano de produção | [`docs/plans/2026-09-11-producao-real.md`](../plans/2026-09-11-producao-real.md) § 6.2 |
+| Etapa | **Gate 2.2 — SOS real e Confirmar Casa** — código feito em 05/11 |
+| Spec | [`specs/2026-11-05-sos-real-confirmar-casa.md`](../../specs/2026-11-05-sos-real-confirmar-casa.md) |
+| Entrega | [`docs/implementation/2026-11-05-sos-real-confirmar-casa.md`](../implementation/2026-11-05-sos-real-confirmar-casa.md) |
+| Plano | [`docs/plans/2026-11-05-sos-real-confirmar-casa.md`](../plans/2026-11-05-sos-real-confirmar-casa.md) |
+| Plano de produção | [`docs/plans/2026-09-11-producao-real.md`](../plans/2026-09-11-producao-real.md) § 6.3 |
 | Autonomia | `tight` |
-| Status | Vínculo no código e migration `013` no remoto. Atalho do Hoje, rótulo em Ajustes e botão legível no celular estão no código; aparecem no Vercel depois do deploy. SOS real e Confirmar Casa ainda não começaram. |
+| Status | Código desta Spec entregue. Homologação FL-05 / FL-06 continua para a rodada única no Vercel. |
 
 ## Gate 2.1 — envio Meta (fechado em 28/10)
 
@@ -26,8 +26,6 @@ Ainda abertos no FL-04 (não bloqueiam a F5):
 
 ## Próximo
 
-Homologação manual continua para o fim das tarefas de implementação.
+Homologação única no Vercel, com celular vinculado de verdade. Casos em [`docs/manual-dev/sos-real-confirmar-casa.md`](../manual-dev/sos-real-confirmar-casa.md). FL-05 e FL-06 não foram marcados como aprovados.
 
-1. Spec seguinte: SOS real e Confirmar Casa
-2. Aprovar o template Meta `zelita_device_link` antes do caminho remoto em produção
-3. Rodada no Vercel: FL-05, FL-06 e os casos ainda abertos
+O template Meta `zelita_device_link` continua passo de operação, em paralelo.

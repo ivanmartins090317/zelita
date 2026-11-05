@@ -165,7 +165,8 @@ describe("porta da prévia", () => {
     expect(canOpenElderPreview({ hasSession: true, canViewRoutine: true })).toBe(true);
   });
 
-  it("não grava alerta nesta fase", () => {
-    expect(elderSosPersistsAlert()).toBe(false);
+  it("a prévia não grava e o aparelho grava", () => {
+    expect(elderSosPersistsAlert(false)).toBe(false);
+    expect(elderSosPersistsAlert(true)).toBe(true);
   });
 });

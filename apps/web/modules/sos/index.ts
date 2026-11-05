@@ -7,6 +7,10 @@ export {
   updateSosEscalationAction,
   resolveSosAlertAction,
 } from "./application/sos-actions";
+export {
+  attachElderSosPositionAction,
+  triggerElderSosAction,
+} from "./application/trigger-elder-sos";
 export { canManageSosEscalationForRole as canManageSosEscalation } from "./application/can-manage-sos-escalation";
 export { canResolveSosAlertForRole as canResolveSosAlert } from "./application/can-resolve-sos-alert";
 export { canViewSosAreaForRole as canViewSosArea } from "./application/can-view-sos-area";
