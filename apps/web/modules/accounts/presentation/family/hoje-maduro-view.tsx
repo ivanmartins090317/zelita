@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FamilyGuideStartButton } from "@/components/family-guide/family-guide-tour";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -102,9 +103,9 @@ function HojeMaduroView({ data, deviceCard }: HojeMaduroViewProps) {
             activeMemberCount={data.activeMemberCount}
             canManageDevices={deviceCard.canManage}
             trailing={
-              <Button variant="secondary" size="xs" asChild>
-                <Link href={familyRoutes.guia}>{copy.maduro.centralTour}</Link>
-              </Button>
+              <FamilyGuideStartButton variant="secondary" size="xs">
+                {copy.maduro.centralTour}
+              </FamilyGuideStartButton>
             }
           />
 

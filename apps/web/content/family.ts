@@ -1255,7 +1255,7 @@ export const familyContent: FamilyContent = {
       "Não foi possível trocar de conta agora. Tente de novo ou entre novamente.",
   },
   topbar: {
-    tourLabel: "🎓 Tour",
+    tourLabel: "Como usar a Zelita",
     addMedicationLabel: "+ Remédio",
     addExamLabel: "+ Exame",
     signOutLabel: "Sair",
@@ -1474,7 +1474,7 @@ export const familyContent: FamilyContent = {
       icon: "🎓",
       title: "Guia da Zelita",
       description:
-        "Cada função do painel explicada em palavras simples. O tour interativo de 1 minuto virá em uma atualização futura.",
+        "Cada função do painel explicada em palavras simples: o que é, para que serve e como usar.",
     },
     participantes: {
       icon: "👥",
@@ -1497,7 +1497,7 @@ export const familyContent: FamilyContent = {
   },
   guia: {
     tourNote:
-      "O tour interativo de 1 minuto virá em uma atualização futura. Enquanto isso, leia cada seção abaixo no seu tempo.",
+      "Esta página existe para você não precisar adivinhar nada. Cada função está em três partes: o que é, para que serve e como usar.",
   },
   install: {
     title: "Instalar no celular dele",
@@ -1814,8 +1814,8 @@ export const familyContent: FamilyContent = {
       dayCardTitle: "O dia do {apelido}",
       tourTitle: "Nunca usou a Zelita?",
       tourBody:
-        "Um tour de 1 minuto mostra para que serve cada parte do painel, em palavras simples. Você pode sair quando quiser.",
-      tourPrimary: "Fazer o tour de 1 minuto",
+        "Mostra para que serve cada parte do painel, em palavras simples. Você pode sair quando quiser.",
+      tourPrimary: "Como usar a Zelita",
       tourSecondary: "Prefiro ler no meu tempo",
       emptyPanelTitle: "O que ainda está vazio",
       emptyPanelItems: [
@@ -1889,7 +1889,7 @@ export const familyContent: FamilyContent = {
       centralProgressProntas: "{count} de {total} prontas",
       centralFooter:
         "Não tem pressa. Cada coisa que entra aqui é uma a menos para você lembrar.",
-      centralTour: "🎓 Rever o tour",
+      centralTour: "Como usar a Zelita",
       checklistAreas: [
         {
           id: "medications",
@@ -1990,11 +1990,10 @@ export const familyContent: FamilyContent = {
       titleNamed: "Sua conta está pronta, {nome}!",
       titleNeutral: "Sua conta está pronta!",
       body: "Você tem {dias} dias grátis com tudo liberado. Quer que eu te mostre o painel em 1 minuto?",
-      tourNote:
-        "Tour de 1 minuto — você pode sair a qualquer momento.",
-      primary: "Sim, me mostre o painel",
+      tourNote: "Você pode sair a qualquer momento.",
+      primary: "Como usar a Zelita",
       secondary: "Prefiro explorar sozinha",
-      footer: "Depois você acha o tour no botão 🎓 Tour, no alto da tela.",
+      footer: "Depois você acha Como usar a Zelita no alto da tela.",
       storageKeyPrefix: "zelita:welcome-dismissed:",
     },
     timeline: {

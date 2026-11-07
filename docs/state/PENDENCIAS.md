@@ -58,11 +58,12 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 - [x] **SOS real (código, 05/11)** — aparelho vinculado grava o pedido, avisa a ordem por e-mail ao mesmo tempo e ignora “não incomodar”: [`docs/implementation/2026-11-05-sos-real-confirmar-casa.md`](../implementation/2026-11-05-sos-real-confirmar-casa.md)
 - [x] **Confirmar Casa (código, 05/11)** — um toque no aparelho grava a posição da Casa em qualquer plano. O e-mail de saída só no Cuidado+, com “avisar ao sair” ligado. Sem leitura contínua de GPS
 - [x] **Carregamento de rota (código, 07/11)** — ao trocar de área, o miolo do painel e do aplicativo mostra uma frase por vez e some quando a área chega. Conferido no aplicativo local. O relatório formal de QA fica para quando for pedido: [`docs/implementation/2026-11-07-carregamento-de-rota.md`](../implementation/2026-11-07-carregamento-de-rota.md)
+- [x] **Como usar a Zelita (código, 07/11)** — o painel da família ganha o passeio e a página de leitura em `/familia/guia`. O aplicativo da pessoa cuidada não entra. Conferido no aplicativo local. O relatório formal de QA fica para quando for pedido: [`docs/implementation/2026-11-07-como-usar-a-zelita.md`](../implementation/2026-11-07-como-usar-a-zelita.md)
 
 ### Gate 3 — Pode esperar no piloto (não bloqueia produção real)
 
 - [ ] **Envio automático de e-mail de convite** — hoje só **Copiar link** (aceite colando o link em outra aba ok, 2026-09-20). Passo 7 do cadastro ainda não persiste convite. Spec nova, path `accounts` (`tight`)
-- F4.12 — Como usar + tour (`/familia/guia` é empty state)
+- [x] **F4.12 — Como usar a Zelita** (código, 07/11) — `/familia/guia` deixa o empty state. Licença comercial do passeio não entra nesta entrega
 - Gateway de pagamento / NF / trocar cartão (stubs ok; trial sem cartão)
 - Voz Cuidado+ (P2)
 - Domínio custom (`zelita.com.br`)
@@ -102,5 +103,5 @@ Fazer **no ambiente Vercel**, numa rodada só, **depois** de fechar as tarefas d
 3. Implementação: F5, F6, SOS real e Confirmar Casa (código feito)
 4. Homologação manual restante no Vercel (FL-05, FL-06 e casos abertos)
 5. Piloto família + idoso (1 conta controlada)
-6. Gate 3 só depois (tour, billing real, domínio, voz)
+6. Gate 3 só depois (billing real, domínio, voz). O código de Como usar a Zelita entrou em 07/11
 ```

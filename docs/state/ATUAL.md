@@ -12,9 +12,11 @@
 
 ## Última entrega de código (07/11)
 
-Carregamento de rota, autonomia `medium`. Spec [`specs/2026-11-07-carregamento-de-rota.md`](../../specs/2026-11-07-carregamento-de-rota.md). Entrega [`docs/implementation/2026-11-07-carregamento-de-rota.md`](../implementation/2026-11-07-carregamento-de-rota.md). Roteiro local [`docs/manual-dev/carregamento-de-rota.md`](../manual-dev/carregamento-de-rota.md).
+Como usar a Zelita, autonomia `medium`. Spec [`specs/2026-11-07-como-usar-a-zelita.md`](../../specs/2026-11-07-como-usar-a-zelita.md). Entrega [`docs/implementation/2026-11-07-como-usar-a-zelita.md`](../implementation/2026-11-07-como-usar-a-zelita.md). Roteiro local [`docs/manual-dev/como-usar-a-zelita.md`](../manual-dev/como-usar-a-zelita.md).
 
-Ao trocar de área, o miolo mostra uma frase por vez. O menu do painel e a barra do aplicativo ficam. Conferido no `pnpm dev`. O relatório formal de QA não entra nesta entrega.
+No painel da família, o topo, Hoje em uso e a página de leitura começam o passeio. O menu abre a página. Conferido no `pnpm dev`. O relatório formal de QA não entra nesta entrega. O diff da apresentação do painel pede review humano.
+
+Carregamento de rota segue entregue no mesmo dia: [`docs/implementation/2026-11-07-carregamento-de-rota.md`](../implementation/2026-11-07-carregamento-de-rota.md).
 
 ## Gate 2.1 — envio Meta (fechado em 28/10)
 

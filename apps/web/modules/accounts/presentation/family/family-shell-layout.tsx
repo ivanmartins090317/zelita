@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { FamilyGuideTour } from "@/components/family-guide/family-guide-tour";
 import { cn } from "@/lib/utils";
 
 interface FamilyMarkProps {
@@ -67,6 +68,7 @@ function FamilyShellLayout({
           <main className="flex-1">{children}</main>
         </div>
       </div>
+      <FamilyGuideTour />
     </div>
   );
 }

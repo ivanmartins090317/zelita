@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FamilyGuideStartButton } from "@/components/family-guide/family-guide-tour";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -125,11 +126,9 @@ function PrimeiroAcessoView({ data, deviceCard }: PrimeiroAcessoViewProps) {
               <p className="text-secondary text-muted">
                 {copy.primeiroAcesso.tourBody}
               </p>
-              <Button className="w-full" asChild>
-                <Link href={familyRoutes.guia}>
-                  {copy.primeiroAcesso.tourPrimary}
-                </Link>
-              </Button>
+              <FamilyGuideStartButton className="w-full">
+                {copy.primeiroAcesso.tourPrimary}
+              </FamilyGuideStartButton>
               <Button variant="secondary" className="w-full" asChild>
                 <Link href={familyRoutes.guia}>
                   {copy.primeiroAcesso.tourSecondary}

@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { FamilyGuideStartButton } from "@/components/family-guide/family-guide-tour";
 import { Button } from "@/components/ui/button";
 import { Tag, tagVariants } from "@/components/ui/tag";
+import { familyGuideTargetIds } from "@/content/family-guide";
 import {
   familyContent,
   familyRoutes,
@@ -38,24 +40,26 @@ function FamilyTopbar({ shell }: FamilyTopbarProps) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link href={familyRoutes.guia}>{copy.tourLabel}</Link>
-          </Button>
+          <FamilyGuideStartButton variant="outline" size="sm">
+            {copy.tourLabel}
+          </FamilyGuideStartButton>
 
           {shell.canManageMedications && !shell.isPaused ? (
-            <Button asChild variant="outline" size="sm">
-              <Link href={`${familyRoutes.remedios}?modal=nova`}>
-                {copy.addMedicationLabel}
-              </Link>
-            </Button>
-          ) : null}
-
-          {shell.canManageMedications && !shell.isPaused ? (
-            <Button asChild variant="outline" size="sm">
-              <Link href={`${familyRoutes.exames}?modal=exame`}>
-                {copy.addExamLabel}
-              </Link>
-            </Button>
+            <div
+              data-tour={familyGuideTargetIds.shortcuts}
+              className="flex flex-wrap items-center gap-2"
+            >
+              <Button asChild variant="outline" size="sm">
+                <Link href={`${familyRoutes.remedios}?modal=nova`}>
+                  {copy.addMedicationLabel}
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href={`${familyRoutes.exames}?modal=exame`}>
+                  {copy.addExamLabel}
+                </Link>
+              </Button>
+            </div>
           ) : null}
 
           {shell.isPaused && shell.canManageBilling ? (

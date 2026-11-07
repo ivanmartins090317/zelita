@@ -1,0 +1,127 @@
+.introjs-tour .introjs-helperLayer {
+  border-radius: var(--r-control);
+}
+
+.family-guide-tooltip {
+  --introjs-arrow-color: var(--sand);
+  --introjs-bg: var(--sand);
+  --introjs-color: var(--brand-900);
+  --introjs-btn-text-shadow: none;
+  background-color: var(--sand);
+  color: var(--brand-900);
+  border-radius: var(--r-card);
+  max-width: 22rem;
+  box-shadow: var(--sh-card);
+}
+
+.introjs-tooltipReferenceLayer .family-guide-tooltip,
+.introjs-tooltipReferenceLayer .family-guide-tooltip * {
+  font-family: var(--font-body-stack);
+}
+
+.family-guide-tooltip .introjs-tooltip-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.family-guide-tooltip .introjs-tooltip-title {
+  width: auto;
+  flex: 1;
+  margin: 0;
+  font-family: var(--font-head-stack);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--brand-900);
+}
+
+.family-guide-tooltip .introjs-tooltiptext {
+  color: var(--ink);
+  font-size: 15.5px;
+  line-height: 1.45;
+}
+
+.family-guide-tooltip .family-guide-progress {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--brand-700);
+}
+
+.family-guide-tooltip .introjs-tooltiptext p {
+  margin: 0;
+}
+
+.family-guide-tooltip .introjs-tooltiptext p + p {
+  margin-top: 8px;
+}
+
+.family-guide-tooltip .introjs-tooltipbuttons {
+  border-top-color: var(--line);
+}
+
+.family-guide-tooltip .introjs-button {
+  border-radius: var(--r-control);
+  font-family: var(--font-head-stack);
+  font-weight: 800;
+  text-shadow: none;
+}
+
+.family-guide-tooltip .introjs-prevbutton {
+  background-color: var(--sand);
+  color: var(--brand-800);
+  border-color: var(--line);
+}
+
+.family-guide-tooltip .introjs-prevbutton:hover,
+.family-guide-tooltip .introjs-prevbutton:focus {
+  background-color: var(--sand-2);
+  color: var(--brand-900);
+  border-color: var(--brand-400);
+  box-shadow: none;
+}
+
+.family-guide-tooltip .introjs-nextbutton,
+.family-guide-tooltip .introjs-donebutton {
+  background-color: var(--brand-600);
+  color: #fff;
+  border-color: var(--brand-700);
+}
+
+.family-guide-tooltip .introjs-nextbutton:hover,
+.family-guide-tooltip .introjs-nextbutton:focus,
+.family-guide-tooltip .introjs-donebutton:hover,
+.family-guide-tooltip .introjs-donebutton:focus {
+  background-color: var(--brand-700);
+  color: #fff;
+  border-color: var(--brand-800);
+  box-shadow: none;
+}
+
+.family-guide-tooltip .introjs-skipbutton {
+  position: static;
+  width: auto;
+  height: auto;
+  margin-left: auto;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--brand-800);
+}
+
+.family-guide-tooltip .introjs-skipbutton:hover,
+.family-guide-tooltip .introjs-skipbutton:focus {
+  color: var(--brand-900);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .introjs-helperLayer,
+  .introjs-tooltipReferenceLayer,
+  .introjs-overlay,
+  .introjs-tooltip {
+    transition: none !important;
+    animation: none !important;
+  }
+}

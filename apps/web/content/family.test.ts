@@ -75,7 +75,7 @@ describe("familyContent", () => {
     expect(familyContent.ajustes.privacy.devicesInstallButton).toContain(
       "Instalar",
     );
-    expect(familyContent.hoje.welcomeModal.primary).toContain("painel");
+    expect(familyContent.hoje.welcomeModal.primary).toBe("Como usar a Zelita");
     expect(familyContent.hoje.maduro.stats.locationValue).toBe("Em breve");
     expect(familyContent.hoje.maduro.stats.noticesValue).toBe("0");
   });

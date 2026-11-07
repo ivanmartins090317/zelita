@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
+import { startFamilyGuideTour } from "@/components/family-guide/family-guide-tour";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { familyContent, familyRoutes } from "@/content/family";
+import { familyContent } from "@/content/family";
 
 interface WelcomeModalProps {
   accountId: string;
@@ -29,7 +29,6 @@ function WelcomeModal({
   trialDays,
   enabled,
 }: WelcomeModalProps) {
-  const router = useRouter();
   const copy = familyContent.hoje.welcomeModal;
   const storageKey = `${copy.storageKeyPrefix}${accountId}`;
   const [open, setOpen] = useState(false);
@@ -49,9 +48,11 @@ function WelcomeModal({
     setOpen(false);
   }
 
-  function goToGuide() {
+  function beginGuide() {
     dismiss();
-    router.push(familyRoutes.guia);
+    window.setTimeout(() => {
+      startFamilyGuideTour();
+    }, 150);
   }
 
   const title = profileName
@@ -65,7 +66,7 @@ function WelcomeModal({
       title={title}
       footer={
         <div className="space-y-2.5">
-          <Button className="w-full" onClick={goToGuide}>
+          <Button className="w-full" onClick={beginGuide}>
             {copy.primary}
           </Button>
           <Button variant="secondary" className="w-full" onClick={dismiss}>

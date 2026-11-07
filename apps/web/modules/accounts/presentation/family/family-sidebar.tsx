@@ -3,8 +3,10 @@
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
+import { registerFamilyGuideMenu } from "@/components/family-guide/family-guide-tour";
+import { familyGuideTargetIds } from "@/content/family-guide";
 import { familyContent } from "@/content/family";
 import { cn } from "@/lib/utils";
 import type { ShellContext } from "@/modules/accounts/application/shell-context";
@@ -35,8 +37,21 @@ const SIDEBAR_ID = "family-sidebar";
 function FamilySidebar({ shell }: FamilySidebarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileOpenRef = useRef(false);
   const sections = buildFamilyNavSections();
   const planLabel = formatSidebarPlanBadge(shell.accountPlan, shell.isPaused);
+
+  const setMenuOpen = useCallback((open: boolean) => {
+    mobileOpenRef.current = open;
+    setMobileOpen(open);
+  }, []);
+
+  useEffect(() => {
+    return registerFamilyGuideMenu({
+      isOpen: () => mobileOpenRef.current,
+      setOpen: setMenuOpen,
+    });
+  }, [setMenuOpen]);
 
   return (
     <>
@@ -50,7 +65,7 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
             ? familyContent.mobileNav.closeLabel
             : familyContent.mobileNav.openLabel
         }
-        onClick={() => setMobileOpen((value) => !value)}
+        onClick={() => setMenuOpen(!mobileOpenRef.current)}
       >
         {mobileOpen ? (
           <X aria-hidden className="size-5" strokeWidth={2} />
@@ -64,7 +79,7 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
           type="button"
           aria-label={familyContent.mobileNav.closeLabel}
           className="fixed inset-0 z-30 bg-ink/50 md:hidden"
-          onClick={() => setMobileOpen(false)}
+          onClick={() => setMenuOpen(false)}
         />
       ) : null}
 
@@ -76,7 +91,9 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
         )}
       >
         <FamilyMark planLabel={planLabel} planPaused={shell.isPaused} />
-        <FamilyRecipientPicker shell={shell} />
+        <div data-tour={familyGuideTargetIds.recipient}>
+          <FamilyRecipientPicker shell={shell} />
+        </div>
         <nav
           className="mt-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain pb-2"
           aria-label="Áreas do painel"
@@ -140,6 +157,7 @@ function FamilyNavLink({
   return (
     <Link
       href={item.path}
+      data-tour={item.id}
       onClick={onNavigate}
       className={cn(
         "relative flex min-h-tap items-center gap-2.5 overflow-hidden rounded-control px-3 py-2 text-[14px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-on-dark focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900",
