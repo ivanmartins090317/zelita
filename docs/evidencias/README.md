@@ -22,4 +22,12 @@ Nomenclatura: `tc[número]-[descricao-curta].[ext]`
 | --- | --- | --- |
 | `tc-fl05-02-proximo-horario.png` | TC-FL05-02 | Captura antecipada em 28/10 (Vercel, João, REMEDIO TC-03 50mg às 22:00). Não fecha o caso; a rodada oficial é no fim da implementação |
 
+## FL-06 · SOS e Confirmar Casa (2026-11-05)
+
+| Arquivo | TC | Descrição |
+| --- | --- | --- |
+| `tc-fl06-07-inicio-aparelho.png` | TC-FL06-07 | Celular vinculado, sem faixa. Botão “Estou em casa” visível |
+| `tc-fl06-07-pergunta-casa.png` | TC-FL06-07 | Pergunta “Você está em casa agora?” |
+| `tc-fl06-07-confirmar-casa.png` | TC-FL06-07 | Painel: autorização em 05/11, João às 15:56, zona segura Casa, Dentro, raio 150 m, precisão ~9 m. Caminho feliz. Negar a permissão ainda não foi exercitado |
+
 Formatos aceitos: `.jpeg`, `.jpg`, `.png`, `.webp`
