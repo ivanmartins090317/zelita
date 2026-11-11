@@ -18,6 +18,7 @@ import {
   elderTapClass,
   elderTitleClass,
 } from "@/modules/elder-access/presentation/elder-classes";
+import { ElderLocationListener } from "@/modules/elder-access/presentation/elder-location-listener";
 import {
   recordForegroundPositionAction,
   shouldReadForegroundPositionAction,
@@ -85,6 +86,7 @@ export function ElderHome({
 
   return (
     <div className="flex flex-1 flex-col">
+      <ElderLocationListener linkedDevice={linkedDevice} />
       <div className="mb-4 flex items-center justify-between gap-3">
         <p className="text-[length:var(--elder-body)] font-bold text-brand-700">
           {elderContent.brand}

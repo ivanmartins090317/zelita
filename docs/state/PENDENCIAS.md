@@ -59,6 +59,7 @@ Sem isto a família usa um painel; o idoso não recebe nem pede ajuda.
 - [x] **Confirmar Casa (código, 05/11)** — um toque no aparelho grava a posição da Casa em qualquer plano. O e-mail de saída só no Cuidado+, com “avisar ao sair” ligado. Sem leitura contínua de GPS
 - [x] **Carregamento de rota (código, 07/11)** — ao trocar de área, o miolo do painel e do aplicativo mostra uma frase por vez e some quando a área chega. Conferido no aplicativo local. O relatório formal de QA fica para quando for pedido: [`docs/implementation/2026-11-07-carregamento-de-rota.md`](../implementation/2026-11-07-carregamento-de-rota.md)
 - [x] **Como usar a Zelita (código, 07/11)** — o painel da família ganha o passeio e a página de leitura em `/familia/guia`. O aplicativo da pessoa cuidada não entra. Conferido no aplicativo local. O relatório formal de QA fica para quando for pedido: [`docs/implementation/2026-11-07-como-usar-a-zelita.md`](../implementation/2026-11-07-como-usar-a-zelita.md)
+- [x] **Pedir posição do aparelho (código, 11/11)** — administradora pede em Onde ele está; aparelho com aba visível grava `on_demand`. Migration `014` aplicada no remoto em 11/11. Homologação: TC-FL08-01…07 em [`docs/relatorio-testes-manuais.html`](../relatorio-testes-manuais.html), roteiro [`docs/manual-dev/pedido-de-localizacao.md`](../manual-dev/pedido-de-localizacao.md)
 
 ### Gate 3 — Pode esperar no piloto (não bloqueia produção real)
 
@@ -87,6 +88,7 @@ Fazer **no ambiente Vercel**, numa rodada só, **depois** de fechar as tarefas d
 - [x] FL-04 Lembretes (job + WA) *(envio Meta 100% em 26–28/10; ficam abertos TC-FL04-04, 07 e 08)*
 - [ ] FL-05 PWA idoso *(código em 28/10; homologar na rodada final)*
 - [ ] FL-06 SOS *(casos TC-FL06-01 a TC-FL06-10 no relatório. Em 05/11 o caminho feliz do TC-FL06-07 foi visto no aparelho e em Onde ele está; negar a permissão e os outros casos seguem abertos)*
+- [ ] FL-08 Pedir posição *(TC-FL08-01 a TC-FL08-07 em `docs/relatorio-testes-manuais.html`. Migration `014` aplicada no remoto em 11/11; rodada manual em andamento)*
 - [x] FL-07 Segurança / RLS smoke *(Gate 1 — aceite via **Copiar link** ok, 2026-09-20; e-mail automático ficou no Gate 3)*
 - [x] FL-08 Exames smoke *(2026-09-20 upload ok; posição real Gate 2)*
 - [ ] FL-09 Avisos

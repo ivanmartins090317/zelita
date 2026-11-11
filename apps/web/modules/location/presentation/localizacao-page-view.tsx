@@ -10,6 +10,7 @@ import { LocationLimitationsCard } from "./location-limitations-card";
 import { LocationMapCard } from "./location-map-card";
 import { LocationShareCard } from "./location-share-card";
 import { LocationShareModal } from "./location-share-modal";
+import { LocationRequestCard } from "./location-request-card";
 import { SafePlacesCard } from "./safe-places-card";
 
 interface LocalizacaoPageViewProps {
@@ -22,6 +23,12 @@ function LocalizacaoPageView({ data }: LocalizacaoPageViewProps) {
   return (
     <>
       <LocationConsentBanner banner={data.consentBanner} />
+
+      {data.locationRequest ? (
+        <div className="mb-4">
+          <LocationRequestCard card={data.locationRequest} />
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
         <LocationMapCard

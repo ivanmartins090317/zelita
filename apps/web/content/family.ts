@@ -1195,11 +1195,34 @@ export interface FamilyLocalizacaoContent {
       safeZone: string;
       zoneExit: string;
       returned: string;
+      onDemand: string;
     };
   };
   limitations: {
     title: string;
     paragraphs: string[];
+  };
+  locationRequest: {
+    title: string;
+    hint: string;
+    button: string;
+    buttonPending: string;
+    states: {
+      requesting: string;
+      appNotOpen: string;
+      gpsFailed: string;
+      appClosedOrOffline: string;
+      fulfilled: string;
+    };
+    errors: {
+      notAdmin: string;
+      accountPaused: string;
+      noConsent: string;
+      noAdvanced: string;
+      noDevice: string;
+      cooldown: string;
+      saveFailed: string;
+    };
   };
   hoje: {
     statHint: string;
@@ -2657,6 +2680,34 @@ export const familyContent: FamilyContent = {
         safeZone: "Zona segura",
         zoneExit: "Saída de zona segura",
         returned: "Retornou",
+        onDemand: "Posição pedida pela família",
+      },
+    },
+    locationRequest: {
+      title: "Pedir a posição agora",
+      hint:
+        "A posição só chega se o aplicativo estiver aberto na tela deste celular. Com o aplicativo fechado, a Zelita não lê o lugar.",
+      button: "Pedir posição agora",
+      buttonPending: "Pedindo…",
+      states: {
+        requesting: "Pedindo a posição neste celular.",
+        appNotOpen: "O aplicativo não está aberto neste celular.",
+        gpsFailed: "O celular não conseguiu enviar a posição.",
+        appClosedOrOffline:
+          "O aplicativo pode ter sido fechado ou o celular ficou sem acesso.",
+        fulfilled:
+          "A posição chegou e aparece no mapa acima, com horário e precisão em metros.",
+      },
+      errors: {
+        notAdmin: "Só quem administra a conta pode pedir a posição.",
+        accountPaused: "Conta pausada — ações indisponíveis até reativar.",
+        noConsent: "Ele ainda não autorizou compartilhar a localização.",
+        noAdvanced:
+          "Pedir a posição agora faz parte da localização avançada.",
+        noDevice: "Ainda não há um celular vinculado para pedir a posição.",
+        cooldown: "Espere 2 minutos para pedir de novo.",
+        saveFailed:
+          "Não foi possível pedir a posição agora. Tente de novo em instantes.",
       },
     },
     limitations: {

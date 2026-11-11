@@ -1,12 +1,29 @@
 import { familyContent, familyRoutes } from "@/content/family";
 import { getFamilyContext } from "@/modules/accounts/application/family-context";
 import { getShellContext } from "@/modules/accounts/application/get-shell-context";
+import {
+  isAccountPaused,
+  type AccountRole,
+  type AccountStatus,
+} from "@/modules/accounts/domain/roles";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
+import { hasAdvancedLocation } from "@/modules/billing";
+import { careRecipientHasActiveDevice } from "@/modules/elder-access/infrastructure/device-link-store";
+
+import { reconcileOpenLocationRequestForRecipient } from "./location-request-sync";
 import { canViewLocation } from "../domain/can-view-location";
 import { canManageSafeZones } from "../domain/can-manage-safe-zones";
 import {
+  LOCATION_REQUEST_CARD_PHASE,
+  LOCATION_REQUEST_STATUS,
+  canAdminRequestLocation,
+  resolveLocationRequestCardPhase,
+  type LocationRequestCardPhase,
+} from "../domain/location-request";
+import {
   LOCATION_CONSENT_STATUS,
+  isLocationConsentActive,
   resolveLocationConsent,
 } from "../domain/location-consent";
 import { resolveHistorySituationLabel } from "../domain/location-history-labels";
@@ -14,7 +31,15 @@ import { canCreateLocationShare } from "../domain/location-share";
 import { hasConfirmedHomeCoords } from "../domain/home-coords";
 import { resolveMapZoneTag, resolvePlacePresence } from "../domain/safe-zone-status";
 import { fetchGeofenceEventsSince } from "../infrastructure/geofence-event-repo";
-import { fetchLatestLocationPoint } from "../infrastructure/location-point-repo";
+import {
+  fetchActiveDeviceLastSeen,
+  fetchLatestLocationRequest,
+  fetchOpenLocationRequest,
+} from "../infrastructure/location-request-repo";
+import {
+  fetchLatestLocationPoint,
+  fetchLocationPointsSince,
+} from "../infrastructure/location-point-repo";
 import { fetchSafePlacesForCareRecipient } from "../infrastructure/safe-place-repo";
 import {
   buildExternalMapUrl,
@@ -68,12 +93,23 @@ export interface LocationHistoryItem {
   whenLabel: string;
   whereLabel: string;
   situationLabel: string;
-  situationTone: "safe" | "warning" | "return";
+  situationTone: "safe" | "warning" | "return" | "muted";
+}
+
+export interface LocationRequestCardViewModel {
+  canSubmit: boolean;
+  pollWhileOpen: boolean;
+  statusMessage: string | null;
+  title: string;
+  hint: string;
+  buttonLabel: string;
+  buttonPendingLabel: string;
 }
 
 export interface LocalizacaoPageViewModel {
   careRecipientId: string;
   careRecipientDisplayName: string;
+  locationRequest: LocationRequestCardViewModel | null;
   consentStatus: string;
   consentBanner: {
     tone: "info" | "warning" | "muted";
@@ -133,6 +169,122 @@ function defaultMapBounds(lat: number, lng: number) {
     maxLat: lat + 0.008,
     minLng: lng - 0.008,
     maxLng: lng + 0.008,
+  };
+}
+
+function resolveLocationRequestStatusMessage(
+  phase: LocationRequestCardPhase,
+  copy: typeof familyContent.localizacao.locationRequest,
+): string | null {
+  switch (phase) {
+    case LOCATION_REQUEST_CARD_PHASE.requesting:
+      return copy.states.requesting;
+    case LOCATION_REQUEST_CARD_PHASE.appNotOpen:
+      return copy.states.appNotOpen;
+    case LOCATION_REQUEST_CARD_PHASE.gpsFailed:
+      return copy.states.gpsFailed;
+    case LOCATION_REQUEST_CARD_PHASE.appClosedOrOffline:
+      return copy.states.appClosedOrOffline;
+    case LOCATION_REQUEST_CARD_PHASE.fulfilled:
+      return copy.states.fulfilled;
+    case LOCATION_REQUEST_CARD_PHASE.waitCooldown:
+      return copy.errors.cooldown;
+    case LOCATION_REQUEST_CARD_PHASE.blocked:
+      return null;
+    default:
+      return null;
+  }
+}
+
+function resolveBlockedRequestMessage(
+  gate: ReturnType<typeof canAdminRequestLocation>,
+  copy: typeof familyContent.localizacao.locationRequest,
+): string | null {
+  if (gate.ok || gate.reason !== "blocked") return null;
+  const messages = {
+    account_paused: copy.errors.accountPaused,
+    no_consent: copy.errors.noConsent,
+    no_advanced: copy.errors.noAdvanced,
+    no_device: copy.errors.noDevice,
+  } as const;
+  return messages[gate.block];
+}
+
+async function buildLocationRequestCard(input: {
+  copy: typeof familyContent.localizacao;
+  role: AccountRole;
+  accountId: string;
+  accountStatus: AccountStatus | null | undefined;
+  accountPlan: string | null;
+  careRecipientId: string;
+  consentInput: {
+    geoConsentAt: string | null;
+    geoConsentRevokedAt: string | null;
+  };
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
+}): Promise<LocationRequestCardViewModel | null> {
+  if (!canManageSafeZones(input.role)) {
+    return null;
+  }
+
+  const reqCopy = input.copy.locationRequest;
+  await reconcileOpenLocationRequestForRecipient(
+    input.supabase,
+    input.careRecipientId,
+    input.accountId,
+  );
+
+  const now = new Date();
+  const [openRequest, latestRequest, lastSeenAt, hasDevice] = await Promise.all([
+    fetchOpenLocationRequest(input.supabase, input.careRecipientId),
+    fetchLatestLocationRequest(input.supabase, input.careRecipientId),
+    fetchActiveDeviceLastSeen(
+      input.supabase,
+      input.accountId,
+      input.careRecipientId,
+    ),
+    careRecipientHasActiveDevice(input.careRecipientId, input.accountId),
+  ]);
+
+  const displayRequest = openRequest ?? latestRequest;
+  const consentActive = isLocationConsentActive(input.consentInput);
+  const accountPaused = input.accountStatus
+    ? isAccountPaused(input.accountStatus)
+    : false;
+
+  const gate = canAdminRequestLocation({
+    role: input.role,
+    accountPaused,
+    consentActive,
+    hasAdvancedLocation: hasAdvancedLocation(input.accountPlan),
+    hasActiveDevice: hasDevice,
+    openRequest,
+    lastRequestedAt: latestRequest?.requestedAt ?? null,
+    now,
+  });
+
+  const phase = resolveLocationRequestCardPhase({
+    request: displayRequest,
+    lastSeenAt,
+    now,
+    canRequest: gate,
+  });
+
+  let statusMessage = resolveLocationRequestStatusMessage(phase, reqCopy);
+  if (phase === LOCATION_REQUEST_CARD_PHASE.blocked) {
+    statusMessage = resolveBlockedRequestMessage(gate, reqCopy);
+  }
+
+  const requestOpen = openRequest?.status === LOCATION_REQUEST_STATUS.open;
+
+  return {
+    canSubmit: gate.ok && phase === LOCATION_REQUEST_CARD_PHASE.idle,
+    pollWhileOpen: Boolean(requestOpen),
+    statusMessage,
+    title: reqCopy.title,
+    hint: reqCopy.hint,
+    buttonLabel: reqCopy.button,
+    buttonPendingLabel: reqCopy.buttonPending,
   };
 }
 
@@ -274,13 +426,14 @@ export async function getLocalizacaoPage(input?: {
     const since = new Date();
     since.setDate(since.getDate() - HISTORY_DAYS);
 
-    const [careRecipient, latestPoint, safePlaces, geofenceEvents] =
+    const [careRecipient, accountRow, latestPoint, safePlaces, geofenceEvents, pointsSince] =
       await Promise.all([
         supabase
           .from("care_recipients")
           .select("geo_consent_at, geo_consent_revoked_at")
           .eq("id", ctx.careRecipientId)
           .single(),
+        supabase.from("accounts").select("plan").eq("id", ctx.accountId).single(),
         fetchLatestLocationPoint(supabase, ctx.careRecipientId),
         fetchSafePlacesForCareRecipient(supabase, ctx.careRecipientId),
         fetchGeofenceEventsSince(
@@ -288,9 +441,15 @@ export async function getLocalizacaoPage(input?: {
           ctx.careRecipientId,
           since.toISOString(),
         ),
+        fetchLocationPointsSince(
+          supabase,
+          ctx.careRecipientId,
+          since.toISOString(),
+        ),
       ]);
 
     if (careRecipient.error) throw new Error(careRecipient.error.message);
+    if (accountRow.error) throw new Error(accountRow.error.message);
 
     const consentInput = {
       geoConsentAt: (careRecipient.data.geo_consent_at as string | null) ?? null,
@@ -446,7 +605,23 @@ export async function getLocalizacaoPage(input?: {
       };
     });
 
-    const history: LocationHistoryItem[] = geofenceEvents.map((event) => {
+    const onDemandHistory = pointsSince
+      .filter((point) => point.source === "on_demand")
+      .map((point) => {
+        const dt = formatDateTime(point.recordedAt);
+        const precision =
+          point.accuracyM != null ? `~${point.accuracyM} m` : copy.history.columns.where;
+        return {
+          id: point.id,
+          whenLabel: `${dt.date} ${dt.time}`,
+          whereLabel: precision,
+          situationLabel: copy.history.situations.onDemand,
+          situationTone: "muted" as const,
+          sortAt: point.recordedAt,
+        };
+      });
+
+    const zoneHistory = geofenceEvents.map((event) => {
       const dt = formatDateTime(event.recordedAt);
       const situation = resolveHistorySituationLabel(event.eventType, {
         safeZone: copy.history.situations.safeZone,
@@ -460,8 +635,22 @@ export async function getLocalizacaoPage(input?: {
         whereLabel: event.placeName,
         situationLabel: situation.label,
         situationTone: situation.tone,
+        sortAt: event.recordedAt,
       };
     });
+
+    const history: LocationHistoryItem[] = [...zoneHistory, ...onDemandHistory]
+      .sort(
+        (a, b) =>
+          new Date(b.sortAt).getTime() - new Date(a.sortAt).getTime(),
+      )
+      .map((item) => ({
+        id: item.id,
+        whenLabel: item.whenLabel,
+        whereLabel: item.whereLabel,
+        situationLabel: item.situationLabel,
+        situationTone: item.situationTone,
+      }));
 
     const canCreateShare =
       canManage &&
@@ -470,11 +659,23 @@ export async function getLocalizacaoPage(input?: {
         hasPosition,
       });
 
+    const locationRequest = await buildLocationRequestCard({
+      copy,
+      role: ctx.role,
+      accountId: ctx.accountId,
+      accountStatus: ctx.accountStatus,
+      accountPlan: (accountRow.data.plan as string | null) ?? null,
+      careRecipientId: ctx.careRecipientId,
+      consentInput,
+      supabase,
+    });
+
     return {
       ok: true,
       data: {
         careRecipientId: ctx.careRecipientId,
         careRecipientDisplayName: apelido,
+        locationRequest,
         consentStatus,
         consentBanner,
         map,

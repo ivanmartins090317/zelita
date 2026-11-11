@@ -38,20 +38,25 @@ export async function insertLocationPoint(
     lng: number;
     accuracyM: number | null;
     recordedAt: string;
-    source: "sos" | "periodic" | "home_confirm";
+    source: "sos" | "periodic" | "home_confirm" | "on_demand";
   },
-): Promise<void> {
-  const { error } = await supabase.from("location_points").insert({
-    care_recipient_id: input.careRecipientId,
-    lat: input.lat,
-    lng: input.lng,
-    accuracy_m: input.accuracyM,
-    recorded_at: input.recordedAt,
-    source: input.source,
-    permission_active: true,
-  });
+): Promise<string> {
+  const { data, error } = await supabase
+    .from("location_points")
+    .insert({
+      care_recipient_id: input.careRecipientId,
+      lat: input.lat,
+      lng: input.lng,
+      accuracy_m: input.accuracyM,
+      recorded_at: input.recordedAt,
+      source: input.source,
+      permission_active: true,
+    })
+    .select("id")
+    .single();
 
   if (error) throw new Error(error.message);
+  return data.id as string;
 }
 
 export async function fetchSosLocationPointNear(

@@ -284,12 +284,15 @@
         <p class="lede">
           Coordenação familiar para cuidado de idosos. Este relatório cobre a
           landing (F1), os lembretes (FL-04), o PWA do idoso (FL-05, prévia e
-          vínculo) e o SOS real com Confirmar Casa (FL-06). Executar no Vercel
+          vínculo), o SOS real com Confirmar Casa (FL-06) e o pedido de posição
+          do aparelho (FL-08). Executar no Vercel
           (<a href="https://zelita-web.vercel.app/">zelita-web.vercel.app</a>)
           ou em <code>http://localhost:3000</code>. Sem Playwright. Evidências em
-          <code>docs/evidencias/</code>. FL-01, FL-02, FL-03, FL-07 e FL-08 já
-          constam como feitos em <code>docs/state/PENDENCIAS.md</code>; os casos
-          deles ainda não estão neste HTML.
+          <code>docs/evidencias/</code>. FL-01, FL-02, FL-03 e FL-07 já constam
+          como feitos em <code>docs/state/PENDENCIAS.md</code>; os casos deles
+          ainda não estão neste HTML. FL-08: migration
+          <code>014_location_requests.sql</code> aplicada no remoto em 11/11/2026
+          — Spec <code>2026-11-11-pedido-de-localizacao</code>.
         </p>
         <div class="meta">
           <div>
@@ -909,6 +912,117 @@
         </div>
       </details>
 
+      <details class="flow" open>
+        <summary data-flow="location">FL-08 · Pedir posição do aparelho</summary>
+        <div class="flow-body">
+          <p class="hint">
+            Rodada em
+            <a href="https://zelita-web.vercel.app/familia/localizacao">Onde ele está</a>
+            + aparelho em <a href="https://zelita-web.vercel.app/idoso">/idoso</a>
+            (ou local com o mesmo schema). Pré-requisitos: administradora, conta
+            ativa, plano com <strong>localização avançada</strong>, consentimento
+            vigente, celular vinculado ativo. Caminho feliz: aplicativo aberto na
+            <strong>aba visível</strong> e GPS já concedido — sem tela nova no idoso.
+            Roteiro: <code>docs/manual-dev/pedido-de-localizacao.md</code>.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>TC</th>
+                <th>Papel</th>
+                <th>Caso e resultado esperado</th>
+                <th class="hide-sm">Disp.</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-flow="location" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL08-01</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Com <code>/idoso</code> aberto na tela e GPS já permitido, em
+                  <code>/familia/localizacao</code> toque <strong>Pedir posição agora</strong>.
+                  O card passa a “Pedindo a posição neste celular.”; o mapa mostra horário e
+                  precisão; o idoso não vê aviso novo. Histórico: “Posição pedida pela família”.
+                  <br /><small>Pendente · migration 014 no remoto (11/11).</small>
+                </td>
+                <td class="hide-sm">Celular + desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="location" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL08-02</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Com o aplicativo fechado ou em segundo plano, o card diz “O aplicativo não
+                  está aberto neste celular.” Se o idoso abrir <code>/idoso</code> dentro de
+                  5 minutos, a posição ainda pode chegar (uma leitura por pedido).
+                  <br /><small>Pendente.</small>
+                </td>
+                <td class="hide-sm">Celular + desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="location" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL08-03</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Aplicativo na tela, mas <strong>sem</strong> permissão de GPS já concedida
+                  (ou GPS não responde em 8 s): o pedido encerra com “O celular não conseguiu
+                  enviar a posição.” O aparelho não abre pedido novo de permissão.
+                  <br /><small>Pendente.</small>
+                </td>
+                <td class="hide-sm">Celular</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="location" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL08-04</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Segundo pedido antes de 2 minutos (contados da hora do anterior) não nasce;
+                  o card mostra “Espere 2 minutos para pedir de novo.”
+                  <br /><small>Pendente.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="location" data-status="pending" data-roles="cuidador">
+                <td class="code">TC-FL08-05</td>
+                <td><span class="pill cuidador">Cuidador</span></td>
+                <td>
+                  Na mesma conta, sessão de cuidadora: vê mapa e histórico com a posição
+                  pedida; <strong>não</strong> vê o card, o botão nem o estado do pedido.
+                  <br /><small>Pendente. Executar após TC-FL08-01.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="location" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL08-06</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Sem localização avançada, sem consentimento vigente ou com conta pausada: o
+                  pedido não nasce; o card explica o motivo (plano, consentimento ou conta).
+                  <br /><small>Pendente. Pode exigir conta ou ajuste de plano de teste.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+              <tr data-flow="location" data-status="pending" data-roles="admin">
+                <td class="code">TC-FL08-07</td>
+                <td><span class="pill admin">Admin</span></td>
+                <td>
+                  Depois de posição pedida gravada: a Casa <strong>não</strong> fica confirmada
+                  só por isso; “avisar ao sair” não liga sozinho; nenhum e-mail de saída de zona
+                  por esta leitura.
+                  <br /><small>Pendente. Conferir lugares de sempre e eventos de zona.</small>
+                </td>
+                <td class="hide-sm">Desktop</td>
+                <td><span class="status pending">Pendente</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
       <section>
         <h2>Matriz de cobertura dos TCs</h2>
         <p class="hint">Quantos casos citam cada papel (um TC pode contar em mais de um).</p>
@@ -980,7 +1094,7 @@
 
       <footer>
         Zelita · <strong>POP-QA-ZELITA-001</strong> · Marca light-first · Vitest + QA manual ·
-        Evidências em docs/evidencias/ · Atualizado 2026-11-05
+        Evidências em docs/evidencias/ · Atualizado 2026-11-11 (FL-08 pedido de posição)
       </footer>
     </div>
     <script>
@@ -989,6 +1103,7 @@
         reminders: "FL-04 Lembretes",
         elder: "FL-05 PWA idoso",
         sos: "FL-06 SOS e Casa",
+        location: "FL-08 Pedir posição",
       };
 
       const ROLE_LABELS = {
@@ -1028,6 +1143,15 @@
         ["tc-fl06-08-trial-sem-saida.png", "TC-FL06-08 · trial ou Essencial sem e-mail de zona"],
         ["tc-fl06-09-saida-cuidado-plus.png", "TC-FL06-09 · saída no Cuidado+"],
         ["tc-fl06-10-familia-avisada.png", "TC-FL06-10 · família avisada e SAMU 192"],
+        ["tc-fl08-01-pedido-mapa.png", "TC-FL08-01 · pedido e mapa com precisão"],
+        ["tc-fl08-01-historico-on-demand.png", "TC-FL08-01 · histórico posição pedida"],
+        ["tc-fl08-02-app-fechado.png", "TC-FL08-02 · card aplicativo não aberto"],
+        ["tc-fl08-02-abre-dentro-5min.png", "TC-FL08-02 · abre idoso e posição chega"],
+        ["tc-fl08-03-sem-gps.png", "TC-FL08-03 · celular não enviou posição"],
+        ["tc-fl08-04-cooldown-2min.png", "TC-FL08-04 · espere 2 minutos"],
+        ["tc-fl08-05-cuidador-sem-card.png", "TC-FL08-05 · cuidador sem card de pedido"],
+        ["tc-fl08-06-bloqueio-plano.png", "TC-FL08-06 · pedido não nasce (plano/consentimento)"],
+        ["tc-fl08-07-casa-nao-confirma.png", "TC-FL08-07 · Casa e zona inalteradas"],
       ];
 
       function emptyStats() {

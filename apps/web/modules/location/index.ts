@@ -31,6 +31,7 @@ export { getLocalizacaoPage } from "./application/get-localizacao-page";
 export { getHojeLocationSnapshot } from "./application/get-hoje-location-snapshot";
 export { getLocationSharePage } from "./application/get-location-share-page";
 export { confirmHomeFromDeviceAction } from "./application/confirm-home-from-device";
+export { createLocationRequestAction } from "./application/request-device-location";
 export {
   recordForegroundPositionAction,
   shouldReadForegroundPositionAction,
