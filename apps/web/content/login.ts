@@ -29,6 +29,8 @@ export interface LoginCodeStepContent {
   submitPendingLabel: string;
   backLabel: string;
   incompleteCodeError: string;
+  pasteLabel: string;
+  pasteFailedMessage: string;
 }
 
 export interface LoginErrorStepContent {
@@ -68,6 +70,7 @@ export interface LoginMessagesContent {
   codeSendSuccess: string;
   codeSendFailure: string;
   verifyFailure: string;
+  emailLinkFailure: string;
 }
 
 export interface LoginRoleLabels {
@@ -128,6 +131,9 @@ export const loginContent: LoginContent = {
     backLabel: "Voltar",
     incompleteCodeError:
       "Informe o código completo do e-mail (6 a 8 números).",
+    pasteLabel: "Colar código",
+    pasteFailedMessage:
+      "Não deu para colar. Copie o código no e-mail, toque numa caixinha, segure o dedo e escolha Colar.",
   },
   error: {
     title: "Esse código não funcionou",
@@ -157,6 +163,11 @@ export const loginContent: LoginContent = {
     subtitle:
       "Estas são as situações mais comuns. Nenhuma delas faz você perder dado nenhum.",
     items: [
+      {
+        question: "No celular não consigo colar o código",
+        answer:
+          "Toque em Colar código. Se o celular pedir permissão, permita. Também dá para tocar em Entrar na Zelita dentro do e-mail, sem digitar.",
+      },
       {
         question: "O código não chegou",
         answer:
@@ -198,6 +209,8 @@ export const loginContent: LoginContent = {
       "Não conseguimos enviar o código agora. Verifique sua conexão e tente de novo em instantes.",
     verifyFailure:
       "Não foi possível confirmar o código agora. Tente de novo em instantes.",
+    emailLinkFailure:
+      "Esse link do e-mail não entrou. Copie o código, cole na tela ou peça um código novo.",
   },
   roleLabels: {
     admin: "você é administradora",

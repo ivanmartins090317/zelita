@@ -193,7 +193,7 @@ export function LoginForm({
 
   return (
     <div className="w-full">
-      {urlError ? (
+      {urlError && step === "email" ? (
         <Note tone="warning" icon="⚠️" className="mt-4">
           {urlError}
         </Note>
@@ -288,6 +288,8 @@ export function LoginForm({
               value={code}
               onChange={handleCodeChange}
               tone={step === "error" ? "warning" : "default"}
+              pasteLabel={copy.code.pasteLabel}
+              pasteFailedMessage={copy.code.pasteFailedMessage}
             />
           </div>
 

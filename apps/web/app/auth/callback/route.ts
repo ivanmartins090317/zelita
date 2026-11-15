@@ -1,21 +1,27 @@
-import { NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  authLinkFailureRedirect,
+  createAuthRouteClient,
+  finishAuthRedirect,
+} from "@/app/auth/finish-auth-redirect";
+import { resolvePostAuthDestination } from "@/modules/accounts/application/post-auth-destination";
 
-export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/onboarding";
+export async function GET(request: NextRequest) {
+  const code = request.nextUrl.searchParams.get("code")?.trim() ?? "";
+  if (!code) return authLinkFailureRedirect(request);
 
-  if (code) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
-    }
-  }
+  const client = createAuthRouteClient(request);
+  if (!client) return authLinkFailureRedirect(request);
 
-  return NextResponse.redirect(
-    `${origin}/entrar?erro=${encodeURIComponent("Link mágico inválido ou expirado. Peça um novo.")}`,
-  );
+  const { error } = await client.supabase.auth.exchangeCodeForSession(code);
+  if (error) return authLinkFailureRedirect(request);
+
+  const {
+    data: { user },
+  } = await client.supabase.auth.getUser();
+  if (!user) return authLinkFailureRedirect(request);
+
+  const route = await resolvePostAuthDestination(client.supabase, user.id);
+  return finishAuthRedirect(request, route, client.pendingCookies);
 }

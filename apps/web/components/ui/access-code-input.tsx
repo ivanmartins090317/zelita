@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   ACCESS_CODE_MAX_LENGTH,
   normalizeAccessCodeInput,
@@ -19,6 +20,8 @@ export interface AccessCodeInputProps {
   onChange: (value: string) => void;
   tone?: "default" | "warning";
   autoFocus?: boolean;
+  pasteLabel?: string;
+  pasteFailedMessage?: string;
   "aria-label"?: string;
   className?: string;
 }
@@ -35,20 +38,51 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
       onChange,
       tone = "default",
       autoFocus = false,
+      pasteLabel,
+      pasteFailedMessage,
       "aria-label": ariaLabel = "Código de acesso",
       className,
     },
     ref,
   ) {
     const labelId = useId();
+    const hintId = useId();
     const internalRef = useRef<HTMLInputElement>(null);
     const [isFocused, setIsFocused] = useState(false);
+    const [pasteHint, setPasteHint] = useState<string | null>(null);
     const digits = toAccessCodeDigits(value, ACCESS_CODE_MAX_LENGTH);
     const caretIndex = resolveCaretIndex(value.length);
 
     function focusInput() {
       const input = internalRef.current;
       input?.focus();
+    }
+
+    function applyPastedText(raw: string) {
+      const pastedDigits = normalizeAccessCodeInput(raw);
+      if (!pastedDigits) {
+        setPasteHint(pasteFailedMessage ?? null);
+        focusInput();
+        return;
+      }
+      setPasteHint(null);
+      onChange(pastedDigits);
+    }
+
+    async function handlePasteClick() {
+      if (!navigator.clipboard?.readText) {
+        setPasteHint(pasteFailedMessage ?? null);
+        focusInput();
+        return;
+      }
+
+      try {
+        const text = await navigator.clipboard.readText();
+        applyPastedText(text);
+      } catch {
+        setPasteHint(pasteFailedMessage ?? null);
+        focusInput();
+      }
     }
 
     function cellToneClass(index: number, digit: string) {
@@ -75,7 +109,8 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
     }
 
     return (
-      <div className={cn("relative", className)}>
+      <div className={className}>
+        <div className="relative">
         <div
           id={labelId}
           role="group"
@@ -123,19 +158,51 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
             }
           }}
           value={value}
-          onChange={(event) =>
-            onChange(normalizeAccessCodeInput(event.target.value))
-          }
+          onChange={(event) => {
+            setPasteHint(null);
+            onChange(normalizeAccessCodeInput(event.target.value));
+          }}
+          onPaste={(event) => {
+            const text = event.clipboardData.getData("text");
+            const pastedDigits = normalizeAccessCodeInput(text);
+            if (!pastedDigits) return;
+            event.preventDefault();
+            setPasteHint(null);
+            onChange(pastedDigits);
+          }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           inputMode="numeric"
           autoComplete="one-time-code"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           autoFocus={autoFocus}
-          maxLength={ACCESS_CODE_MAX_LENGTH}
+          name="one-time-code"
           aria-labelledby={labelId}
           aria-label={ariaLabel}
-          className="absolute inset-0 cursor-text opacity-0"
+          aria-describedby={pasteHint ? hintId : undefined}
+          className="absolute inset-0 z-10 h-full w-full cursor-text border-0 bg-transparent p-0 text-[16px] text-transparent caret-transparent outline-none selection:bg-transparent [-webkit-text-fill-color:transparent]"
         />
+        </div>
+        {pasteLabel ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="md"
+            className="mt-3 w-full"
+            onClick={() => {
+              void handlePasteClick();
+            }}
+          >
+            {pasteLabel}
+          </Button>
+        ) : null}
+        {pasteHint ? (
+          <p id={hintId} role="status" className="mt-2 text-compact text-amber-ink">
+            {pasteHint}
+          </p>
+        ) : null}
       </div>
     );
   },

@@ -8,7 +8,7 @@ describe("loginContent", () => {
     expect(loginContent.code.title).toBeTruthy();
     expect(loginContent.error.title).toBeTruthy();
     expect(loginContent.picker.title).toBeTruthy();
-    expect(loginContent.help.items).toHaveLength(5);
+    expect(loginContent.help.items).toHaveLength(6);
     expect(loginContent.resendCooldownSeconds).toBe(45);
   });
 

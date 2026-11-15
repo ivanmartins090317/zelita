@@ -31,6 +31,8 @@ export interface SignupCodeStepContent {
   submitPendingLabel: string;
   backLabel: string;
   incompleteCodeError: string;
+  pasteLabel: string;
+  pasteFailedMessage: string;
 }
 
 export interface SignupCodeErrorContent {
@@ -224,6 +226,9 @@ export const signupContent: SignupContent = {
     backLabel: "Voltar",
     incompleteCodeError:
       "Informe o código completo do e-mail (6 a 8 números).",
+    pasteLabel: "Colar código",
+    pasteFailedMessage:
+      "Não deu para colar. Copie o código no e-mail, toque numa caixinha, segure o dedo e escolha Colar.",
   },
   codeError: {
     title: "Esse código não funcionou",

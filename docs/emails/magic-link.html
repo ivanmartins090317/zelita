@@ -49,14 +49,16 @@
             <tr>
               <td style="padding:0 28px 8px 28px;">
                 <p style="margin:0;font-size:15px;line-height:1.55;color:#4E5D5A;">
-                  Prefere o link? Toque no botão para entrar neste aparelho:
+                  Prefere não digitar? Toque no botão para entrar neste
+                  aparelho. Se abrir a página inicial, copie o código acima e
+                  use Colar código na tela da Zelita.
                 </p>
               </td>
             </tr>
             <tr>
               <td style="padding:16px 28px 28px 28px;" align="center">
                 <a
-                  href="{{ .ConfirmationURL }}"
+                  href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email"
                   style="display:inline-block;background:#12766E;color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:14px 28px;border-radius:12px;"
                 >
                   Entrar na Zelita

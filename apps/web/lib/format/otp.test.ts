@@ -51,6 +51,11 @@ describe("normalizeAccessCodeInput", () => {
     expect(normalizeAccessCodeInput("04145851")).toBe("04145851");
     expect(normalizeAccessCodeInput("0414585199")).toBe("04145851");
   });
+
+  it("aceita o código copiado do e-mail, com espaço ou texto ao redor", () => {
+    expect(normalizeAccessCodeInput("9 2 5 0 6 9 0 6")).toBe("92506906");
+    expect(normalizeAccessCodeInput("código 92506906")).toBe("92506906");
+  });
 });
 
 describe("toAccessCodeDigits", () => {

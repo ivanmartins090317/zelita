@@ -88,6 +88,8 @@ export function SignupCodeStep({
           value={code}
           onChange={onCodeChange}
           tone={uiStep === "error" ? "warning" : "default"}
+          pasteLabel={copy.pasteLabel}
+          pasteFailedMessage={copy.pasteFailedMessage}
         />
       </div>
 

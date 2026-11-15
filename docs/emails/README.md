@@ -44,14 +44,29 @@ O **número de dígitos** do `{{ .Token }}` vem do **Supabase Auth**, não do te
 
 Projetos Supabase mais novos costumam vir com **8 dígitos** por padrão. O app aceita **6 a 8** na digitação, mas o copy e a UX assumem **6** — alinhe o Dashboard para evitar confusão.
 
+## Botão do e-mail
+
+O botão não usa mais `{{ .ConfirmationURL }}`. Esse endereço caía na home e não criava sessão.
+
+O href do template aponta para o app:
+
+`{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email`
+
+(no HTML, `&` vira `&amp;`.)
+
+- **Site URL** sem barra no final: `https://zelita-web.vercel.app`
+- O código (`{{ .Token }}`) continua no e-mail para quem preferir colar
+- Tocar no botão consome o código. Se o link falhar, a pessoa pede outro ou cola o que ainda estiver válido
+
 ## Variáveis Supabase usadas
 
 - `{{ .Token }}` — código OTP (6–8 dígitos, conforme Auth do Supabase)
-- `{{ .ConfirmationURL }}` — link mágico / confirmação
+- `{{ .TokenHash }}` — token de uso único do botão, válido em outro navegador (Gmail no celular)
+- `{{ .SiteURL }}` — origem do app, sem barra no final
 - `{{ .Email }}` — e-mail do destinatário (opcional no corpo)
 
 ## Depois de colar
 
-1. Salve cada template no Dashboard
-2. Confirme Site URL + Redirect URLs da Vercel (ver homologação Auth)
+1. Salve cada template no Dashboard — **sem este passo o botão continua abrindo a home**
+2. Confirme Site URL sem barra no final
 3. Peça **um** e-mail novo (templates antigos não mudam e-mails já enviados)
