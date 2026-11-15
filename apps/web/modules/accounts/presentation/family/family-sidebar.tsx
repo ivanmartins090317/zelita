@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import type { ShellContext } from "@/modules/accounts/application/shell-context";
 import { signOut } from "@/modules/accounts/application/auth-actions";
 import {
+  FamilyMobileMenuButton,
   SIDEBAR_ID,
   useFamilyMobileMenu,
 } from "@/modules/accounts/presentation/family/family-mobile-menu";
@@ -45,7 +46,7 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
         <button
           type="button"
           aria-label={familyContent.mobileNav.closeLabel}
-          className="fixed inset-0 z-30 bg-ink/50 md:hidden"
+          className="fixed inset-0 z-55 h-dvh w-full bg-ink/50 md:hidden"
           onClick={() => setOpen(false)}
         />
       ) : null}
@@ -53,11 +54,15 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
       <aside
         id={SIDEBAR_ID}
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-[min(100%,288px)] flex-col bg-brand-900 px-3 pb-4 text-on-dark transition-transform duration-200 ease-out motion-reduce:transition-none max-md:pt-(--family-header-offset,1rem) md:static md:z-auto md:w-[272px] md:translate-x-0 md:pt-4 md:shrink-0",
+          "fixed top-0 left-0 z-60 flex h-dvh w-[min(100%,288px)] flex-col bg-brand-900 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] text-on-dark transition-transform duration-200 ease-out motion-reduce:transition-none md:static md:z-auto md:h-auto md:w-[272px] md:shrink-0 md:translate-x-0 md:pt-4 md:pb-4",
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
-        <FamilyMark planLabel={planLabel} planPaused={shell.isPaused} />
+        <FamilyMark
+          planLabel={planLabel}
+          planPaused={shell.isPaused}
+          trailing={open ? <FamilyMobileMenuButton /> : null}
+        />
         <div data-tour={familyGuideTargetIds.recipient}>
           <FamilyRecipientPicker shell={shell} />
         </div>

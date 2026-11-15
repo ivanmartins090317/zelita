@@ -9,18 +9,15 @@ import {
   useRef,
   useState,
   type ReactNode,
-  type RefCallback,
 } from "react";
 
 import { registerFamilyGuideMenu } from "@/components/family-guide/family-guide-tour";
 import { familyContent } from "@/content/family";
 
 const SIDEBAR_ID = "family-sidebar";
-const HEADER_OFFSET_VAR = "--family-header-offset";
 
 interface FamilyMobileMenuContextValue {
   open: boolean;
-  headerRef: RefCallback<HTMLElement>;
   toggle: () => void;
   setOpen: (open: boolean) => void;
 }
@@ -31,7 +28,6 @@ const FamilyMobileMenuContext =
 function FamilyMobileMenuProvider({ children }: { children: ReactNode }) {
   const [open, setOpenState] = useState(false);
   const openRef = useRef(false);
-  const offsetObserver = useRef<ResizeObserver | null>(null);
 
   const setOpen = useCallback((next: boolean) => {
     openRef.current = next;
@@ -49,32 +45,18 @@ function FamilyMobileMenuProvider({ children }: { children: ReactNode }) {
     });
   }, [setOpen]);
 
-  const headerRef = useCallback((node: HTMLElement | null) => {
-    offsetObserver.current?.disconnect();
-    offsetObserver.current = null;
+  useEffect(() => {
+    if (!open || !window.matchMedia("(max-width: 767px)").matches) return;
 
-    if (!node) {
-      document.documentElement.style.removeProperty(HEADER_OFFSET_VAR);
-      return;
-    }
-
-    const syncOffset = () => {
-      document.documentElement.style.setProperty(
-        HEADER_OFFSET_VAR,
-        `${Math.ceil(node.getBoundingClientRect().height)}px`,
-      );
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
     };
-
-    syncOffset();
-    const observer = new ResizeObserver(syncOffset);
-    observer.observe(node);
-    offsetObserver.current = observer;
-  }, []);
+  }, [open]);
 
   return (
-    <FamilyMobileMenuContext.Provider
-      value={{ open, headerRef, toggle, setOpen }}
-    >
+    <FamilyMobileMenuContext.Provider value={{ open, toggle, setOpen }}>
       {children}
     </FamilyMobileMenuContext.Provider>
   );

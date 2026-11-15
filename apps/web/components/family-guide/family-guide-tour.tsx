@@ -98,12 +98,17 @@ async function loadIntro() {
   return introModule.default;
 }
 
+function isTourTargetVisible(element: Element) {
+  return element instanceof HTMLElement && element.getClientRects().length > 0;
+}
+
 function readVisibleSteps() {
   const available = new Set<string>();
   for (const step of familyGuideSteps) {
-    if (document.querySelector(familyGuideTargetSelector(step.targetId))) {
-      available.add(step.targetId);
-    }
+    const element = document.querySelector(
+      familyGuideTargetSelector(step.targetId),
+    );
+    if (element && isTourTargetVisible(element)) available.add(step.targetId);
   }
   return selectFamilyGuideSteps(available);
 }

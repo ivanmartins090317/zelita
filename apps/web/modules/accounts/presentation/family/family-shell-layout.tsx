@@ -7,11 +7,16 @@ import { FamilyMobileMenuProvider } from "@/modules/accounts/presentation/family
 interface FamilyMarkProps {
   planLabel: string;
   planPaused?: boolean;
+  trailing?: ReactNode;
 }
 
-function FamilyMark({ planLabel, planPaused = false }: FamilyMarkProps) {
+function FamilyMark({
+  planLabel,
+  planPaused = false,
+  trailing,
+}: FamilyMarkProps) {
   return (
-    <div className="flex items-center gap-2.5 px-1.5 pb-4 pt-1">
+    <div className="flex items-center gap-2 px-1.5 pb-4 pt-1">
       <svg
         width={24}
         height={24}
@@ -39,6 +44,7 @@ function FamilyMark({ planLabel, planPaused = false }: FamilyMarkProps) {
         <span className="sr-only">{planPaused ? "Conta " : "Plano "}</span>
         {planLabel}
       </span>
+      {trailing}
     </div>
   );
 }
