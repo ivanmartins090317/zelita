@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { FamilyGuideTour } from "@/components/family-guide/family-guide-tour";
 import { cn } from "@/lib/utils";
+import { FamilyMobileMenuProvider } from "@/modules/accounts/presentation/family/family-mobile-menu";
 
 interface FamilyMarkProps {
   planLabel: string;
@@ -58,18 +59,20 @@ function FamilyShellLayout({
   children,
 }: FamilyShellLayoutProps) {
   return (
-    <div className="flex min-h-full flex-1 bg-sand">
-      {sidebar}
-      <div className="flex min-w-0 flex-1 flex-col">
-        {topbar}
-        <div className="flex flex-1 flex-col px-4 py-4 sm:px-6 lg:px-8">
-          {trialBar}
-          {pausedBanner}
-          <main className="flex-1">{children}</main>
+    <FamilyMobileMenuProvider>
+      <div className="flex min-h-full flex-1 bg-sand">
+        {sidebar}
+        <div className="flex min-w-0 flex-1 flex-col">
+          {topbar}
+          <div className="flex flex-1 flex-col px-4 py-4 sm:px-6 lg:px-8">
+            {trialBar}
+            {pausedBanner}
+            <main className="flex-1">{children}</main>
+          </div>
         </div>
+        <FamilyGuideTour />
       </div>
-      <FamilyGuideTour />
-    </div>
+    </FamilyMobileMenuProvider>
   );
 }
 

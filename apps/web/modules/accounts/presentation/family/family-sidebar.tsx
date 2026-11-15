@@ -1,16 +1,17 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
 
-import { registerFamilyGuideMenu } from "@/components/family-guide/family-guide-tour";
 import { familyGuideTargetIds } from "@/content/family-guide";
 import { familyContent } from "@/content/family";
 import { cn } from "@/lib/utils";
 import type { ShellContext } from "@/modules/accounts/application/shell-context";
 import { signOut } from "@/modules/accounts/application/auth-actions";
+import {
+  SIDEBAR_ID,
+  useFamilyMobileMenu,
+} from "@/modules/accounts/presentation/family/family-mobile-menu";
 import {
   buildFamilyNavSections,
   isNavItemActive,
@@ -32,62 +33,28 @@ interface FamilySidebarProps {
   shell: ShellContext;
 }
 
-const SIDEBAR_ID = "family-sidebar";
-
 function FamilySidebar({ shell }: FamilySidebarProps) {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const mobileOpenRef = useRef(false);
+  const { open, setOpen } = useFamilyMobileMenu();
   const sections = buildFamilyNavSections();
   const planLabel = formatSidebarPlanBadge(shell.accountPlan, shell.isPaused);
 
-  const setMenuOpen = useCallback((open: boolean) => {
-    mobileOpenRef.current = open;
-    setMobileOpen(open);
-  }, []);
-
-  useEffect(() => {
-    return registerFamilyGuideMenu({
-      isOpen: () => mobileOpenRef.current,
-      setOpen: setMenuOpen,
-    });
-  }, [setMenuOpen]);
-
   return (
     <>
-      <button
-        type="button"
-        className="fixed bottom-4 left-4 z-50 flex min-h-tap min-w-tap items-center justify-center rounded-control bg-brand-800 text-white shadow-card md:hidden"
-        aria-expanded={mobileOpen}
-        aria-controls={SIDEBAR_ID}
-        aria-label={
-          mobileOpen
-            ? familyContent.mobileNav.closeLabel
-            : familyContent.mobileNav.openLabel
-        }
-        onClick={() => setMenuOpen(!mobileOpenRef.current)}
-      >
-        {mobileOpen ? (
-          <X aria-hidden className="size-5" strokeWidth={2} />
-        ) : (
-          <Menu aria-hidden className="size-5" strokeWidth={2} />
-        )}
-      </button>
-
-      {mobileOpen ? (
+      {open ? (
         <button
           type="button"
           aria-label={familyContent.mobileNav.closeLabel}
           className="fixed inset-0 z-30 bg-ink/50 md:hidden"
-          onClick={() => setMenuOpen(false)}
+          onClick={() => setOpen(false)}
         />
       ) : null}
 
       <aside
         id={SIDEBAR_ID}
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-[min(100%,288px)] flex-col bg-brand-900 px-3 py-4 text-on-dark transition-transform duration-200 ease-out motion-reduce:transition-none md:static md:z-auto md:w-[272px] md:translate-x-0 md:shrink-0",
-          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-[min(100%,288px)] flex-col bg-brand-900 px-3 pb-4 text-on-dark transition-transform duration-200 ease-out motion-reduce:transition-none max-md:pt-(--family-header-offset,1rem) md:static md:z-auto md:w-[272px] md:translate-x-0 md:pt-4 md:shrink-0",
+          open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
         <FamilyMark planLabel={planLabel} planPaused={shell.isPaused} />
@@ -118,7 +85,7 @@ function FamilySidebar({ shell }: FamilySidebarProps) {
                     activeMedicationCount: shell.activeMedicationCount,
                     openAlertsCount: shell.openAlertsCount,
                   })}
-                  onNavigate={() => setMobileOpen(false)}
+                  onNavigate={() => setOpen(false)}
                 />
               ))}
             </div>
