@@ -59,6 +59,7 @@ function SafePlacesCard({
             {items.map((item) => (
               <ListRow
                 key={item.id}
+                stackOnMobile
                 icon={item.icon}
                 title={item.name}
                 subtitle={`${item.addressText || "—"} · ${item.subtitle}`}

@@ -47,6 +47,7 @@ function UpcomingAppointmentsCard({
           items.map((item) => (
             <ListRow
               key={item.id}
+              stackOnMobile
               icon={
                 <span
                   className={cn(
@@ -60,7 +61,7 @@ function UpcomingAppointmentsCard({
               title={item.title}
               subtitle={item.subtitle}
               trailing={
-                <div className="flex flex-col items-end gap-1">
+                <div className="flex flex-wrap items-center gap-2 sm:flex-col sm:items-end sm:gap-1">
                   {canManage && !isPaused ? (
                     <Button
                       variant="secondary"

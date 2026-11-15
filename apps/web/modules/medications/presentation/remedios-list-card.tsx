@@ -75,6 +75,7 @@ function RemediosListCard({
         {medications.map((med) => (
           <ListRow
             key={med.medicationId}
+            stackOnMobile
             icon="💊"
             title={med.title}
             subtitle={med.subtitle}

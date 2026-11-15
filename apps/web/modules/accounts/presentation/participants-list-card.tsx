@@ -93,6 +93,7 @@ function ParticipantsListCard({
         {participants.map((participant) => (
           <ListRow
             key={`${participant.kind}-${participant.id}`}
+            stackOnMobile
             icon={
               <ParticipantAvatar
                 initials={participant.initials}

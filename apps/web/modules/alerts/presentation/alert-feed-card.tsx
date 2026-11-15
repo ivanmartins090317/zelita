@@ -112,6 +112,7 @@ function AlertFeedCard({ data }: AlertFeedCardProps) {
               return (
                 <ListRow
                   key={item.id}
+                  stackOnMobile
                   icon={
                     <span
                       className={cn(
