@@ -207,6 +207,8 @@ export interface FamilyAjustesContent {
     devicesSubtitle: string;
     devicesInstallButton: string;
     devicesViewButton: string;
+    homeScreenTitle: string;
+    homeScreenSubtitle: string;
     accessLogTitle: string;
     accessLogButton: string;
     tags: {
@@ -1586,7 +1588,8 @@ export const familyContent: FamilyContent = {
       voiceTitle: "Ligação de voz",
       voiceSubtitle: "Reforço quando não há leitura em 20 min",
       shortcutTitle: "Atalho no celular dele",
-      shortcutSubtitle: "Ícone na tela inicial — opcional",
+      shortcutSubtitle:
+        "Ícone na tela inicial dele. Abre o app da pessoa cuidada.",
       videoTitle: "Videochamada",
       howItWorks: "Como funciona",
       saveButton: "Salvar canal",
@@ -1666,6 +1669,9 @@ export const familyContent: FamilyContent = {
       devicesSubtitle: "Nenhum aparelho vinculado ainda",
       devicesInstallButton: "Instalar no celular",
       devicesViewButton: "Ver aparelho",
+      homeScreenTitle: "Atalho deste painel",
+      homeScreenSubtitle:
+        "Adicione à tela de início com o painel aberto. Esse ícone abre a Zelita família. O link enviado abre o app dele.",
       accessLogTitle: "Últimos acessos à conta",
       accessLogButton: "Ver",
       tags: {

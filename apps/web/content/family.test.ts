@@ -75,6 +75,12 @@ describe("familyContent", () => {
     expect(familyContent.ajustes.privacy.devicesInstallButton).toContain(
       "Instalar",
     );
+    expect(familyContent.ajustes.privacy.homeScreenSubtitle).toContain(
+      "Zelita família",
+    );
+    expect(familyContent.ajustes.channels.shortcutSubtitle).toContain(
+      "pessoa cuidada",
+    );
     expect(familyContent.hoje.welcomeModal.primary).toBe("Como usar a Zelita");
     expect(familyContent.hoje.maduro.stats.locationValue).toBe("Em breve");
     expect(familyContent.hoje.maduro.stats.noticesValue).toBe("0");

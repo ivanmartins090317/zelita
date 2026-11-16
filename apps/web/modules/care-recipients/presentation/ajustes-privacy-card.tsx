@@ -133,6 +133,12 @@ function AjustesPrivacyCard({
             trailing={<Tag tone="ok">{copy.tags.active}</Tag>}
           />
           <ListRow
+            icon="🏠"
+            title={copy.homeScreenTitle}
+            subtitle={copy.homeScreenSubtitle}
+            stackOnMobile
+          />
+          <ListRow
             icon="📱"
             title={copy.devicesTitle}
             subtitle={deviceSubtitle || copy.devicesSubtitle}

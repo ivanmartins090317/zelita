@@ -15,3 +15,7 @@
 ## Em espera
 
 Pedido de posição: código Done; homologação no Vercel ainda aberta. Gate 2.2 (SOS) segue na rodada única.
+
+## Ajuste paralelo — dois PWAs
+
+Manifesto único removido. `/familia` instala a Zelita família; `/idoso` instala o app da pessoa cuidada. O relato para quem administra está em Ajustes, no cartão de privacidade (“Atalho deste painel”). Entrega: [`docs/implementation/2026-11-16-pwa-dois-manifestos.md`](../implementation/2026-11-16-pwa-dois-manifestos.md).
