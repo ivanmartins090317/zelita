@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { familyContent, familyRoutes } from "@/content/family";
 import { DEVICE_LINK_CHANNELS } from "@/modules/elder-access/domain/device-link";
 import type { DeviceLinkActionState } from "@/modules/elder-access/application/device-link-actions";
@@ -39,73 +40,119 @@ export function InstallDevicePanel({
 
   return (
     <div className="space-y-4">
-      {maskedWhatsapp ? (
-        <p className="text-secondary">
-          {copy.whatsappLine.replace("{mascara}", maskedWhatsapp)}
-        </p>
-      ) : null}
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{hasDevice ? devices[0]?.statusLine : copy.none}</CardTitle>
-        </CardHeader>
-        <CardBody className="space-y-3">
+      {/* Situação atual: uma linha de status, não um card vazio. */}
+      <div className="rounded-note border border-line bg-white px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="flex items-center gap-2 text-body font-bold text-ink">
+            <span
+              aria-hidden
+              className={cn(
+                "inline-block h-2.5 w-2.5 shrink-0 rounded-full",
+                hasDevice ? "bg-brand-500" : "bg-line",
+              )}
+            />
+            {hasDevice ? devices[0]?.statusLine : copy.none}
+          </p>
           {hasDevice && canManage
             ? devices.map((device) => (
                 <form key={device.id} action={revokeAction}>
                   <input type="hidden" name="deviceId" value={device.id} />
-                  <Button type="submit" variant="secondary" disabled={revokePending}>
+                  <Button
+                    type="submit"
+                    variant="secondary"
+                    size="sm"
+                    disabled={revokePending}
+                  >
                     {copy.revoke}
                   </Button>
                 </form>
               ))
             : null}
-          {!canManage ? <p className="text-secondary">{copy.caregiverNote}</p> : null}
-          {revokeState.message ? (
-            <p className={revokeState.ok ? "text-secondary" : "text-coral-dark"}>
-              {revokeState.message}
-            </p>
-          ) : null}
-        </CardBody>
-      </Card>
+        </div>
+        {!canManage ? (
+          <p className="mt-2 text-secondary">{copy.caregiverNote}</p>
+        ) : null}
+        {revokeState.message ? (
+          <p
+            className={cn(
+              "mt-2",
+              revokeState.ok ? "text-secondary" : "text-coral-dark",
+            )}
+          >
+            {revokeState.message}
+          </p>
+        ) : null}
+      </div>
 
       {canManage && !hasDevice ? (
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>{copy.remoteTitle}</CardTitle>
-            </CardHeader>
-            <CardBody className="space-y-3">
-              <p className="text-secondary">{copy.remoteHint}</p>
-              <form action={issueAction}>
-                <input type="hidden" name="channel" value={DEVICE_LINK_CHANNELS.whatsapp} />
-                <Button type="submit" disabled={issuePending}>
+        <Card>
+          <CardHeader>
+            <CardTitle>{copy.chooseTitle}</CardTitle>
+          </CardHeader>
+          <CardBody className="space-y-5">
+            <section>
+              <h4 className="text-body font-bold text-ink">
+                {copy.remoteTitle}
+              </h4>
+              <p className="mt-1 text-secondary">
+                {copy.remoteHint}
+                {maskedWhatsapp
+                  ? ` ${copy.whatsappLine.replace("{mascara}", maskedWhatsapp)}`
+                  : null}
+              </p>
+              <form action={issueAction} className="mt-3">
+                <input
+                  type="hidden"
+                  name="channel"
+                  value={DEVICE_LINK_CHANNELS.whatsapp}
+                />
+                <Button
+                  type="submit"
+                  disabled={issuePending}
+                  className="w-full sm:w-auto"
+                >
                   {copy.remoteButton}
                 </Button>
               </form>
-            </CardBody>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>{copy.inPersonTitle}</CardTitle>
-            </CardHeader>
-            <CardBody className="space-y-3">
-              <p className="text-secondary">{copy.inPersonHint}</p>
-              <form action={issueAction}>
-                <input type="hidden" name="channel" value={DEVICE_LINK_CHANNELS.inPerson} />
-                <Button type="submit" variant="secondary" disabled={issuePending}>
+            </section>
+
+            <div aria-hidden className="h-px bg-line-2" />
+
+            <section>
+              <h4 className="text-body font-bold text-ink">
+                {copy.inPersonTitle}
+              </h4>
+              <p className="mt-1 text-secondary">{copy.inPersonHint}</p>
+              <form action={issueAction} className="mt-3">
+                <input
+                  type="hidden"
+                  name="channel"
+                  value={DEVICE_LINK_CHANNELS.inPerson}
+                />
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  disabled={issuePending}
+                  className="w-full sm:w-auto"
+                >
                   {copy.inPersonButton}
                 </Button>
               </form>
-            </CardBody>
-          </Card>
-        </div>
+            </section>
+          </CardBody>
+        </Card>
       ) : null}
 
       {issueState.message ? (
         <Card>
           <CardBody className="space-y-3">
-            <p className={issueState.ok ? "font-bold text-ink" : "font-bold text-coral-dark"}>
+            <p
+              className={
+                issueState.ok
+                  ? "font-bold text-ink"
+                  : "font-bold text-coral-dark"
+              }
+            >
               {issueState.message}
             </p>
             {issueState.url ? (
@@ -115,7 +162,10 @@ export function InstallDevicePanel({
                 </p>
                 <p className="text-secondary">{copy.onceNote}</p>
                 <p className="text-secondary">
-                  <a className="text-brand-700 underline" href={familyRoutes.ajustes}>
+                  <a
+                    className="text-brand-700 underline"
+                    href={familyRoutes.ajustes}
+                  >
                     {familyContent.ajustes.privacy.devicesTitle}
                   </a>
                 </p>
