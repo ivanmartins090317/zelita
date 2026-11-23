@@ -72,6 +72,14 @@ export interface SignupContactStepContent {
   whatsappHint: string;
   addressLabel: string;
   addressHint: string;
+  addressStreetLabel: string;
+  addressNumberLabel: string;
+  addressComplementLabel: string;
+  addressComplementHint: string;
+  addressDistrictLabel: string;
+  addressCityLabel: string;
+  addressStateLabel: string;
+  addressStatePlaceholder: string;
 }
 
 export interface SignupChannelOptionContent {
@@ -144,6 +152,11 @@ export interface SignupValidationContent {
   birthDateInvalid: string;
   relationshipInvalid: string;
   addressRequired: string;
+  addressStreetRequired: string;
+  addressNumberRequired: string;
+  addressDistrictRequired: string;
+  addressCityRequired: string;
+  addressStateRequired: string;
   channelInvalid: string;
   toneInvalid: string;
   planInvalid: string;
@@ -271,6 +284,14 @@ export const signupContent: SignupContent = {
     addressLabel: "Endereço de casa",
     addressHint:
       "Serve para o pedido de ajuda saber onde ele mora, e vira o primeiro “lugar de sempre”.",
+    addressStreetLabel: "Rua",
+    addressNumberLabel: "Número",
+    addressComplementLabel: "Complemento",
+    addressComplementHint: "Opcional. Apartamento, bloco, casa dos fundos.",
+    addressDistrictLabel: "Bairro",
+    addressCityLabel: "Cidade",
+    addressStateLabel: "Estado",
+    addressStatePlaceholder: "UF",
   },
   channel: {
     title: "Como a Zelita vai falar com ele(a)",
@@ -382,6 +403,11 @@ export const signupContent: SignupContent = {
     birthDateInvalid: "Informe a data de nascimento.",
     relationshipInvalid: "Escolha o parentesco.",
     addressRequired: "Informe o endereço de casa (mínimo 5 caracteres).",
+    addressStreetRequired: "Informe a rua.",
+    addressNumberRequired: "Informe o número (ou “s/n”).",
+    addressDistrictRequired: "Informe o bairro.",
+    addressCityRequired: "Informe a cidade.",
+    addressStateRequired: "Escolha o estado.",
     channelInvalid: "Escolha um canal válido.",
     toneInvalid: "Escolha um tom válido.",
     planInvalid: "Escolha como quer começar.",

@@ -6,8 +6,9 @@ export interface LoginEmailStepContent {
   emailPlaceholder: string;
   submitLabel: string;
   submitPendingLabel: string;
-  dividerLabel: string;
+  signupPrompt: string;
   signupLabel: string;
+  signupHint: string;
   signupHref: string;
   passwordNote: {
     icon: string;
@@ -100,16 +101,17 @@ export const loginRoutes = {
 export const loginContent: LoginContent = {
   resendCooldownSeconds: 45,
   email: {
-    title: "Que bom te ver de novo",
+    title: "Entrar na Zelita",
     subtitle:
-      "Digite o e-mail da sua conta. A gente manda um código de 6 números e você entra — ",
+      "Já tem conta? Digite o e-mail dela. A gente manda um código de 6 números e você entra — ",
     subtitleBold: "sem senha para decorar",
     emailLabel: "Seu e-mail",
     emailPlaceholder: "cintia@email.com",
     submitLabel: "Enviar meu código de acesso",
     submitPendingLabel: "Enviando…",
-    dividerLabel: "ou",
-    signupLabel: "Criar minha conta · 30 dias grátis",
+    signupPrompt: "Primeira vez aqui?",
+    signupLabel: "Criar minha conta grátis",
+    signupHint: "30 dias grátis, sem cartão de crédito.",
     signupHref: loginRoutes.signup,
     passwordNote: {
       icon: "🔐",

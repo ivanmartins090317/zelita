@@ -158,13 +158,12 @@ export function SignupSteps(props: SignupStepsProps) {
         <SignupContactStep
           careDisplayName={data.careDisplayName}
           careWhatsapp={data.careWhatsapp}
-          addressText={data.addressText}
-          fieldErrors={{
-            careWhatsapp: fieldErrors.careWhatsapp,
-            addressText: fieldErrors.addressText,
-          }}
+          address={data.address}
+          fieldErrors={fieldErrors}
           onCareWhatsappChange={(careWhatsapp) => onPatch({ careWhatsapp })}
-          onAddressChange={(addressText) => onPatch({ addressText })}
+          onAddressChange={(patch) =>
+            onPatch({ address: { ...data.address, ...patch } })
+          }
           onBack={() => onSetStep(SIGNUP_STEP.careRecipient)}
           onContinue={() => {
             const errors = validateContactStep(data);

@@ -108,6 +108,7 @@ export interface FamilyInstallContent {
   title: string;
   lead: string;
   whatsappLine: string;
+  chooseTitle: string;
   remoteTitle: string;
   remoteButton: string;
   remoteHint: string;
@@ -1528,10 +1529,11 @@ export const familyContent: FamilyContent = {
     title: "Instalar no celular dele",
     lead: "O link vale 15 minutos e serve uma vez. Ele não cria senha.",
     whatsappLine: "WhatsApp dele: {mascara}",
-    remoteTitle: "Estou longe",
+    chooseTitle: "Como o link chega até ele?",
+    remoteTitle: "Estou longe dele",
     remoteButton: "Enviar o link para ele",
     remoteHint: "A mensagem sai no WhatsApp já cadastrado.",
-    inPersonTitle: "Estou com o celular dele agora",
+    inPersonTitle: "Estou com o celular dele aqui",
     inPersonButton: "Mostrar o link aqui",
     inPersonHint: "Nada é enviado. O endereço aparece nesta tela.",
     sent: "Link enviado. Vale até {quando}.",
@@ -1542,7 +1544,7 @@ export const familyContent: FamilyContent = {
     activeDevice:
       "Já existe um celular ligado. Desvincule antes de mandar outro link.",
     hourlyLimit: "Já foram 5 links nesta hora. Espere um pouco e tente de novo.",
-    none: "Nenhum aparelho vinculado",
+    none: "Nenhum celular vinculado ainda",
     revoke: "Desvincular",
     revoked: "Aparelho desvinculado. O atalho para no próximo carregamento.",
     revokeMissing:
