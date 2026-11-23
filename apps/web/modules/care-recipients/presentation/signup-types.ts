@@ -10,6 +10,10 @@ import {
   type SignupToneSlug,
 } from "@/modules/care-recipients/domain/signup-options";
 import { SIGNUP_STEP, type SignupStepNumber } from "@/modules/care-recipients/application/signup-routing";
+import {
+  initialSignupAddress,
+  type SignupAddressParts,
+} from "@/modules/care-recipients/presentation/signup-address";
 
 export interface SignupLocalInvite {
   id: string;
@@ -27,7 +31,7 @@ export interface SignupWizardData {
   careBirthDate: string;
   careRelationship: keyof typeof import("@/modules/care-recipients/domain/signup-options").SIGNUP_RELATIONSHIPS;
   careWhatsapp: string;
-  addressText: string;
+  address: SignupAddressParts;
   channelPreference: SignupChannelSlug;
   tone: SignupToneSlug;
   dontBotherBefore: string;
@@ -46,7 +50,7 @@ export const initialSignupWizardData: SignupWizardData = {
   careBirthDate: "",
   careRelationship: SIGNUP_RELATIONSHIP_SLUGS[0],
   careWhatsapp: "",
-  addressText: "",
+  address: initialSignupAddress,
   channelPreference: SIGNUP_CHANNELS.whatsapp,
   tone: SIGNUP_TONES.carinhoso,
   dontBotherBefore: SIGNUP_DEFAULT_DND.dontBotherBefore,

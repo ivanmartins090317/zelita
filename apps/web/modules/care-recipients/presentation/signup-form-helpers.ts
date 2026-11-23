@@ -6,6 +6,10 @@ import {
   type SignupStepNumber,
 } from "@/modules/care-recipients/application/signup-routing";
 import {
+  formatSignupAddress,
+  validateSignupAddress,
+} from "@/modules/care-recipients/presentation/signup-address";
+import {
   isSignupStepRequiringSession,
   type SignupWizardData,
 } from "@/modules/care-recipients/presentation/signup-types";
@@ -50,10 +54,16 @@ export function validateContactStep(data: SignupWizardData): Record<string, stri
   const errors: Record<string, string> = {};
   const phoneError = validateSignupPhone(data.careWhatsapp);
   if (phoneError) errors.careWhatsapp = phoneError;
-  if (data.addressText.trim().length < 5) {
-    errors.addressText = signupContent.validation.addressRequired;
+  const addressErrors = validateSignupAddress(data.address);
+  for (const [field, message] of Object.entries(addressErrors)) {
+    errors[toAddressErrorKey(field)] = message;
   }
   return errors;
+}
+
+/** Chave do erro de um campo do endereço em `fieldErrors` (ex.: `address.city`). */
+export function toAddressErrorKey(field: string): string {
+  return `address.${field}`;
 }
 
 export function validateChannelStep(data: SignupWizardData): string | undefined {
@@ -87,7 +97,7 @@ export function buildSignupPayload(data: SignupWizardData) {
     careBirthDate: data.careBirthDate,
     careRelationship: data.careRelationship,
     careWhatsapp: data.careWhatsapp,
-    addressText: data.addressText.trim(),
+    addressText: formatSignupAddress(data.address),
     channelPreference: data.channelPreference,
     tone: data.tone,
     dontBotherBefore: data.dontBotherBefore,
