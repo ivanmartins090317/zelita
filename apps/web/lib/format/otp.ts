@@ -4,10 +4,14 @@ import { onlyDigits } from "./phone";
 export const ACCESS_CODE_LENGTH = 6;
 /** Supabase Auth pode emitir até 8 dígitos conforme config do projeto. */
 export const ACCESS_CODE_MAX_LENGTH = 8;
+/*
+ * A UI mostra 6 casas numa linha só (o projeto emite código de 6 números);
+ * o servidor segue aceitando até ACCESS_CODE_MAX_LENGTH por segurança.
+ */
 const ACCESS_CODE_GROUP_SIZE = 3;
 
 export function resolveAccessCodeBoxLength(): number {
-  return ACCESS_CODE_MAX_LENGTH;
+  return ACCESS_CODE_LENGTH;
 }
 
 export function normalizeAccessCodeInput(raw: string): string {

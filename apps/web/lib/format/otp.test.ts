@@ -32,8 +32,8 @@ describe("formatAccessCode", () => {
 });
 
 describe("resolveAccessCodeBoxLength", () => {
-  it("sempre reserva oito casas na UI de auth", () => {
-    expect(resolveAccessCodeBoxLength()).toBe(8);
+  it("reserva seis casas na UI de auth, tudo numa linha", () => {
+    expect(resolveAccessCodeBoxLength()).toBe(6);
   });
 });
 

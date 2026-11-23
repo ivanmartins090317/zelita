@@ -9,8 +9,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import {
-  ACCESS_CODE_MAX_LENGTH,
   normalizeAccessCodeInput,
+  resolveAccessCodeBoxLength,
   toAccessCodeDigits,
 } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -26,8 +26,10 @@ export interface AccessCodeInputProps {
   className?: string;
 }
 
+const BOX_LENGTH = resolveAccessCodeBoxLength();
+
 function resolveCaretIndex(valueLength: number): number | null {
-  if (valueLength >= ACCESS_CODE_MAX_LENGTH) return null;
+  if (valueLength >= BOX_LENGTH) return null;
   return valueLength;
 }
 
@@ -50,7 +52,7 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
     const internalRef = useRef<HTMLInputElement>(null);
     const [isFocused, setIsFocused] = useState(false);
     const [pasteHint, setPasteHint] = useState<string | null>(null);
-    const digits = toAccessCodeDigits(value, ACCESS_CODE_MAX_LENGTH);
+    const digits = toAccessCodeDigits(value, BOX_LENGTH);
     const caretIndex = resolveCaretIndex(value.length);
 
     function focusInput() {
@@ -59,7 +61,7 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
     }
 
     function applyPastedText(raw: string) {
-      const pastedDigits = normalizeAccessCodeInput(raw);
+      const pastedDigits = normalizeAccessCodeInput(raw).slice(0, BOX_LENGTH);
       if (!pastedDigits) {
         setPasteHint(pasteFailedMessage ?? null);
         focusInput();
@@ -117,7 +119,7 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
           aria-label={ariaLabel}
           onClick={focusInput}
           className={cn(
-            "grid grid-cols-4 gap-2 rounded-note p-1 transition-shadow sm:grid-cols-8",
+            "grid grid-cols-6 gap-1.5 rounded-note p-1 transition-shadow sm:gap-2",
             isFocused && "ring-2 ring-brand-400 ring-offset-2",
           )}
         >
@@ -129,7 +131,7 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
                 key={index}
                 aria-hidden
                 className={cn(
-                  "relative flex h-14 w-full min-w-0 items-center justify-center rounded-control border-2 font-head text-xl font-extrabold sm:h-15 sm:text-2xl",
+                  "relative flex h-13 w-full min-w-0 items-center justify-center rounded-control border-2 font-head text-xl font-extrabold sm:h-15 sm:text-2xl",
                   cellToneClass(index, digit),
                 )}
               >
@@ -160,11 +162,16 @@ const AccessCodeInput = forwardRef<HTMLInputElement, AccessCodeInputProps>(
           value={value}
           onChange={(event) => {
             setPasteHint(null);
-            onChange(normalizeAccessCodeInput(event.target.value));
+            onChange(
+              normalizeAccessCodeInput(event.target.value).slice(0, BOX_LENGTH),
+            );
           }}
           onPaste={(event) => {
             const text = event.clipboardData.getData("text");
-            const pastedDigits = normalizeAccessCodeInput(text);
+            const pastedDigits = normalizeAccessCodeInput(text).slice(
+              0,
+              BOX_LENGTH,
+            );
             if (!pastedDigits) return;
             event.preventDefault();
             setPasteHint(null);
