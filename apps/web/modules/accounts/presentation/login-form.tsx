@@ -237,17 +237,24 @@ export function LoginForm({
             </Button>
           </form>
 
-          <div className="my-5 flex items-center gap-3">
-            <div className="h-px flex-1 bg-line" />
-            <span className="text-compact font-bold text-muted">
-              {copy.email.dividerLabel}
-            </span>
-            <div className="h-px flex-1 bg-line" />
+          <div className="mt-6 rounded-note border border-brand-200 bg-brand-50 p-4 text-center">
+            <p className="font-head text-base font-extrabold text-brand-900">
+              {copy.email.signupPrompt}
+            </p>
+            <p className="mt-0.5 text-compact text-muted">
+              {copy.email.signupHint}
+            </p>
+            <Button
+              asChild
+              variant="secondary"
+              size="md"
+              className="mt-3 w-full"
+            >
+              <Link href={copy.email.signupHref}>
+                {copy.email.signupLabel}
+              </Link>
+            </Button>
           </div>
-
-          <Button asChild variant="secondary" size="md" className="w-full">
-            <Link href={copy.email.signupHref}>{copy.email.signupLabel}</Link>
-          </Button>
 
           {/* <Note
             tone="info"
